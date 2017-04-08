@@ -1,8 +1,46 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
 a {
   color: #00B7FF;
 }
+
+.mainPictures {
+  width: 100%;
+}
+
+#register-form, #login-form {
+  text-align: center;
+  width: 80%;
+  padding: 1em;
+  margin: auto;
+}
+#register-form > h3, #login-form > h3 {
+  border-bottom: 2px solid rgb(51, 51, 51);
+  text-align: center;
+}
+
+header .btn-lg{
+  margin-right: 3em;
+}
+
+.field-title {
+    padding-bottom: 0.5em;
+    color: #c9302c;
+    font-weight: bold;
+    font-size: 2em;
+}
+/*Buttons for login/register with Google and Facebook*/
+#register-form .col-md-5 > .btn-lg, #login-form .col-md-5 > .btn-lg {
+  margin: 1em;
+  width: 100%;
+}
+
+#register-left-side {
+  padding-right: 3em; 
+  border-right: 3px solid #c9302c;
+}
+.centered-text {
+  text-align: center;
+}
+.input-group {
+  margin-bottom: 1em;
+}
+

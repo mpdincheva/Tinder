@@ -1,0 +1,150 @@
+<div ng-controller="dashboardController">
+	
+	<aside id="leftSide" class="col-sm-3">
+		<div id="logosite">
+			<h2>Tinder</h2>
+		</div>
+		<div id="myprofile">
+			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-4">
+			<p>{{ currentUser.name }}</p>
+			<span id="accountSetting">Редактиране на профила</span>
+			<div>
+				<button class="btn btn-sm" ng-click="logout()">Logout</span>
+			</div>
+		</div>
+
+		<div class="panel-group" id="accordion">
+			<div class="panel panel-default">
+				<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+					<h4 class="panel-title">
+						Хора
+					</h4>
+				</div>
+				<div id="collapse1" class="panel-collapse collapse">
+					<div class="panel-body">
+						<form method="POST">
+							<div id="custom-search-input">
+								<div class="input-group">
+									<input type="text" class="form-control input-md" ng-model="namePerson" ng-change="searchPeopleByName()" placeholder="Търси хора.." />
+									<span class="input-group-btn">
+										<button class="btn btn-danger btn-md" type="submit">
+											<span class="glyphicon glyphicon-search"></span>
+										</button>
+									</span>
+								</div>
+							</div>
+						</form>
+						<hr/>
+						<form id="peopleForm">
+							<div class="table-row">
+								<label class="table-cell">Радиус: </label>
+								<div class="table-cell">
+									<input type="number" min="0">
+									<!-- <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/> -->
+								</div>
+							</div>
+							<div class="table-row">
+								<label class="table-cell">Пол: </label>
+								<div id="gender" class="table-cell">
+									<label>Мъже</label>
+									<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini">
+									<label>Жени</label>
+									<input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini">
+								</div>
+							</div>
+							<div class="table-row">
+								<label class="table-cell">Интереси: </label>
+								<div class="table-cell">
+									<input type="text" name="">
+								</div>
+							</div>
+							<div class="table-row" x>
+								<button class="btn btn-danger btn-block"> Търси </button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+					<h4 class="panel-title">
+						Събития
+					</h4>
+				</div>
+				<div id="collapse2" class="panel-collapse collapse">
+					<div class="panel-body">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="lastinvites">
+			<div class="invites">
+				<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
+				<p> George пожела да започне чат с Вас</p>
+			</div>
+			<div class="invites">
+				<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
+				<p> George пожела да започне чат с Вас</p>
+			</div>
+			<div class="invites">
+				<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
+				<p> George пожела да започне чат с Вас</p>
+			</div>
+		</div>
+	</aside>
+
+
+	<div id="map" class="large">
+	</div>
+
+	<div id="markPerson" ng-show="showme">
+		<div id="closeInformation">
+			<button type="button" class="close" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<img class="personProfileImg" src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png">
+		<div class="photos">
+			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-4">
+			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-4">
+			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-4">
+		</div>
+		<div class="personProfile">
+			<h1>{{ user.name }}</h1>
+			<h2>22</h2>
+			<h3>Интереси: </h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam maiores quod quaerat atque vitae quia repellendus voluptatibus
+				nihil nesciunt aliquid. Sapiente veritatis expedita eos soluta dolorem placeat et quod in.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum facilis, sapiente exercitationem aliquid aperiam nobis
+				architecto vitae, nulla illo tempore ipsam distinctio soluta, molestiae cupiditate eaque itaque explicabo praesentium
+				suscipit?</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum facilis, sapiente exercitationem aliquid aperiam nobis
+				architecto vitae, nulla illo tempore ipsam distinctio soluta, molestiae cupiditate eaque itaque explicabo praesentium
+				suscipit?</p>
+		</div>
+	</div>
+
+	<!-- <div id="accountSettingForm">
+		<img class="personProfileImg" src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png">
+		<div class="photos">
+			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png"
+			class="col-sm-4">
+			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png"
+			class="col-sm-4">
+			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png"
+			class="col-sm-4">
+		</div>
+		<div class="personProfile">
+			<h1>George Carlin</h1>
+			<h2>22</h2>
+			<h3>Интереси: </h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam maiores quod quaerat atque vitae quia repellendus voluptatibus nihil nesciunt aliquid. Sapiente veritatis expedita eos soluta dolorem placeat et quod in.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum facilis, sapiente exercitationem aliquid aperiam nobis architecto vitae, nulla illo tempore ipsam distinctio soluta, molestiae cupiditate eaque itaque explicabo praesentium suscipit?</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum facilis, sapiente exercitationem aliquid aperiam nobis architecto vitae, nulla illo tempore ipsam distinctio soluta, molestiae cupiditate eaque itaque explicabo praesentium suscipit?</p>
+		</div>
+	</div> -->
+
+</div>

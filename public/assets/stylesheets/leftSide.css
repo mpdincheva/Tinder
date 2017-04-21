@@ -1,0 +1,138 @@
+#leftSide {
+	background-color: #333;
+	height: 800px;
+	display: inline-block;
+	float: left;
+}
+
+#logosite {
+	font-style: italic;
+	color: white;
+}
+
+#myprofile {
+	background-color: white;
+	padding: 1em;
+	color: black;	
+	margin-bottom: 1em;
+}
+
+.panel-default > .panel-heading {
+	color: white !important;
+	background-color: rgb(183, 28, 28) !important;
+	border-color: rgb(183, 28, 28) !important;
+	cursor: pointer;
+}
+
+.panel-default {
+	border-color: white;
+}
+
+#lastinvites {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	margin: 0px 1em;
+	background-color: white;
+	display: block;
+	height: 150px;
+	overflow-y: scroll;
+}
+
+.invites {
+	display: inline-block;
+	padding: 1em 0px;
+	border-bottom: 1px solid grey;
+}
+
+.invites p{
+	color: black;
+}
+
+
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}
+
+#gender{
+	display: inline-block;
+}
+
+form  { 
+	display: table;     
+}
+
+.table-row { 
+	display: table-row;  
+	margin-top : 1em;
+}
+
+.table-cell { 
+	display: table-cell; 
+}
+
+#map {
+	height: 500px;
+	display: inline-block;
+	float: left;
+}
+
+.large {
+	width: 1020px;
+}
+
+.small {
+	width: 700px;
+}
+
+#map img {
+	width: 100%;
+	height: 100%;
+}
+
+#markPerson {
+	height: 500px;
+	width: 320px;
+	padding:0.5em;
+	overflow: scroll;
+}
+
+.personProfileImg {
+	display: block;
+	margin:auto;
+	width: 200px;
+	margin-bottom: 1em;
+}
+
+.photos {
+	margin-bottom: 1em;
+	display: inline-block;
+}
+
+.personProfile {
+	padding-left: 1em;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+#closeInformation {
+	float: left;
+	position: fixed;
+	top: 2px;
+}
+
+#accountSettingForm {
+	height: 500px;
+	width: 1020px;
+	display: none;
+	float: left;
+}
+
+#accountSettingForm img.personProfileImg,  #accountSettingForm div.personProfile, #accountSettingForm div.photos {
+	display: inline-block;
+	width: 320px;
+	float: left;
+}

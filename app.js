@@ -4,8 +4,40 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var jquery = require('jquery');
-// var bootstrap = require('bootstrap');
+var session = require('express-session');
+
+// Including mongo database ->
+var mongodb = require('mongodb');
+var monk = require('monk');
+var db = monk('mongodb://vmmp:vmmp96@ds041432.mlab.com:41432/vmmp');
+
+// Including Passport ->
+var passport = require('passport');
+var LocalStrategy = require('passport-local');
+// var FacebookStrategy = require('passport-facebook');
+
+var authStrategy = new LocalStrategy(function (username, password, done) {
+  var users = db.get('users');
+  passReqToCallback: true;
+  users.find({ email: username })
+    .then(function (data) {
+      var user = data[0];
+      if (!user) {
+        return done(null, false, { message: "Incorrect username." });
+      }
+      if (user.password !== password) {
+        return done(null, false, { message: "Incorrect password." });
+      } else {
+        return done(null, user);
+      }
+      console.log(data);
+    })
+    .catch(function (error) {
+      return done(error, false);
+    })
+})
+
+passport.use('local', authStrategy);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -24,8 +56,56 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
+
+app.use(session({ secret: 'purple unicorn' }));
+// app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 // app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
+
+
+
+passport.serializeUser(function (user, done) {
+  // What passport will save in the cookie ->
+  if (user) {
+    done(null, user._id);
+  }
+});
+
+passport.deserializeUser(function (userId, done) {
+  var users = db.get("db-users");
+  users.find({ _id: userId })
+    .then(function (data) {
+      var user = data[0];
+      if (user) {
+        done(null, user);
+      } else {
+        done(null, false);
+      }
+    })
+    .catch(function (error) {
+      done(error, false);
+    })
+});
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+// app.use(flash());
+
+// function requireLogin(req, res, next) {
+//   return (req.user);
+// }
+
+// app.use('/login', login);
+app.use('/', index);
+// app.use('/users', users);
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
 
 app.use('/', index);
 app.use('/users', users);

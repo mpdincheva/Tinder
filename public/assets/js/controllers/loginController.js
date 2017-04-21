@@ -1,15 +1,20 @@
 app.controller("loginController", function($scope, $location, $rootScope, $http){
-	$http.get("http://localhost:3000/users")
-	.then(function(response){
-		$rootScope.users = response.data;
 
-		$scope.submit = function(){
-			for (var index = 0; index < $rootScope.users.length; index++) {	
-				if($rootScope.users[index].name == $scope.username && $rootScope.users[index].password == $scope.password) {
-					$rootScope.user_id = $rootScope.users[index]._id;
-					$location.path("/dashboardTinder");
-				}
-			}
-		};
-	});
+	$scope.submit = function () {
+
+        var Indata = { 'username': $scope.username, 'password': $scope.password };
+        $http.post("http://localhost:3000/login", Indata)
+            .then(function (response, status, headers, config) {
+				console.log('Eto me az sum datata');
+                console.log(response.data);
+                if (response.data) {
+					console.log($rootScope);
+					$rootScope.user = response.data;
+                    $location.path('/dashboardTinder');
+                }
+                // console.log(response);
+            }, function (response, status, headers, config) {
+                alert("error");
+            });
+    }
 });

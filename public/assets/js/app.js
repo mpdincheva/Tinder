@@ -8,7 +8,8 @@ app.config(function ($routeProvider) {
 		.when("/dashboardTinder", {
 			resolve: {
 				"check": function ($location, $rootScope) {
-					if (!$rootScope.user_id) {
+					console.log(document.cookie)
+					if (!document.cookie) {
 						$location.path("/");
 					}
 				}

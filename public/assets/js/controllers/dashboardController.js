@@ -23,8 +23,9 @@ app.controller("dashboardController", function ($scope, $location, $rootScope, $
 	console.log($rootScope);
 	$scope.currentUser = $rootScope.user;
 	console.log($scope.currentUser);
-
+	console.log(document.cookie);
 	$scope.logout = function () {
+		document.cookie = userid + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 		$rootScope.user_id = 0;
 		$location.path("/");
 	};

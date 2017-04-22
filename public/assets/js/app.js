@@ -16,9 +16,6 @@ app.config(function ($routeProvider) {
 			},
 			templateUrl: "./assets/views/dashboardTinder.htm"
 		})
-		.when("/registration", {
-			templateUrl: "./assets/views/registration.htm"
-		})
 		.otherwise({
 			redirectTo: './assets/views/login.htm'
 		});

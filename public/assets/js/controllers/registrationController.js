@@ -1,17 +1,28 @@
-app.controller("registrationController", function($scope, $location, $rootScope){
-	$scope.registration = function(){
+app.controller("registrationController", function ($scope, $location, $rootScope, $http) {
+	$scope.submit = function () {
 
-		for (var index = 0; index < $rootScope.users.length; index++) {
-			if($rootScope.users[index].username == $scope.regUsername) {
-				var hasUserName = true;
+		if ($scope.firstName == undefined || $scope.lastName == undefined || $scope.email == undefined || $scope.password == undefined || $scope.repeatedPassword == undefined) {
+			$scope.error = true;
+			$scope.errorMessage = "Моля попълнете всички полета";
+		} else {
+			if ($scope.password !== $scope.repeatedPassword) {
+				$scope.error = true;
+				$scope.errorMessage = "Паролите не съвпадат";
+			} else {
+				var Indata = {
+					'firstName': $scope.firstName,
+					'lastName': $scope.lastName,
+					'email': $scope.email,
+					'password': $scope.password
+				}
+				$http.post("http://localhost:3000/register", Indata)
+					.then(function (response, status, headers, config) {
+						console.log(status);
+						console.log(response);
+						console.log(headers);
+					})
 			}
-		}
 
-		if(!hasUserName) {
-			$rootScope.users.push({username: $scope.regUsername, password: $scope.regPassword })
-			$rootScope.user_id = $rootScope.users.length;
-			$location.path("/dashboardTinder");
-		}
-		
-	};
+		};
+	}
 });

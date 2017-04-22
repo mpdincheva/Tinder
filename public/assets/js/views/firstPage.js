@@ -12,3 +12,4 @@ $('#top-register-button').on('click', function (ev) {
     }, 1000);
 })
 console.log("hi");
+console.log($('#top-login-button'));

@@ -6,7 +6,7 @@
 		</div>
 		<div id="myprofile">
 			<img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-4">
-			<p>{{ currentUser.firstname }} {{ currentUser.lastname}} </p>
+			<p>{{ currentUser.name }}</p>
 			<span id="accountSetting">Редактиране на профила</span>
 			<div>
 				<button class="btn btn-sm" ng-click="logout()">Logout</span>
@@ -26,20 +26,15 @@
 							<div id="custom-search-input">
 								<div class="input-group">
 									<input type="text" class="form-control input-md" ng-model="namePerson" ng-change="searchPeopleByName()" placeholder="Търси хора.." />
-									<span class="input-group-btn">
-										<button class="btn btn-danger btn-md" type="submit">
-											<span class="glyphicon glyphicon-search"></span>
-										</button>
-									</span>
 								</div>
 							</div>
 						</form>
 						<hr/>
-						<form id="peopleForm">
+						<form id="peopleForm" ng-submit="searchPeople()">
 							<div class="table-row">
 								<label class="table-cell">Радиус: </label>
-								<div class="table-cell">
-									<input type="number" min="0">
+								<div class="table-cell" ng-init="radius=0">
+									<input type="number" min="0" ng-model="radius">
 									<!-- <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/> -->
 								</div>
 							</div>
@@ -47,9 +42,11 @@
 								<label class="table-cell">Пол: </label>
 								<div id="gender" class="table-cell">
 									<label>Мъже</label>
-									<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini">
+									<input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="male"
+           ng-true-value="'on'" ng-false-value="'off'">
 									<label>Жени</label>
-									<input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini">
+									<input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="female"
+           ng-true-value="'on'" ng-false-value="'off'">
 								</div>
 							</div>
 							<div class="table-row">
@@ -59,7 +56,7 @@
 								</div>
 							</div>
 							<div class="table-row" x>
-								<button class="btn btn-danger btn-block"> Търси </button>
+								<button class="btn btn-danger btn-block" type="submit"> Търси </button>
 							</div>
 						</form>
 					</div>

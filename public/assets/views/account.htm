@@ -1,0 +1,25 @@
+<div ng-controller="accountController">
+    <form enctype="multipart/form-data">
+        <div>
+            <input type='file' onchange="angular.element(this).scope().uploadFile()"/>
+            <img id="photo" src="{{ img }}" ng-show="imgUploated" />
+            <button>Запази като профилна снимка</button>
+        </div>
+    </form>
+    
+    <form>
+        <div>
+            <label for="">Години: </label>
+            <input type="number" min="0" ng-model="age" required/>
+        </div>
+        <div>
+            <label for="">Интереси: </label>
+            <select ng-model="sport.model">
+                <option ng-repeat="option in sport.options" value="{{option.id}}">{{option.name}}</option>
+            </select>
+            <select ng-model="music.model">
+                <option ng-repeat="option in music.options" value="{{option.id}}">{{option.name}}</option>
+            </select>
+        </div>
+    </form>
+</div>

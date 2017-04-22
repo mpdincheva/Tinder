@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var multer = require("multer");
 
 // Including mongo database ->
 var mongodb = require('mongodb');
@@ -42,6 +43,7 @@ passport.use('local', authStrategy);
 var index = require('./routes/index');
 var users = require('./routes/users');
 var accountSettings = require('./routes/accountSettings');
+var upload = require("./routes/upload"); 
 
 var app = express();
 
@@ -56,11 +58,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(multer({dest:'./uploads/'}).single('singleInputFileName'));
 
 app.use(session({ secret: 'purple unicorn' }));
 // app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist/'));
 // app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 
+app.use(bodyParser({uploadDir:'/path/to/temporary/directory/to/store/uploaded/files'}));
 
 
 passport.serializeUser(function (user, done) {
@@ -107,6 +111,7 @@ app.use(function (req, res, next) {
 });
 
 
+app.use('/upload', upload);
 app.use('/', index);
 app.use('/users', users);
 app.use('/accountSettings', accountSettings);

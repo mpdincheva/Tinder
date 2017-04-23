@@ -1,5 +1,6 @@
-app.controller("dashboardController", function ($scope, $location, $rootScope, $http) {
+app.controller("homeController", function ($scope, $location, $rootScope, $http) {
 	$("aside").css("height", window.innerHeight);
+	console.log("hoem");
 
 	function degreesToRadians(degrees) {
 		return degrees * Math.PI / 180;
@@ -21,26 +22,23 @@ app.controller("dashboardController", function ($scope, $location, $rootScope, $
 
 	$scope.showme = false;
 	$scope.currentUser = $rootScope.user;
+	console.log($scope.currentUser);
 
 	$scope.logout = function () {
-		$rootScope.user_id = 0;
-		$location.path("/");
+		document.cookie = "userid" + '=; Max-Age=0';
+		$scope.$apply(function() {
+			$location.path("/");
+		});
 	};
 
-	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 8,
-		center: { lat: Number($scope.currentUser.coords.lat), lng: Number($scope.currentUser.coords.lng) },
-		// styles: [{"featureType":"administrative","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"hue":"#ff0000"}]},{"featureType":"transit","elementType":"all","stylers":[{"hue":"#ff0000"}]}]
-		styles: [{ "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#b71c1c" }] }, { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] }, { "featureType": "landscape.natural", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": "-23" }, { "lightness": "27" }, { "visibility": "on" }, { "gamma": "1" }, { "hue": "#ff1800" }, { "weight": "0.75" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "visibility": "on" }, { "color": "#e74c3c" }, { "saturation": "-59" }, { "lightness": "30" }] }, { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "on" }, { "hue": "#ff1800" }, { "saturation": "2" }, { "lightness": "2" }, { "weight": "0.75" }] }, { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "on" }, { "saturation": "-51" }, { "color": "#cbcbcb" }] }, { "featureType": "transit.station", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#2c3e50" }, { "visibility": "on" }] }]
-	});
+	// var map = new google.maps.Map(document.getElementById('map'), {
+	// 	zoom: 8,
+	// 	center: { lat: Number($scope.currentUser.coords.lat), lng: Number($scope.currentUser.coords.lng) },
+	// 	// styles: [{"featureType":"administrative","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"hue":"#ff0000"}]},{"featureType":"transit","elementType":"all","stylers":[{"hue":"#ff0000"}]}]
+	// 	styles: [{ "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#b71c1c" }] }, { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] }, { "featureType": "landscape.natural", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": "-23" }, { "lightness": "27" }, { "visibility": "on" }, { "gamma": "1" }, { "hue": "#ff1800" }, { "weight": "0.75" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "visibility": "on" }, { "color": "#e74c3c" }, { "saturation": "-59" }, { "lightness": "30" }] }, { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "on" }, { "hue": "#ff1800" }, { "saturation": "2" }, { "lightness": "2" }, { "weight": "0.75" }] }, { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "on" }, { "saturation": "-51" }, { "color": "#cbcbcb" }] }, { "featureType": "transit.station", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#2c3e50" }, { "visibility": "on" }] }]
+	// });
 
 	$scope.searchPeople = function () {
-		console.log("radius:");
-		console.log($scope.radius);
-		console.log("male:");
-		console.log($scope.male);
-		console.log("female");
-		console.log($scope.female);
 		// $http({
 		// 	url: "http://localhost:3000/users/",
 		// 	method: "POST",

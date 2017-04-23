@@ -8,6 +8,9 @@
     <!-- styles -->
     <link rel='stylesheet' href='./assets/stylesheets/reset.css' />
     <link rel='stylesheet' href='./assets/stylesheets/leftSide.css' />
+    <!--For login page-->
+    <link rel='stylesheet' href='./assets/stylesheets/style.css' />
+    <link rel="stylesheet" href="./assets/stylesheets/reset.css" />
 
     <!-- bootstrap and jquery -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -20,25 +23,28 @@
 
     <!-- google maps api -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtJU-BosH_YHprTUSY0JVZE0BurzQbwSs"></script>
+    
+
 
 </head>
 
 <body ng-app="myapp">
 
     <div ng-view></div>
-
+    
     <!-- modules -->
     <script src="assets/js/app.js"></script>
 
     <!-- services -->
-    <!-- <script src="assets/js/services/.js"></script> -->
+    <!-- <script src="assets/js/services.js"></script> -->
 
     <!-- controllers -->
     <script src="assets/js/controllers/loginController.js"></script>
-    <script src="assets/js/controllers/dashboardController.js"></script>
     <script src="assets/js/controllers/registrationController.js"></script>
+    <script src="assets/js/controllers/homeController.js"></script>
     <script src="assets/js/controllers/accountController.js"></script>
-    
+    <script src="assets/js/controllers/headerController.js"></script>
+
     <!-- directives -->
 
 </body>

@@ -3,9 +3,9 @@ var app = angular.module("myapp", ["ngRoute"]);
 app.config(function ($routeProvider) {
 	$routeProvider
 		.when("/", {
-			templateUrl: "./assets/views/login.htm"
+			templateUrl: "./assets/views/index.htm"
 		})
-		.when("/dashboardTinder", {
+		.when("/home", {
 			resolve: {
 				"check": function ($location, $rootScope) {
 					console.log(document.cookie)
@@ -14,16 +14,13 @@ app.config(function ($routeProvider) {
 					}
 				}
 			},
-			templateUrl: "./assets/views/dashboardTinder.htm"
-		})
-		.when("/registration", {
-			templateUrl: "./assets/views/registration.htm"
+			templateUrl: "./assets/views/home.htm"
 		})
 		.when("/account",{
 			templateUrl: "./assets/views/account.htm"
 		})
 		.otherwise({
-			redirectTo: './assets/views/login.htm'
+			redirectTo: './assets/views/index.htm'
 		});
 });
 

@@ -1,8 +1,8 @@
 <div ng-controller="accountController">
     <form enctype="multipart/form-data">
         <div>
-            <input type='file' onchange="angular.element(this).scope().uploadFile()"/>
-            <img id="photo" src="{{ img }}" ng-show="imgUploated" />
+            <input type='file' ng-model="file" onchange="angular.element(this).scope().uploadFile(this)"/>
+            <img id="photo" src="{{ imageUrl }}" ng-show="imgUploated" />
             <button>Запази като профилна снимка</button>
         </div>
     </form>

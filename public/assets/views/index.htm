@@ -1,0 +1,92 @@
+<header ng-controller="headerController">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Our website</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><button class="btn btn-danger btn-lg" id="top-login-button">Вход</button></li>
+                <li><button class="btn btn-danger btn-lg" id="top-register-button">Регистрация</button></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <img class="mainPictures" src="assets/images/smile.jpg" alt="">
+    <img class="mainPictures" src="assets/images/available.jpg" alt="">
+    <div id="register-form" ng-controller="registrationController">
+        <h3 class="field-title">Регистрация</h3>
+        <div class="row">
+            <div class="col-md-5" id="register-left-side">
+                <h3>Използвайте данните си от: </h3>
+            </div>
+
+            <div class="col-md-7">
+                <h3>Моля попълнете всички полета</h3>
+                <form ng-submit="submit()">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="firstName" type="text" class="form-control" ng-model="firstName" placeholder="Име:">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="secondName" type="text" class="form-control" ng-model="lastName" placeholder="Фамилия:">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="email" type="email" class="form-control" ng-model="email" placeholder="И-мейл:">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="password" type="password" class="form-control" ng-model="password" placeholder="Password">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="repeatedPassword" type="password" class="form-control" ng-model="repeatedPassword" placeholder="Repeat your password">
+                    </div>
+
+                    <button class=" btn btn-primary btn-lg pull-right" type="submit">Регистрация</button>
+                     <p ng-show="error">{{ errorMessage }}</p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="login-form" ng-controller="loginController">
+        <h3 class="field-title">Вход</h3>
+        <div class="row">
+            <div class="col-md-5" id="register-left-side">
+                <h3>Влез с: </h3>
+                <!--<button class="btn btn-primary btn-lg"><a href="/auth/facebook">Facebook</a></button>-->
+                <button class="btn btn-primary btn-lg"><a ng-click="facebook()">Facebook</a></button>
+                <button class="btn btn-danger btn-lg"><a href="/auth/google">Google</a></button>
+            </div>
+            <div class="col-md-7">
+                <h3>Моля попълнете всички полета</h3>
+                <form ng-submit="submit()">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="email" type="email" class="form-control" name="email" placeholder="И-мейл" ng-model="username">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="password" type="password" class="form-control" name="password" placeholder="Парола" ng-model="password">
+                    </div>
+                    <button class=" btn btn-primary btn-lg pull-right">Вход</button>
+                </form>
+                <p ng-show="error">{{ errorMessage }}</p>
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+</main>
+
+<footer>
+    <div class="panel panel-danger">
+        <div class="panel-heading centered-text">
+            <h5>Всички права запазени © 2017</h5>
+        </div>
+    </div>
+</footer>

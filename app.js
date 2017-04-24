@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var multer = require("multer");
 var upload = multer({dest:'./uploads/'}).single('singleInputFileName');
+var passwordHash = require('password-hash');
 
 // Including mongo database if we need it->
 // var mongodb = require('mongodb');

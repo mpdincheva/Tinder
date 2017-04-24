@@ -26,6 +26,12 @@ app.controller("homeController", function ($scope, $location, $rootScope, $http)
 
 	$scope.logout = function () {
 		document.cookie = "userid" + '=; Max-Age=0';
+		// $http({
+		// 		method: 'GET',
+		// 		url: 'http://localhost:3000/logout/'
+		// 	}).then(function (response) {
+		// 		console.log(response);
+		// 	});
 		$scope.$apply(function() {
 			$location.path("/");
 		});

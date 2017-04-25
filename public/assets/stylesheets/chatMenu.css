@@ -1,0 +1,18 @@
+#bottom-chat-menu {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 30%;
+    background-color: pink;
+}
+
+/*Temporary styling*/
+
+#chatPage {
+    position: fixed;
+    top: 0;
+    right:0;
+    width:75%;
+    height:70%;
+    background-color: lightblue;
+}

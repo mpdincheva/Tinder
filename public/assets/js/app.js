@@ -8,7 +8,6 @@ app.config(function ($routeProvider) {
 		.when("/home", {
 			resolve: {
 				"check": function ($location, $rootScope) {
-					console.log(document.cookie)
 					if (!document.cookie) {
 						$location.path("/");
 					}
@@ -20,7 +19,7 @@ app.config(function ($routeProvider) {
 			templateUrl: "./assets/views/account.htm"
 		})
 		.otherwise({
-			redirectTo: './assets/views/index.htm'
+			templateUrl: './assets/views/index.htm'
 		});
 });
 

@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var passwordHash = require('password-hash');
+
 
 // Including mongo database if we need it->
 // var mongodb = require('mongodb');
@@ -36,6 +38,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/routes.js')(app, passport);
+require('./config/socketIO')(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

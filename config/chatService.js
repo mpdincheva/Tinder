@@ -7,6 +7,7 @@ var users = db.get('users');
 
 var ObjectId = require('mongodb').ObjectID;
 
+
 var passwordHash = require('password-hash');
 
 
@@ -67,12 +68,12 @@ module.exports = (function () {
             })
         },
         findUserById: function (profileId, cb) {
-            // console.log("user service found user by id");
+            console.log("user service found user by id");
             // console.log(profileId);
-            // console.log(ObjectId(profileId));
+            console.log(ObjectId(profileId));
             users.find({'_id': profileId})
                 .then(function (data) {
-                    // console.log(data);
+                    console.log(data);
                     if (data.length > 0) {
                         cb(null, data[0]);
                     } else {
@@ -87,7 +88,7 @@ module.exports = (function () {
         checkUserPassword: function (provider, username, password, cb) {
             users.find({provider: provider, 'email': username})
                 .then(function (data) {
-                    // console.log(data);
+                    console.log(data);
                     if (data.length > 0) {
                         if(passwordHash.verify(password, data[0].password)) {
                         cb(null, data[0]);                            
@@ -112,18 +113,14 @@ module.exports = (function () {
         getUsersFriends: function(arrayWithIds, cb) {
             users.find({ _id : { $in : arrayWithIds } })
                 .then(function(data) {
-                    // console.log("Founded users from database are: ")
-                    // console.log(data);
+                    console.log("Founded users from database are: ")
+                    console.log(data);
                     cb(null, data);
                 })
                 .catch(function(err) {
                     cb(err, false);
                 })
-        },
-        
-        // updateSocket: function(userId, socketId, cb) {
-        //     users.findAndModify({},{})
-        // }
+        }
         
     }
 

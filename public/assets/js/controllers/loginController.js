@@ -1,4 +1,4 @@
-app.controller("loginController", function ($scope, $location, $rootScope, $http) {
+app.controller("loginController", function ($scope, $location, $window, $http) {
 
     $scope.submit = function () {
 
@@ -10,7 +10,10 @@ app.controller("loginController", function ($scope, $location, $rootScope, $http
                 .then(function (response, status, headers, config) {
 
                     if (response.data !== "") {
-                        $rootScope.user = response.data;
+                        console.log(response.data);                 
+                        $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
+                        // $rootScope.user = response.data;
+                        console.log($window.localStorage.getItem("currentUser"));
                         $location.path('/home');
                     }
 

@@ -1,0 +1,19 @@
+<div ng-controller="chatController">
+	<div id="bottom-chat-menu" class="col-sm-9" >
+		<div class="row">
+			<div class="col-sm-3" ng-repeat="friend in friends">
+				<img src="{{ friend.profilePic }}" />
+				<h2>{{friend.firstname}} {{friend.lastname}}</h2>
+				<button ng-click="startChat($index)">Напиши съобщение</button>
+				<button>Разгледай профила</button>
+			</div>
+			<div ng-show="nofriends">
+				<h1>Все още нямате приятели, с които да си пишете</h1>
+			</div>
+		</div>
+		<div ng-show="chatWith" id="chatPage">
+			<h1>You are chatting with: {{friendId}}</h1>
+			<h1>{{ name }}</h1>
+		</div>
+	</div>
+</div>

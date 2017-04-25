@@ -8,11 +8,18 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     $scope.showme = false;
 
     $scope.logout = function () {
-        document.cookie = "userid" + '=; Max-Age=0';
-        $scope.$apply(function () {
-            $location.path("/");
-        });
-    };
+		document.cookie = "userid" + '=; Max-Age=0';
+		$window.localStorage.removeItem('currentUser');
+		// $http({
+		// 		method: 'GET',
+		// 		url: 'http://localhost:3000/logout/'
+		// 	}).then(function (response) {
+		// 		console.log(response);
+		// 	});
+		$scope.$apply(function() {
+			$location.path("/");
+		});
+	};
 
     $scope.searchPeopleByName = function () {
         var name = $scope.namePerson;

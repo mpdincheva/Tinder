@@ -14,7 +14,7 @@
 var multer = require("multer");
 var upload = multer({dest: './uploads/'});
 
-var user = require("../config/userService");
+var userService = require("../config/userService");
 
 // var passwordHash = require('password-hash');
  
@@ -22,9 +22,9 @@ var user = require("../config/userService");
 module.exports = function (app, passport) {
   
   app.post('/register', function (req, res, next) {
-    user.checkIfUsernameExist('local', req.body.email, function(isAvalilableUsername) {
+    userService.checkIfUsernameExist('local', req.body.email, function(isAvalilableUsername) {
       if(isAvalilableUsername) {
-        user.createUser('local', req.body.email, req.body.password, req.body.firstName, req.body.lastName);
+        userService.createUser('local', req.body.email, req.body.password, req.body.firstName, req.body.lastName);
         res.status(200).send();
       }
       else {
@@ -67,14 +67,15 @@ module.exports = function (app, passport) {
   app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/index.html#/' }),
     function (req, res) {
-
+      
       res.cookie('userid', req.user._id);
       res.redirect('/index.html#/home');
     });
 
 
   app.get('/logout', function (req, res) {
-    req.logout();
+    req.session.destroy();
+    // req.logout();
     res.status(200).send();
     // res.redirect('/');
   });
@@ -85,5 +86,73 @@ module.exports = function (app, passport) {
     console.log(req.files, 'files');
     res.end();
   });
+
+  // app.get('/myUser:userId', function(req, res) {
+  //   console.log('In my User get request');
+  //   console.log(req.params);
+  //   console.log(req.params.userId);
+  //   var userid = req.params.userId.substring(10, req.params.userId.length - 1);
+  //   console.log(userid);
+  //   user.findUserById(userid, function(err, user) {
+  //     console.log(err);
+  //     console.log(user);
+  //     if(user) {
+  //       res.json(user);
+  //     }
+  //   })
+  // })
+
+  app.get('/getFriends:userId', function(req, res) {
+    // console.log("In the server...");
+    // console.log(req.params.userId);
+    userService.findUserById(req.params.userId, function(err, user) {
+      if(user) {
+        // console.log(user);
+        userService.getUsersFriends(user.friends, function(err, friends) {
+          // console.log("Get all friends in one array: ");
+          // console.log(friends);
+          res.json(friends);
+        })
+      }
+    })
+  })
+
+  app.get('/updateSocket', function(req, res) {
+    console.log(req.cookies.userid);
+    res.json('');
+  })
+
+
+
+//   router.post('/', function (req, res, next) {
+//     var userid = req.session.userId;
+//     console.log(req.session.userId);
+//     var db = req.db;
+//     var users = db.get('users');
+//     users.find({_id: userid})
+//         .then(function (data) {
+//             if (data.length > 0) {
+//                 var user = data[0];
+//                 console.log(user);
+//                 res.json(user);
+//             } else {
+//                 res.json('');
+//             }
+//         }).catch(function (err) {
+//         res.json(500, err);
+//     });
+// });
 }
 // module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
-app.controller("homeController", function ($scope, $location, $rootScope, $http) {
+app.controller("homeController", function ($scope, $location, $window, $http) {
 	$("aside").css("height", window.innerHeight);
-	console.log("hoem");
+	console.log("home");
 
 	function degreesToRadians(degrees) {
 		return degrees * Math.PI / 180;
@@ -21,11 +21,12 @@ app.controller("homeController", function ($scope, $location, $rootScope, $http)
 	}
 
 	$scope.showme = false;
-	$scope.currentUser = $rootScope.user;
-	console.log($scope.currentUser);
+	var currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
+	$scope.currentUser = currentUser;
 
 	$scope.logout = function () {
 		document.cookie = "userid" + '=; Max-Age=0';
+		$window.localStorage.removeItem('currentUser');
 		// $http({
 		// 		method: 'GET',
 		// 		url: 'http://localhost:3000/logout/'

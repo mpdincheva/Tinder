@@ -9,6 +9,8 @@ var multer = require("multer");
 var upload = multer({dest:'./uploads/'}).single('singleInputFileName');
 var passwordHash = require('password-hash');
 
+
+
 // Including mongo database if we need it->
 // var mongodb = require('mongodb');
 // var monk = require('monk');
@@ -41,6 +43,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/routes.js')(app, passport);
+require('./config/socketIO')(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

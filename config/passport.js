@@ -54,12 +54,9 @@ module.exports = function (passport) {
     console.log("In local strategy");
 
     // Check username and password in userService
-    userService.checkUserPassword(username, password, handleUser);
+    userService.checkUserPassword('local', username, password, handleUser);
 
     function handleUser(error, user) {
-      console.log("Az sum ot pasporta.. potrebitelq koito stiga do men e:");
-      console.log(user);
-      console.log(error)
       if (user) {
         return done(null, user);
       } else {
@@ -67,6 +64,7 @@ module.exports = function (passport) {
       }
     }
   }))
+
 
   
   // FACEBOOK STRATEGY ------------------------->

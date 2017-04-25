@@ -21,7 +21,8 @@
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "password-hash": "^1.2.2",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "socket.io": "^1.7.3"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

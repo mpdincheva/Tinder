@@ -24,6 +24,9 @@
 
     <!-- google maps api -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtJU-BosH_YHprTUSY0JVZE0BurzQbwSs"></script>
+
+    <!--Socket IO - Client -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
     
 
 
@@ -31,8 +34,8 @@
 
 <body ng-app="myapp">
 
-    <div ng-view></div>
-    
+    <div ng-view data-ng-controller="sessionController" data-ng-init="currentSession()"> </div>
+     
     <!-- modules -->
     <script src="assets/js/app.js"></script>
 
@@ -40,12 +43,13 @@
     <!-- <script src="assets/js/services.js"></script> -->
 
     <!-- controllers -->
+
+    <script src="assets/js/controllers/sessionController.js"></script>
     <script src="assets/js/controllers/loginController.js"></script>
     <script src="assets/js/controllers/registrationController.js"></script>
     <script src="assets/js/controllers/homeController.js"></script>
     <script src="assets/js/controllers/accountController.js"></script>
     <script src="assets/js/controllers/headerController.js"></script>
-    
     <script src="assets/js/controllers/chatController.js"></script>
 
     <!-- directives -->
@@ -53,3 +57,55 @@
 </body>
 
 </html>
+
+
+
+
+<!--<div ng-view data-ng-controller="sessionController" data-ng-init="currentSession()"> </div>-->
+
+
+<!--app.controller('sessionController', function ($scope, $http, $rootScope, $location) {
+    $scope.currentSession = function () {
+
+        $http.post('/session')
+            .then(function (response, status, headers, config) {
+                console.log("Poluchix suobshtenieto");
+                console.log("Nodemon raboti");
+
+                console.log(response.data);
+
+                // if(typeof(response.data) != 'string' ) {
+                if (response.data != '') {
+                    menuToLoggedIn();
+                    // Globalna promenliva za da mojete da q vijdate ot vsqkude v angular trqbva da q includnete i gore $rootScope
+                    $rootScope.user = response.data;
+                    console.log($rootScope.user);
+                } else {
+                    menuToLoggedout();
+                }
+            }, function (response, status, headers, config) {
+                alert('Server Error');
+            });
+    };
+});-->
+
+
+
+<!--router.post('/', function (req, res, next) {
+    var userid = req.session.userId;
+    console.log(req.session.userId);
+    var db = req.db;
+    var users = db.get('users');
+    users.find({_id: userid})
+        .then(function (data) {
+            if (data.length > 0) {
+                var user = data[0];
+                console.log(user);
+                res.json(user);
+            } else {
+                res.json('');
+            }
+        }).catch(function (err) {
+        res.json(500, err);
+    });
+});-->

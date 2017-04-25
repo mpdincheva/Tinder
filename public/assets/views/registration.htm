@@ -1,0 +1,39 @@
+<div ng-controller="registrationController">
+    <div id="register-form">
+        <h3 class="field-title">Регистрация</h3>
+        <div class="row">
+            <div class="col-md-5" id="register-left-side">
+                <h3>Използвайте данните си от: </h3>
+            </div>
+
+            <div class="col-md-7">
+                <h3>Моля попълнете всички полета</h3>
+                <form ng-submit="submit()">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="firstName" type="text" class="form-control" ng-model="firstName" placeholder="Име:">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="secondName" type="text" class="form-control" ng-model="lastName" placeholder="Фамилия:">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="email" type="email" class="form-control" ng-model="email" placeholder="И-мейл:">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="password" type="password" class="form-control" ng-model="password" placeholder="Password">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="repeatedPassword" type="password" class="form-control" ng-model="repeatedPassword" placeholder="Repeat your password">
+                    </div>
+
+                    <button class=" btn btn-primary btn-lg pull-right" type="submit">Регистрация</button>
+                    <p ng-show="error">{{ errorMessage }}</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

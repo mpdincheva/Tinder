@@ -1,35 +1,35 @@
-app.controller("accountController", function ($scope, $http) {
-    $scope.uploadFile = function (elem) {
-        var file = elem.files[0];
+app.controller("accountController", function ($scope, $http, $location) {
+    $scope.uploadFile = function (event) {
+        var file = document.getElementById("file").files[0];
+
         var reader = new FileReader();
 
         reader.addEventListener("load", function (event) {
             $scope.$apply(function () {
                 $scope.file = file;
-                $scope.imageUrl = reader.result;
-                $scope.imgUploated = true;
+                $scope.image.filename = reader.result;
             });
         });
         reader.readAsDataURL(file);
-    }
+    };
 
-    // $http.post("http://localhost:3000/upload", fd, {
-    //     transformRequest: angular.identity,
-    //     headers: {
-    //         'Content-Type': undefined
-    //     },
-    //     enctype: 'multipart/form-data'
-    // })
-    //     .success(function () {
-    //         console.log("success");
-    //     })
-    //     .error(function () {
-    //         console.log("fail");
-    //     });
-    //     $scope.$apply(function () {
-    //         $scope.imgUploated = true;
-    //         console.log($scope.file);
-    //         // $scope.img = $scope.file;
-    //         // console.log($scope.img);
-    //     })
+    $scope.saveAccountSettings = function () {
+        var formData = new FormData();
+        var file = document.getElementById("file").files[0];
+
+        for (prop in $scope.user) {
+            formData.append(prop, $scope.user[prop]);
+        }
+
+        formData.append("image", file);
+
+        $http.post("http://localhost:3000/save", formData, {
+            transformRequest: angular.identify,
+            headers: {
+                'Content-Type': undefined
+            }
+        }).then(function (response) {
+            $location.path("/home");
+        });
+    };
 });

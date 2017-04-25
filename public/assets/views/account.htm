@@ -1,25 +1,64 @@
-<div ng-controller="accountController">
-    <form enctype="multipart/form-data">
-        <div>
-            <input type='file' ng-model="file" onchange="angular.element(this).scope().uploadFile(this)"/>
-            <img id="photo" src="{{ imageUrl }}" ng-show="imgUploated" />
-            <button>Запази като профилна снимка</button>
+<div ng-controller="accountController" class="modal show" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: lightgrey">
+                <h4 class="modal-title">Моля попълнете</h4>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="saveAccountSettings()">
+                    <div class="row">
+
+                        <div ng-init="image.filename='assets/images/profilePhotos/default.svg'" class="col-sm-6">
+                            <input type='file' id="file" custom-on-change="uploadFile">
+                            <div style="width:300px; height: 400px" >
+                                <img id="photo" ng-src="{{ image.filename }}" class="col-sm-12" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div>
+                                <label for="firstname">Име: </label>
+                                <input id="firstname" type="text" ng-model="user.firstname" required/>
+                            </div>
+
+                            <div>
+                                <label for="lastname">Фамилия: </label>
+                                <input id="lastname" type="text" ng-model="user.lastname" required/>
+                            </div>
+
+                            <div>
+                                <label for="age">Години: </label>
+                                <input id="age" type="number" min="0" ng-model="user.age" required/>
+                            </div>
+
+                            <div>
+                                <label for="gender"> Пол: </label>
+                                <input type="radio" ng-model="user.gender" value="male"> Male
+                                <input type="radio" ng-model="user.gender" value="female"> Female
+                            </div>
+
+                            <div>  
+                                <label for="">Описание:</label>
+                                <textarea></textarea>
+                            </div>
+
+                            <div>
+                                <label for="">Интереси: </label>
+                                <select ng-model="sport.model">
+                    <option ng-repeat="option in sport.options" value="{{option.id}}">{{option.name}}</option>
+                </select>
+                                <select ng-model="music.model">
+                    <option ng-repeat="option in music.options" value="{{option.id}}">{{option.name}}</option>
+                </select>
+                            </div>
+
+                            <div>
+                                <button type="submit">Запази</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
-    
-    <form>
-        <div>
-            <label for="">Години: </label>
-            <input type="number" min="0" ng-model="age" required/>
-        </div>
-        <div>
-            <label for="">Интереси: </label>
-            <select ng-model="sport.model">
-                <option ng-repeat="option in sport.options" value="{{option.id}}">{{option.name}}</option>
-            </select>
-            <select ng-model="music.model">
-                <option ng-repeat="option in music.options" value="{{option.id}}">{{option.name}}</option>
-            </select>
-        </div>
-    </form>
+    </div>
 </div>

@@ -15,11 +15,11 @@ app.controller("registrationController", function ($scope, $location, $rootScope
 					'email': $scope.email,
 					'password': $scope.password
 				}
+				console.log(Indata);
 				$http.post("http://localhost:3000/register", Indata)
 					.then(function (response, status, headers, config) {
-						console.log(status);
 						console.log(response);
-						console.log(headers);
+						// $location.path("/account");
 					})
 			}
 

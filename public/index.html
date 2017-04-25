@@ -8,6 +8,7 @@
     <!-- styles -->
     <link rel='stylesheet' href='./assets/stylesheets/reset.css' />
     <link rel='stylesheet' href='./assets/stylesheets/leftSide.css' />
+    
     <!--For login page-->
     <link rel='stylesheet' href='./assets/stylesheets/style.css' />
     <link rel="stylesheet" href="./assets/stylesheets/reset.css" />
@@ -24,8 +25,6 @@
     <!-- google maps api -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtJU-BosH_YHprTUSY0JVZE0BurzQbwSs"></script>
     
-
-
 </head>
 
 <body ng-app="myapp">
@@ -39,14 +38,19 @@
     <!-- <script src="assets/js/services.js"></script> -->
 
     <!-- controllers -->
+    <!--for index page-->
     <script src="assets/js/controllers/loginController.js"></script>
     <script src="assets/js/controllers/registrationController.js"></script>
-    <script src="assets/js/controllers/homeController.js"></script>
-    <script src="assets/js/controllers/accountController.js"></script>
     <script src="assets/js/controllers/headerController.js"></script>
+    <!--for home page-->
+    <script src="assets/js/controllers/homeController.js"></script>
+    <script src="assets/js/controllers/leftSideController.js"></script>
+    <script src="assets/js/controllers/mapController.js"></script>
+    <!--for account settings page-->
+    <script src="assets/js/controllers/accountController.js"></script>
 
     <!-- directives -->
-
+    <script src="assets/js/directives/customOnChange.js"></script>
 </body>
 
 </html>

@@ -18,6 +18,14 @@ module.exports = (function () {
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
+
+        this.lat = "";
+        this.lng = "";
+        this.age;
+        this.gender;
+        this.description;
+        this.profilePicture;
+        this.friends = [];
     }
 
     // function LocalUser(email, password, firstname, lastname) {
@@ -39,7 +47,7 @@ module.exports = (function () {
             var hashedPassword = passwordHash.generate(password);
             var createdUser = new User(provider, email, hashedPassword, firstname, lastname)
             users.insert(createdUser);
-            // return createdUser;
+            return createdUser;
         },
         // createLocalUser : function(email, password, firstname, lastname){
         //     users.insert(new LocalUser(email, password, firstname, lastname));
@@ -123,15 +131,49 @@ module.exports = (function () {
                 })
         },
 
-
         // Must use findOneAndUpdate---->
         updateSocket: function (userId, socketId, cb) {
             users.findOneAndUpdate(
                 { _id: userId },
-                { $set: { socketId: socketId }})
+                { $set: { socketId: socketId } })
+        },
+
+        updatePosition: function (userId, lat, lng, cb) {
+            users.findOneAndUpdate(
+                { _id: userId },
+                {
+                    $set: {
+                        lat: lat,
+                        lng: lng
+                    }
+                })
+        },
+
+        updateUserAccount: function (userId, accountSettings) {
+            console.log(accountSettings);
+            users.findOneAndUpdate(
+                { _id: userId },
+                {
+                    $set: accountSettings
+                })
+        },
+
+        findUsersByFullName: function (firstname, lastname, cb) {
+            var lastName = new RegExp("^" + lastname);
+            users.find({ firstname: firstname, lastname: lastName})
+                .then(function (data) {
+                    console.log(data);
+                    cb(null, data);
+                });
+        },
+
+        findUsersByFirstName: function (first, cb){
+            var firstName = new RegExp("^" + first);
+            users.find({ firstname: firstName})
+                .then(function (data) {
+                    cb(null, data);
+                });
         }
     }
 
-
 })();
-

@@ -10,30 +10,65 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     console.log("From left side controller");
     console.log($rootScope.currentUser);
 
+    $scope.showMapHideChat = function () {
+        $rootScope.showMap = true;
+        $rootScope.showChatRoom = false;
+
+        $rootScope.$broadcast('showUpdated');
+    };
 
     $scope.logout = function () {
-		document.cookie = "userid" + '=; Max-Age=0';
-		$window.localStorage.removeItem('currentUser');
-		// $http({
-		// 		method: 'GET',
-		// 		url: 'http://localhost:3000/logout/'
-		// 	}).then(function (response) {
-		// 		console.log(response);
-		// 	});
-		$scope.$apply(function() {
+        $http({
+            method: "POST",
+            url: "/updatePosition",
+            data: {
+                id: JSON.parse($window.localStorage.getItem("currentUser"))._id,
+                lat: "",
+                lng: ""
+            }
+        });
+
+        document.cookie = "userid" + '=; Max-Age=0';
+        $window.localStorage.removeItem('currentUser');
+
+        $scope.$apply(function () {
             console.log("Changing path!");
-			$location.path("/");
-		});
-	};
+            $location.path("/");
+        });
+        // $http({
+        // 		method: 'GET',
+        // 		url: 'http://localhost:3000/logout/'
+        // 	}).then(function (response) {
+        // 		console.log(response);
+        // 	});
+
+    };
 
     $scope.searchPeopleByName = function () {
         var name = $scope.namePerson;
+        console.log(name);
         if (name != "") {
+            var encodedName = encodeURIComponent(name);
             $http({
                 method: 'GET',
-                url: 'http://localhost:3000/users/' + name
+                url: '/users' + encodedName
             }).then(function (response) {
-                console.log(response.data);
+                if (response.data.length > 0) {
+                    $("ul.dropdown-menu").html("");
+                    $("ul.dropdown-menu").show();
+                    
+                    Array.prototype.forEach.call(response.data, function(element){
+                        var pic = $("<img>");
+                        pic.src = element.profilePicture;
+                        var item = $("<li class='row'></li>");
+                        item.append(pic);
+                        var name = $("<div></div>").append($("<p></p>").text(element.firstname + " " + element.lastname))     ;
+                        item.append(name);
+                        item.append("<hr/>");
+                        $("ul.dropdown-menu").append(name);
+                    });
+                    console.log(response.data);
+                }
             });
         }
     };

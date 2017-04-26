@@ -1,6 +1,4 @@
-app.controller("chatListController", function ($scope, $http, $window) {
-
-
+app.controller("chatListController", function ($scope, $timeout, $http, $window, $rootScope) {
 
     if ($scope.currentUser.friends == 0) {
         $scope.nofriends = true;
@@ -19,11 +17,13 @@ app.controller("chatListController", function ($scope, $http, $window) {
         var friend_id = $scope.currentUser.friends[index];
 
         // $scope.chatWith = !$scope.chatWith;
-        // $scope.friendId = friend_id;
-
-        $scope.showMap = false;
-        $scope.showChatRoom = true;
-
+        $rootScope.showMap = false;
+        $rootScope.showChatRoom = true;
+        $rootScope.friendId = friend_id;
+        
+        $rootScope.$broadcast("friendUpdated");
+        $rootScope.$broadcast('showUpdated');
+        
         // http.
         // var friend = data;
         // $scope.name = friend.name;

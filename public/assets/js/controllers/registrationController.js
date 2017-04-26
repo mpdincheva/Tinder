@@ -1,4 +1,4 @@
-app.controller("registrationController", function ($scope, $location, $rootScope, $http) {
+app.controller("registrationController", function ($scope, $window, $location, $rootScope, $http) {
 	$scope.submit = function () {
 
 		if ($scope.firstName == undefined || $scope.lastName == undefined || $scope.email == undefined || $scope.password == undefined || $scope.repeatedPassword == undefined) {
@@ -18,8 +18,9 @@ app.controller("registrationController", function ($scope, $location, $rootScope
 				console.log(Indata);
 				$http.post("http://localhost:3000/register", Indata)
 					.then(function (response, status, headers, config) {
-						console.log(response);
-						// $location.path("/account");
+						console.log(response.data);
+						$window.localStorage.setItem("currentUser", JSON.stringify(response.data));
+						$location.path("/account");
 					})
 			}
 

@@ -9,9 +9,13 @@ app.controller("homeController", function ($scope, $location, $window, $http, $r
 		$scope.currentUser = currentUser;
 	}
 
-
 	$scope.showMap = true;
 	$scope.showChatRoom = false;
+
+	$rootScope.$on('showUpdated', function () {
+		$scope.showMap = $rootScope.showMap;
+		$scope.showChatRoom = $rootScope.showChatRoom;
+	});
 });
 
 

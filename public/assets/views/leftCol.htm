@@ -6,7 +6,7 @@
         </div>
 
         <div id="myprofile">
-            <img src="{{ currentUser.profilePic }}" class="col-sm-4" />
+            <img src="{{ currentUser.profilePicture }}" class="col-sm-4" />
             <p>{{ currentUser.firstname }} {{ currentUser.lastname }}</p>
             <span id="accountSetting">Редактиране на профила</span>
             <div>
@@ -16,7 +16,7 @@
 
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
-                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse1" ng-click="showMapHideChat()">
                     <h4 class="panel-title">
                         Хора
                     </h4>
@@ -24,10 +24,15 @@
                 <div id="collapse1" class="panel-collapse collapse">
                     <div class="panel-body">
                         <form method="POST">
-                            <div id="custom-search-input">
-                                <div class="input-group">
-                                    <input type="text" class="form-control input-md" ng-model="namePerson" ng-change="searchPeopleByName()" placeholder="Търси хора.."
-                                    />
+                            <div class="col-sm-12">
+                                <div class="top dropdown" id="search-bar">
+
+                                    <input type="text" id="search" class="form-control" autocomplete="off" ng-model="namePerson" ng-change="searchPeopleByName()"
+                                        placeholder="Търси хора.." />
+
+                                    <ul class="dropdown-menu col-sm-12">
+                                        <li> Something </li>
+                                    </ul>
                                 </div>
                             </div>
                         </form>
@@ -64,7 +69,7 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2" ng-click="showMapHideChat()">
                     <h4 class="panel-title">
                         Събития
                     </h4>

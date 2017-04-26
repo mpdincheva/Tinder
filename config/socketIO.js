@@ -7,8 +7,17 @@ module.exports = function (app, passport) {
 
 
     app.io.on('connection', function (socket) {
+
+        socket.on('updateSocket', function (data) {
         console.log("Made new socket id");
-        console.log(socket.id);
+
+            console.log(data);
+            userService.updateSocket(data.userId, socket.id);
+            console.log(socket.id); 
+        })
+
+        // console.log(socket.id);
+        // userService.updateSocket()
 
         // var dbUsers = db.get("users");
         // Here socket provide uniqe socket id

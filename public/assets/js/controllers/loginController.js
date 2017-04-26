@@ -10,10 +10,11 @@ app.controller("loginController", function ($scope, $location, $window, $http) {
                 .then(function (response, status, headers, config) {
 
                     if (response.data !== "") {
-                        console.log(response.data);                 
-                        $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
+                        // console.log(response.data);                 
+                        // $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
                         // $rootScope.user = response.data;
-                        console.log($window.localStorage.getItem("currentUser"));
+                        // console.log($window.localStorage.getItem("currentUser"));
+                        $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
                         $location.path('/home');
                     }
 
@@ -26,12 +27,4 @@ app.controller("loginController", function ($scope, $location, $window, $http) {
         }
     }
 
-    // $scope.facebook = function () {
-    //     console.log("KLikna mee");
-    //     $http.get('/auth/facebook')
-    //         .then(function (response, status, headers, config) {
-    //             console.log("Come back with the response");
-    //             console.log(response.data);
-    //         })
-    // }
 });

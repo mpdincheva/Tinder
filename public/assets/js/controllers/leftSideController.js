@@ -1,4 +1,4 @@
-app.controller("leftSideController", function ($scope, $location, $rootScope, $http) {
+app.controller("leftSideController", function ($scope, $location, $rootScope, $http, $window) {
     $("#leftSide").css("height", window.innerHeight);
 
     window.onresize = function (event) {
@@ -6,6 +6,10 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     }
 
     $scope.showme = false;
+
+    console.log("From left side controller");
+    console.log($rootScope.currentUser);
+
 
     $scope.logout = function () {
 		document.cookie = "userid" + '=; Max-Age=0';
@@ -17,6 +21,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
 		// 		console.log(response);
 		// 	});
 		$scope.$apply(function() {
+            console.log("Changing path!");
 			$location.path("/");
 		});
 	};

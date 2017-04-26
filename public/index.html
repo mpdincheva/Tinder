@@ -32,9 +32,8 @@
 </head>
 
 <body ng-app="myapp">
-
-    <div ng-view data-ng-controller="sessionController" data-ng-init="currentSession()"> </div>
-
+    <div data-ng-controller="sessionController" data-ng-init="currentSession()" ng-view> </div>
+    
     <!-- modules -->
     <script src="assets/js/app.js"></script>
 
@@ -51,7 +50,8 @@
     <script src="assets/js/controllers/homeController.js"></script>
     <script src="assets/js/controllers/leftSideController.js"></script>
     <script src="assets/js/controllers/mapController.js"></script>
-    <script src="assets/js/controllers/chatController.js"></script>
+    <script src="assets/js/controllers/chatRoomController.js"></script>
+    <script src="assets/js/controllers/chatListController.js"></script>
     <!--for account settings and events page-->
     <script src="assets/js/controllers/accountController.js"></script>
     <script src="assets/js/controllers/eventsController.js"></script>

@@ -15,6 +15,7 @@ var multer = require("multer");
 
 var userService = require("../config/userService");
 
+
 // var passwordHash = require('password-hash');
  
 module.exports = function (app, passport) {
@@ -41,7 +42,7 @@ module.exports = function (app, passport) {
       res.json(req.user);
     }
   );
-
+  
   // We send the client on facebook to authenticate ->
   app.get('/auth/facebook',
   passport.authenticate('facebook', { scope: 'email' }),
@@ -65,7 +66,7 @@ module.exports = function (app, passport) {
   app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/index.html#/' }),
     function (req, res) {
-      
+      console.log("Google passport");
       res.cookie('userid', req.user._id);
       res.redirect('/index.html#/home');
     });
@@ -96,30 +97,10 @@ module.exports = function (app, passport) {
 		res.json({ "success": "Uploaded.", "status": 200 });
 	});
 
-  // app.get('/myUser:userId', function(req, res) {
-  //   console.log('In my User get request');
-  //   console.log(req.params);
-  //   console.log(req.params.userId);
-  //   var userid = req.params.userId.substring(10, req.params.userId.length - 1);
-  //   console.log(userid);
-  //   user.findUserById(userid, function(err, user) {
-  //     console.log(err);
-  //     console.log(user);
-  //     if(user) {
-  //       res.json(user);
-  //     }
-  //   })
-  // })
-
-  app.get('/getFriends:userId', function(req, res) {
-    // console.log("In the server...");
-    // console.log(req.params.userId);
-    userService.findUserById(req.params.userId, function(err, user) {
+  app.get('/getFriends', function(req, res) {
+    userService.findUserById(req.cookies.userid, function(err, user) {
       if(user) {
-        // console.log(user);
         userService.getUsersFriends(user.friends, function(err, friends) {
-          // console.log("Get all friends in one array: ");
-          // console.log(friends);
           res.json(friends);
         })
       }
@@ -131,6 +112,16 @@ module.exports = function (app, passport) {
     res.json('');
   })
 
+app.get('/getAllInfoForMe', function(req, res) {
+  console.log(req.cookies.userid);
+  userService.findUserById(req.cookies.userid, function(err, user) {
+    if(user) {
+      res.json(user);
+    } else {
+      res.status(404).send();
+    }
+  })
+})
 
 
 //   router.post('/', function (req, res, next) {
@@ -152,7 +143,6 @@ module.exports = function (app, passport) {
 //     });
 // });
 }
-// module.exports = router;
 
 
 

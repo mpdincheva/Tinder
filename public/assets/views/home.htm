@@ -1,5 +1,6 @@
 <div ng-controller="homeController">
 	<div ng-include="'/assets/views/leftCol.htm'"></div>
-	<div ng-include="'/assets/views/map.htm'"></div>
-	<div ng-include="'/assets/views/chatList.htm'"></div>
+	<div ng-include="'/assets/views/map.htm'" ng-show="showMap"></div>
+	<div ng-include="'/assets/views/chatList.htm'"></div>	
+	<div ng-include="'/assets/views/chatRoom.htm'" ng-show="showChatRoom"></div>
 </div>

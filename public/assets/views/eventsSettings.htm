@@ -1,0 +1,43 @@
+<div ng-controller="eventsController" class="modal show" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: lightgrey">
+                <h4 class="modal-title">Моля попълнете</h4>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="saveAccountSettings()">
+                    <div class="row">
+
+                        <div id="mapEvents" style="width:400px;height:400px; cursor:pointer"></div>
+
+                        <div class="col-sm-6">
+                            <div>
+                                <label for="firstname">Име на събитие: </label>
+                                <input id="firstname" type="text" ng-model="user.firstname" required/>
+                            </div>
+
+                            <div>  
+                                <label for="">Описание:</label>
+                                <textarea></textarea>
+                            </div>
+
+                            <div>
+                                <label for="">Свързано с: </label>
+                                <select ng-model="sport.model">
+                    <option ng-repeat="option in sport.options" value="{{option.id}}">{{option.name}}</option>
+                </select>
+                                <select ng-model="music.model">
+                    <option ng-repeat="option in music.options" value="{{option.id}}">{{option.name}}</option>
+                </select>
+                            </div>
+
+                            <div>
+                                <button type="submit">Запази</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

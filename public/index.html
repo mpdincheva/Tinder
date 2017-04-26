@@ -9,7 +9,7 @@
     <link rel='stylesheet' href='./assets/stylesheets/reset.css' />
     <link rel='stylesheet' href='./assets/stylesheets/leftSide.css' />
     <link rel='stylesheet' href='./assets/stylesheets/chatMenu.css' />
-    
+
     <!--For login page-->
     <link rel='stylesheet' href='./assets/stylesheets/style.css' />
     <link rel="stylesheet" href="./assets/stylesheets/reset.css" />
@@ -28,13 +28,13 @@
 
     <!--Socket IO - Client -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
-    
+
 </head>
 
 <body ng-app="myapp">
 
     <div ng-view data-ng-controller="sessionController" data-ng-init="currentSession()"> </div>
-     
+
     <!-- modules -->
     <script src="assets/js/app.js"></script>
 
@@ -52,9 +52,10 @@
     <script src="assets/js/controllers/leftSideController.js"></script>
     <script src="assets/js/controllers/mapController.js"></script>
     <script src="assets/js/controllers/chatController.js"></script>
-    <!--for account settings page-->
+    <!--for account settings and events page-->
     <script src="assets/js/controllers/accountController.js"></script>
-
+    <script src="assets/js/controllers/eventsController.js"></script>
+   
     <!-- directives -->
     <script src="assets/js/directives/customOnChange.js"></script>
 </body>

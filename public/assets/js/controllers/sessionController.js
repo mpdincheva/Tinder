@@ -14,7 +14,7 @@ app.controller('sessionController', function ($scope, $http, $window, $location)
             })
             $location.path('/home');
         } else {
-            $location.path('/');
+            // $location.path('/');
         }
         
         console.log($window.localStorage.getItem('currentUser'));

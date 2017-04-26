@@ -18,6 +18,9 @@ app.config(function ($routeProvider) {
 		.when("/account",{
 			templateUrl: "./assets/views/account.htm"
 		})
+		.when("/events",{
+			templateUrl: "./assets/views/eventsSettings.htm"
+		})
 		.otherwise({
 			templateUrl: './assets/views/index.htm'
 		});

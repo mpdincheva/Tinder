@@ -3,18 +3,48 @@ var chatService = require('./chatService');
 var userService = require('./userService');
 module.exports = function (app, passport) {
 
+    var friends;
+    
     app.io = require('socket.io')();
 
 
     app.io.on('connection', function (socket) {
 
         socket.on('updateSocket', function (data) {
-        console.log("Made new socket id");
+            // data is the full current person object
+
+            console.log("Made new socket id");
 
             console.log(data);
             userService.updateSocket(data.userId, socket.id);
-            console.log(socket.id); 
+            console.log("Sockets for current user: ");
+            console.log(socket.id);
+            console.log("Updated user id is: ");
+            // console.log(data.user.socketId);
+
+            // userService.getUsersFriends(data.user.friends, function(err, data) {
+            //     if(data) {
+            //         friends = data;
+            //         console.log("Function for getting all friends result is: ");
+            //         console.log(data);
+            //     }
+            // });
         })
+
+        socket.on('new-msg', function (data) {
+            console.log("Az sum survura i poluchavam suobshtenie.")
+            // This is the final ------>
+            console.log("Idva ot---"+ data.fromUser+"---Izprashtam go na: " + data.toUser + "----a suobshtenieto e: :--- " + data.msg);
+            chatService.insertMessage(data.fromUser, data.toUser, data.msg);
+            // socket.broadcast.to(users[data.toUser]).emit('new-msg', data.msg);
+            // Sending message to the user and me
+            app.io.to(socket.id).to(data.toUser).emit('new-msg', data.msg);
+        });
+
+
+        // userService -> Find all my friends which are online
+
+
 
         // console.log(socket.id);
         // userService.updateSocket()
@@ -83,14 +113,7 @@ module.exports = function (app, passport) {
         // })
 
 
-        // socket.on('new-msg', function (data) {
-        //     console.log("Az sum survura i poluchavam suobshtenie.")
-        //     // This is the final ------>
-        //     console.log("Izprashtam go na: " + users[data.toUser] + "----a puk idito mu e:--- " + socket.id);
-        //     // socket.broadcast.to(users[data.toUser]).emit('new-msg', data.msg);
-        //     // Sending message to the user and me
-        //     app.io.to(socket.id).to(users[data.toUser]).emit('new-msg', data.msg);
-        // });
+
 
     })
 }

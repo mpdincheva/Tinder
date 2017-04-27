@@ -1,16 +1,12 @@
 app.controller("homeController", function ($scope, $location, $window, $http, $rootScope) {
-	if (!$window.localStorage.getItem("currentUser")) {
-		$rootScope.$on('localStorageUpdated', function () {
-			var currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
-			$scope.currentUser = currentUser;
-		})
-	} else {
-		var currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
-		$scope.currentUser = currentUser;
-	}
+	
+	console.log("From home controller");
+	$scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
+	console.log($scope.currentUser);
 
 	$scope.showMap = true;
 	$scope.showChatRoom = false;
+
 
 	$rootScope.$on('showUpdated', function () {
 		$scope.showMap = $rootScope.showMap;

@@ -5,6 +5,8 @@
 
     <title>Tinder</title>
 
+    <script src="assets/js/getUserInfo.js"></script>
+
     <!-- styles -->
     <link rel='stylesheet' href='./assets/stylesheets/reset.css' />
     <link rel='stylesheet' href='./assets/stylesheets/leftSide.css' />
@@ -32,7 +34,8 @@
 </head>
 
 <body ng-app="myapp">
-    <div data-ng-controller="sessionController" data-ng-init="currentSession()" ng-view> </div>
+    <!--<div data-ng-controller="sessionController" data-ng-init="currentSession()" ng-view> </div>-->
+    <div  ng-view> </div>
     
     <!-- modules -->
     <script src="assets/js/app.js"></script>

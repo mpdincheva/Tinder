@@ -22,6 +22,7 @@ module.exports = function (app, passport) {
 
   app.post('/register', function (req, res, next) {
     userService.checkIfUsernameExist('local', req.body.email, function (isAvalilableUsername) {
+      console.log(isAvalilableUsername);
       if (isAvalilableUsername) {
         var createdUser = userService.createUser('local', req.body.email, req.body.password, req.body.firstName, req.body.lastName);
 
@@ -44,7 +45,8 @@ module.exports = function (app, passport) {
     function (req, res, next) {
       // console.log(req.user);
       console.log("In /login route"),
-        res.cookie('userid', req.user._id);
+      console.log(req.user._id)
+      res.cookie('userid', req.user._id);
       res.json(req.user);
     }
   );
@@ -120,9 +122,12 @@ module.exports = function (app, passport) {
   })
 
   app.get('/getAllInfoForMe', function (req, res) {
+    console.log("In get all info for me in Server");
     console.log(req.cookies.userid);
     userService.findUserById(req.cookies.userid, function (err, user) {
       if (user) {
+        console.log("Sending user to the client:");
+        console.log(user);
         res.json(user);
       } else {
         res.status(404).send();

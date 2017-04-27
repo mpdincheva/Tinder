@@ -8,7 +8,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     $scope.showme = false;
 
     console.log("From left side controller");
-    console.log($rootScope.currentUser);
+    console.log($scope.currentUser);
 
     $scope.showMapHideChat = function () {
         $rootScope.showMap = true;
@@ -22,7 +22,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
             method: "POST",
             url: "/updatePosition",
             data: {
-                id: JSON.parse($window.localStorage.getItem("currentUser"))._id,
+                id: $scope.currentUser._id,
                 lat: "",
                 lng: ""
             }
@@ -35,13 +35,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
             console.log("Changing path!");
             $location.path("/");
         });
-        // $http({
-        // 		method: 'GET',
-        // 		url: 'http://localhost:3000/logout/'
-        // 	}).then(function (response) {
-        // 		console.log(response);
-        // 	});
-
     };
 
     $scope.searchPeopleByName = function () {

@@ -16,3 +16,38 @@
     height:70%;
     background-color: lightblue;
 }
+
+
+
+  #chatPage form {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  #chatPage #new-message {
+    width: 80%;
+    height: 20px;
+    background-color: lightblue;
+  }
+
+  #chatPage button {
+    background-color: pink;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 1em;
+    border-radius: 25%;
+  }
+
+  #chatPage ul {
+    width: 70%;
+    margin: auto;
+    background: lightblue;
+  }
+
+  #chatPage li {
+    margin-top: 2em;
+    background-color: pink;
+    list-style-type: none;
+  }

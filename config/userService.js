@@ -10,6 +10,9 @@ var ObjectId = require('mongodb').ObjectID;
 var passwordHash = require('password-hash');
 
 
+
+
+
 module.exports = (function () {
 
     function User(provider, email, password, firstname, lastname) {
@@ -41,6 +44,10 @@ module.exports = (function () {
     //     this.googleId = googleId;
     //     User.call(this, email, password, firstname, lastname);
     // }
+
+    function degreesToRadians(degrees) {
+        return degrees * Math.PI / 180;
+    }
 
     return {
         createUser: function (provider, email, password, firstname, lastname) {
@@ -160,20 +167,42 @@ module.exports = (function () {
 
         findUsersByFullName: function (firstname, lastname, cb) {
             var lastName = new RegExp("^" + lastname);
-            users.find({ firstname: firstname, lastname: lastName})
+            users.find({ firstname: firstname, lastname: lastName })
                 .then(function (data) {
                     console.log(data);
                     cb(null, data);
                 });
         },
 
-        findUsersByFirstName: function (first, cb){
+        findUsersByFirstName: function (first, cb) {
             var firstName = new RegExp("^" + first);
-            users.find({ firstname: firstName})
+            users.find({ firstname: firstName })
                 .then(function (data) {
                     cb(null, data);
                 });
-        }
-    }
+        },
 
+        distanceInKmBetweenTwoUsers: function(lat1, lon1, lat2, lon2) {
+            var earthRadiusKm = 6371;
+
+            var dLat = degreesToRadians(lat2 - lat1);
+            var dLon = degreesToRadians(lon2 - lon1);
+
+            lat1 = degreesToRadians(lat1);
+            lat2 = degreesToRadians(lat2);
+
+            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return earthRadiusKm * c;
+        },
+
+        findUsers: function (radius, gender, interest, cb) {
+            users.find({ gender: gender })
+                .then(function (data) {
+                    console.log(data);
+                    cb(null, data);
+                });
+        }
+        
+    }
 })();

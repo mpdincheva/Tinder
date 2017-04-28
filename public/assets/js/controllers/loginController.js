@@ -1,4 +1,5 @@
 app.controller("loginController", function ($scope, $location, $window, $http) {
+    $("#login-form").css("height", $window.innerHeight + "px");
 
     $scope.submit = function () {
 

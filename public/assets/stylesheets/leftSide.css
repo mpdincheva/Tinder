@@ -50,7 +50,7 @@
 }
 
 
-#ex1Slider .slider-selection {
+.slider-selection {
 	background: #BABABA;
 }
 
@@ -113,11 +113,6 @@ form  {
 	padding-left: 1em;
 }
 
-::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
-}
-
 #closeInformation {
 	float: left;
 	position: fixed;
@@ -135,4 +130,8 @@ form  {
 	display: inline-block;
 	width: 320px;
 	float: left;
+}
+
+.updated-handle {
+    background:  rgb(183, 28, 28) !important; 
 }

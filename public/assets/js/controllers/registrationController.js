@@ -1,4 +1,6 @@
 app.controller("registrationController", function ($scope, $window, $location, $rootScope, $http) {
+	$("#register-form").css("height", $window.innerHeight + "px");
+	
 	$scope.submit = function () {
 
 		if ($scope.firstName == undefined || $scope.lastName == undefined || $scope.email == undefined || $scope.password == undefined || $scope.repeatedPassword == undefined) {

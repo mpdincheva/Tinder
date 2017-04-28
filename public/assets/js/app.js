@@ -20,8 +20,6 @@ var app = angular.module("myapp", ["ngRoute"]);
 // 	}
 // });
 
-
-
 // app.service('getCurrentUser', ['$http', '$window', function ($http, $window) {
 // 	console.log("In app.service for getting all info for current user");
 // 	$http.get('/getAllInfoForMe').then(function (response) {

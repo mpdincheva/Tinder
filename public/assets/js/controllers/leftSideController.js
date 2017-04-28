@@ -10,10 +10,27 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     console.log("From left side controller");
     console.log($scope.currentUser);
 
+    $http({
+        method: "GET",
+        url: "/getInterests",
+    }).then(function (response) {
+        $scope.interests = response.data;
+        $scope.$apply();
+    });
+
     $scope.showMapHideChat = function () {
         $rootScope.showMap = true;
         $rootScope.showChatRoom = false;
-
+        console.log($("#slider"));
+        $("#slider").slider({
+            value: 0,
+            min: 0,
+            max: 50,
+            step: 1,
+            slide: function (event, ui) {
+                $scope.radius = ui.value;
+            }
+        }).find(".ui-slider-handle").addClass("updated-handle");
         $rootScope.$broadcast('showUpdated');
     };
 
@@ -49,13 +66,13 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                 if (response.data.length > 0) {
                     $("ul.dropdown-menu").html("");
                     $("ul.dropdown-menu").show();
-                    
-                    Array.prototype.forEach.call(response.data, function(element){
+
+                    Array.prototype.forEach.call(response.data, function (element) {
                         var pic = $("<img>");
                         pic.src = element.profilePicture;
                         var item = $("<li class='row'></li>");
                         item.append(pic);
-                        var name = $("<div></div>").append($("<p></p>").text(element.firstname + " " + element.lastname))     ;
+                        var name = $("<div></div>").append($("<p></p>").text(element.firstname + " " + element.lastname));
                         item.append(name);
                         item.append("<hr/>");
                         $("ul.dropdown-menu").append(name);
@@ -67,36 +84,41 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     };
 
     $scope.searchPeople = function () {
-        // $http({
-        // 	url: "http://localhost:3000/users/",
-        // 	method: "POST",
-        // 	data: {
-        // 		radius: $scope.radius,
-        // 		gender: {
-        // 			male: $scope.male,
-        // 			female: $scope.female
-        // 		}
-        // 	}
-        // }).then(function (response) {
-        // 	response.data.forEach(function(user) {
-        // 		var mark = new google.maps.Marker({
-        // 			position: { lat: user.coords.lat, lng: user.coords.lng },
-        // 			map: map,
-        // 			user: user
-        // 		});
+        console.log($scope.radius);
+        console.log($scope.male);
+        console.log($scope.female);
+        console.log($scope.selectedInterest);
 
-        // 		mark.addListener('click', function () {
-        // 			var self = this;
-        // 			$scope.$apply(function () {
-        // 				$scope.showme = true;
-        // 				$scope.user = self.user;
-        // 				$("#map").addClass("small");
-        // 				$("#map").removeClass("large");
-        // 				google.maps.event.trigger(map, 'resize');
-        // 				map.setCenter({ lat: $scope.currentUser.position.lat, lng: $scope.currentUser.position.lng });
-        // 			});
-        // 		});
-        // 	})
-        // });
+        var gender = ($scope.male == "on") ? "male" : "female";
+        $http({
+            url: "/allUsers",
+            method: "POST",
+            data: {
+                radius: $scope.radius,
+                gender: gender,
+                interest: $scope.selectedInterest
+            }
+        }).then(function (response) {
+            console.log(response.data);
+            response.data.forEach(function (user) {
+                var mark = new google.maps.Marker({
+                    position: { lat: parseFloat(user.lat), lng: parseFloat(user.lng) },
+                    map: $rootScope.map,
+                    user: user
+                });
+
+                mark.addListener('click', function () {
+                    var self = this;
+                    $scope.$apply(function () {
+                        $rootScope.user = self.user;
+                        $rootScope.$broadcast("updateMarkerUser");
+                        $("#map").addClass("small");
+                        $("#map").removeClass("large");
+                        google.maps.event.trigger(map, 'resize');
+                        // map.setCenter({ lat: $scope.currentUser.position.lat, lng: $scope.currentUser.position.lng });
+                    });
+                });
+            })
+        });
     };
 });

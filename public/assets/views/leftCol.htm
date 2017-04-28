@@ -31,7 +31,6 @@
                                         placeholder="Търси хора.." />
 
                                     <ul class="dropdown-menu col-sm-12">
-                                        <li> Something </li>
                                     </ul>
                                 </div>
                             </div>
@@ -40,9 +39,10 @@
                         <form id="peopleForm" ng-submit="searchPeople()">
                             <div class="table-row">
                                 <label class="table-cell">Радиус: </label>
-                                <div class="table-cell" ng-init="radius=0">
-                                    <input type="number" min="0" ng-model="radius">
+                                <div id="slider" ng-model="radius">
+
                                 </div>
+                                <span>{{radius}}</span>
                             </div>
                             <div class="table-row">
                                 <label class="table-cell">Пол: </label>
@@ -58,17 +58,19 @@
                             <div class="table-row">
                                 <label class="table-cell">Интереси: </label>
                                 <div class="table-cell">
-                                    <input type="text" name="">
+                                    <select ng-model="selectedInterest">
+                                        <option ng-repeat="interest in interests" value="{{interest.value}}">{{ interest.name }}</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="table-row" x>
+                            <div class="table-row">
                                 <button class="btn btn-danger btn-block" type="submit"> Търси </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
+            <!--<div class="panel panel-default">
                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2" ng-click="showMapHideChat()">
                     <h4 class="panel-title">
                         Събития
@@ -78,7 +80,7 @@
                     <div class="panel-body">
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
 
         <div id="lastinvites">

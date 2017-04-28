@@ -49,6 +49,20 @@ module.exports = (function () {
         return degrees * Math.PI / 180;
     }
 
+    function distanceInKmBetweenTwoUsers(lat1, lon1, lat2, lon2) {
+        var earthRadiusKm = 6371;
+
+        var dLat = degreesToRadians(lat2 - lat1);
+        var dLon = degreesToRadians(lon2 - lon1);
+
+        lat1 = degreesToRadians(lat1);
+        lat2 = degreesToRadians(lat2);
+
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return earthRadiusKm * c;
+    }
+
     return {
         createUser: function (provider, email, password, firstname, lastname) {
             var hashedPassword = passwordHash.generate(password);
@@ -182,27 +196,35 @@ module.exports = (function () {
                 });
         },
 
-        distanceInKmBetweenTwoUsers: function(lat1, lon1, lat2, lon2) {
-            var earthRadiusKm = 6371;
-
-            var dLat = degreesToRadians(lat2 - lat1);
-            var dLon = degreesToRadians(lon2 - lon1);
-
-            lat1 = degreesToRadians(lat1);
-            lat2 = degreesToRadians(lat2);
-
-            var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return earthRadiusKm * c;
-        },
-
         findUsers: function (radius, gender, interest, cb) {
             users.find({ gender: gender })
                 .then(function (data) {
                     console.log(data);
                     cb(null, data);
                 });
-        }
+        },
         
+        getAllOnlineUsers: function (arrayWithIds, cb) {
+            console.log("In get online users function..");
+            users.find({ _id: { $in: arrayWithIds }  })
+                .then(function (data) {
+                    var onlineUsers = [];
+                    for(var index = 0; index < data.length; index++) {
+                        // console.log("In the loop--->");
+                        // console.log(data[index].socketId);
+                        if(data[index].socketId) {
+                            console.log(data[index]);
+                            onlineUsers.push(data[index]);
+                        }
+                    }
+                    console.log("Founded users from database are: ")
+                    // console.log(onlineUsers);
+                    cb(null, onlineUsers);
+                })
+                .catch(function (err) {
+                    cb(err, false);
+                })
+        },
+
     }
 })();

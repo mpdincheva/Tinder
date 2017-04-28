@@ -15,174 +15,192 @@ var multer = require("multer");
 
 var userService = require("../config/userService");
 var interestsService = require("../config/interestsService");
+var chatService = require("../config/chatService");
+
 
 // var passwordHash = require('password-hash');
 
 module.exports = function (app, passport) {
 
-	app.post('/register', function (req, res, next) {
-		userService.checkIfUsernameExist('local', req.body.email, function (isAvalilableUsername) {
-			console.log(isAvalilableUsername);
-			if (isAvalilableUsername) {
-				var createdUser = userService.createUser('local', req.body.email, req.body.password, req.body.firstName, req.body.lastName);
+  app.post('/register', function (req, res, next) {
+    userService.checkIfUsernameExist('local', req.body.email, function (isAvalilableUsername) {
+      console.log(isAvalilableUsername);
+      if (isAvalilableUsername) {
+        var createdUser = userService.createUser('local', req.body.email, req.body.password, req.body.firstName, req.body.lastName);
 
-				userService.findUserByName("local", createdUser.email, function (err, user) {
-					if (user) {
-						res.cookie("userid", user._id);
-						res.json(user);
-					}
-				});
-			}
-			else {
-				res.status(404).send();
-			}
+        userService.findUserByName("local", createdUser.email, function (err, user) {
+          if (user) {
+            res.cookie("userid", user._id);
+            res.json(user);
+          }
+        });
+      }
+      else {
+        res.status(404).send();
+      }
 
-		})
-	})
+    })
+  })
 
-	app.post('/login',
-		passport.authenticate('local'),
-		function (req, res, next) {
-			// console.log(req.user);
-			console.log("In /login route"),
-				console.log(req.user._id)
-			res.cookie('userid', req.user._id);
-			res.json(req.user);
-		}
-	);
+  app.post('/login',
+    passport.authenticate('local'),
+    function (req, res, next) {
+      // console.log(req.user);
+      console.log("In /login route"),
+      console.log(req.user._id)
+      res.cookie('userid', req.user._id);
+      res.json(req.user);
+    }
+  );
 
-	// We send the client on facebook to authenticate ->
-	app.get('/auth/facebook',
-		passport.authenticate('facebook', { scope: 'email' }),
-		function () {
-			console.log("Vikna me");
-		});
+  // We send the client on facebook to authenticate ->
+  app.get('/auth/facebook',
+    passport.authenticate('facebook', { scope: 'email' }),
+    function () {
+      console.log("Vikna me");
+    });
 
-	// Waiting for response from facebook->
-	app.get('/auth/facebook/callback',
-		passport.authenticate('facebook', { failureRedirect: '/index.html#/' }),
-		function (req, res, next) {
-			console.log("Poluchix usera.... toi izglejda ei taka:");
-			res.cookie('userid', req.user._id);
-			res.redirect('/index.html#/home');
-		});
-
-
-	app.get('/auth/google',
-		passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-	app.get('/auth/google/callback',
-		passport.authenticate('google', { failureRedirect: '/index.html#/' }),
-		function (req, res) {
-			console.log("Google passport");
-			res.cookie('userid', req.user._id);
-			res.redirect('/index.html#/home');
-		});
+  // Waiting for response from facebook->
+  app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/index.html#/' }),
+    function (req, res, next) {
+      console.log("Poluchix usera.... toi izglejda ei taka:");
+      res.cookie('userid', req.user._id);
+      res.redirect('/index.html#/home');
+    });
 
 
-	app.get('/logout', function (req, res) {
-		req.session.destroy();
-		// req.logout();
-		res.status(200).send();
-		// res.redirect('/');
-	});
+  app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-	var upload = multer({ dest: "public/assets/images/profilePhotos" });
+  app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/index.html#/' }),
+    function (req, res) {
+      console.log("Google passport");
+      res.cookie('userid', req.user._id);
+      res.redirect('/index.html#/home');
+    });
 
-	app.post('/updateAccountInfo', upload.any(), function (req, res, next) {
-		var obj = {
-			age: req.body.age,
-			gender: req.body.gender,
-			description: req.body.description
-		}
-		if (req.files.length > 0) {
-			obj["profilePicture"] = req.files[0].path;
-		} else {
-			obj["profilePicture"] = "assets/images/profilePhotos/default.svg";
-		}
-		console.log(obj);
-		userService.updateUserAccount(req.cookies.userid, obj);
 
-		res.status(200).send();
-	});
+  app.get('/logout', function (req, res) {
+    req.session.destroy();
+    // req.logout();
+    res.status(200).send();
+    // res.redirect('/');
+  });
 
-	app.get('/getFriends', function (req, res) {
-		userService.findUserById(req.cookies.userid, function (err, user) {
-			if (user) {
-				userService.getUsersFriends(user.friends, function (err, friends) {
-					res.json(friends);
-				})
-			}
-		})
-	})
+  var upload = multer({ dest: "public/assets/images/profilePhotos" });
 
-	app.get('/updateSocket', function (req, res) {
-		console.log(req.cookies.userid);
-		res.json('');
-	})
+  app.post('/updateAccountInfo', upload.any(), function (req, res, next) {
+    var obj = {
+      age: req.body.age,
+      gender: req.body.gender,
+      description: req.body.description
+    }
+    if (req.files.length > 0) {
+      obj["profilePicture"] = req.files[0].path;
+    } else {
+      obj["profilePicture"] = "assets/images/profilePhotos/default.svg";
+    }
+    console.log(obj);
+    userService.updateUserAccount(req.cookies.userid, obj);
 
-	app.get('/getAllInfoForMe', function (req, res) {
-		console.log("In get all info for me in Server");
-		console.log(req.cookies.userid);
-		userService.findUserById(req.cookies.userid, function (err, user) {
-			if (user) {
-				console.log("Sending user to the client:");
-				console.log(user);
-				res.json(user);
-			} else {
-				res.status(404).send();
-			}
-		})
-	})
+    res.status(200).send();
+  });
 
-	app.post("/updatePosition", function (req, res, next) {
-		console.log(req.body.lat);
-		console.log(req.body.lng);
-		console.log("Eto ti go user-a");
-		console.log(req.cookies.userid);
-		var user_id = (req.body.id) ? req.body.id : req.cookies.userid;
-		userService.updatePosition(user_id, req.body.lat, req.body.lng);
-		res.status(200).send();
-	})
-	//   router.post('/', function (req, res, next) {
-	//     var userid = req.session.userId;
-	//     console.log(req.session.userId);
-	//     var db = req.db;
-	//     var users = db.get('users');
-	//     users.find({_id: userid})
-	//         .then(function (data) {
-	//             if (data.length > 0) {
-	//                 var user = data[0];
-	//                 console.log(user);
-	//                 res.json(user);
-	//             } else {
-	//                 res.json('');
-	//             }
-	//         }).catch(function (err) {
-	//         res.json(500, err);
-	//     });
-	// });
+  app.get('/getFriends', function (req, res) {
+    userService.findUserById(req.cookies.userid, function (err, user) {
+      if (user) {
+        userService.getUsersFriends(user.friends, function (err, friends) {
+          res.json(friends);
+        })
+      }
+    })
+  })
 
-	app.get("/users:name", function (req, res, next) {
-		var decodedName = decodeURIComponent(req.params.name);
-		var firstNameIndex = decodedName.indexOf(" ");
-		console.log(firstNameIndex);
-		if (firstNameIndex != -1) {
-			var firstName = decodedName.slice(0, firstNameIndex);
-			var lastName = decodedName.slice(firstNameIndex + 1, decodedName.length);
-			userService.findUsersByFullName(firstName, lastName, function (err, data) {
-				console.log(data);
-			});
-		} else {
-			var firstName = decodedName;
-			userService.findUsersByFirstName(firstName, function (err, data) {
-				res.json(data);
-			});
-		}
-		// res.json(decodedName);
-	});
+  app.get('/updateSocket', function (req, res) {
+    console.log(req.cookies.userid);
+    res.json('');
+  })
 
-	app.get("/getInterests", function (req, res, next) {
+  app.get('/getAllInfoForMe', function (req, res) {
+    console.log("In get all info for me in Server");
+    console.log(req.cookies.userid);
+    userService.findUserById(req.cookies.userid, function (err, user) {
+      if (user) {
+        // console.log("Sending user to the client:");
+        // console.log(user);
+        res.json(user);
+      } else {
+        res.status(404).send();
+      }
+    })
+  })
+
+  app.post("/updatePosition", function (req, res, next) {
+    // console.log(req.body.lat);
+    // console.log(req.body.lng);
+    // console.log("Eto ti go user-a");
+    // console.log(req.cookies.userid);
+    var user_id = (req.body.id) ? req.body.id : req.cookies.userid;
+    userService.updatePosition(user_id, req.body.lat, req.body.lng);
+    res.status(200).send();
+  })
+  //   router.post('/', function (req, res, next) {
+  //     var userid = req.session.userId;
+  //     console.log(req.session.userId);
+  //     var db = req.db;
+  //     var users = db.get('users');
+  //     users.find({_id: userid})
+  //         .then(function (data) {
+  //             if (data.length > 0) {
+  //                 var user = data[0];
+  //                 console.log(user);
+  //                 res.json(user);
+  //             } else {
+  //                 res.json('');
+  //             }
+  //         }).catch(function (err) {
+  //         res.json(500, err);
+  //     });
+  // });
+
+  app.get("/users:name", function (req, res, next) {
+    var decodedName = decodeURIComponent(req.params.name);
+    var firstNameIndex = decodedName.indexOf(" ");
+    console.log(firstNameIndex);
+    if (firstNameIndex != -1) {
+      var firstName = decodedName.slice(0, firstNameIndex);
+      var lastName = decodedName.slice(firstNameIndex + 1, decodedName.length);
+      userService.findUsersByFullName(firstName, lastName, function (err, data) {
+        console.log(data);
+      });
+    } else {
+      var firstName = decodedName;
+      userService.findUsersByFirstName(firstName, function (err, data) {
+          res.json(data);
+      });
+    }
+    // res.json(decodedName);
+  });
+
+  app.get('/allMessagesBetween:friendId', function(req, res, next) {
+    var friendId = req.params.friendId;
+    console.log("In the server. My friends id is: ");
+    console.log(friendId);
+    chatService.getMessages(req.cookies.userid, friendId, function(err, messages) {
+      if(messages) {
+        res.json(messages);
+      } else {
+        res.status(200).send();
+      }
+      if(err) {
+        res.status(500).send();
+      }
+    })
+  });
+  
+  app.get("/getInterests", function (req, res, next) {
 		interestsService.getAll(function (err, data) {
 			res.json(data);
 		})
@@ -193,5 +211,6 @@ module.exports = function (app, passport) {
 			res.json(data);
 		});
 	});
+
 }
 

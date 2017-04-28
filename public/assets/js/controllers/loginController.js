@@ -16,11 +16,16 @@ app.controller("loginController", function ($scope, $location, $window, $http) {
                         // $rootScope.user = response.data;
                         // console.log($window.localStorage.getItem("currentUser"));
                         $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
+                        console.log("In the login controlleeeeeeeeeer:");
+                        // Create global variable for socket
+                        socket = io.connect('http://localhost:3000');
+                        socket.emit('updateSocket', { user: response.data });
+                        console.log(socket);
                         $location.path('/home');
                     }
 
                 }, function (response, status, headers, config) {
-                    alert("error");
+                    alert("Сгрешени потребителско име или парола");
                 });
         } else {
             $scope.errorMessage = "Моля попълнете полетата за име и парола";

@@ -6,10 +6,15 @@
 	<p>Here you can chat with your friends</p>
 	<h3>You are chatting with: {{friendId}}</h3>
 
-	<ul id="messages-area"></ul>
+	<ul id="messages-area">
+		<li ng-repeat="message in messages">
+			{{message.message}}
+		</li>
+	</ul>
 	<form id="form" action="/chatroom" method="POST">
 		<input id="new-message" type="text" name="message" />
 		<button id="sendMessage">Send</button>
 	</form>
+
 
 </div>

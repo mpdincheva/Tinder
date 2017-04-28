@@ -3,15 +3,16 @@ if (document.cookie) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/getAllInfoForMe', false);
     xhr.send(null);
-    console.log("Make synchronous ajax here....");
-    console.log(xhr.response);
+    var currentUser = JSON.parse(xhr.response)
     window.localStorage.setItem('currentUser', xhr.response);
-    // Socket events--->
-    var socket = io.connect('http://localhost:3000');
-    socket.emit('updateSocket', { userId: JSON.parse($window.localStorage.getItem("currentUser")) });
-    var socket = io.connect('http://localhost:3000');
-    $rootScope.socket = socket;
-    // Send user on socket ------->
-    socket.emit('updateSocket', { userId: JSON.parse($window.localStorage.getItem("currentUser")) });
 
+    // Socket events--->
+    console.log("Create new socket");
+    var socket = io.connect('http://localhost:3000');
+    socket.emit('updateSocket', { user: currentUser });
+    console.log(socket);
+    console.log("end");
+    // $rootScope.socket = socket;
 }
+
+

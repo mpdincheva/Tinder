@@ -196,23 +196,47 @@ module.exports = (function () {
                 });
         },
 
-        findUsers: function (radius, gender, interest, cb) {
-            users.find({ gender: gender })
+        findUsers: function (lat, lng, radius, genderInput, ageInput, interest, cb) {
+            var obj = {};
+            if (typeof genderInput === "string") {
+                obj.gender = genderInput;
+            }
+
+            users.find(obj)
                 .then(function (data) {
-                    console.log(data);
-                    cb(null, data);
+                    var allUsers = [];
+                    for (var index = 0; index < data.length; index++) {
+                        var returnUser = false;
+                        if (interest !== "all") {
+
+                            for (var userInterest = 0; userInterest < data[index].interests.length; userInterest++) {
+                                if(data[index]["interests"][userInterest] == interest){
+                                    returnUser = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            returnUser = true;
+                        }
+                        if (returnUser && parseInt(data[index]["age"]) >= ageInput.minAge && parseInt(data[index]["age"]) <= ageInput.maxAge && distanceInKmBetweenTwoUsers(lat, lng, data[index].lat, data[index].lng) <= radius) {
+                            allUsers.push(data[index]);
+                        }
+                    }
+                    // console.log("Userite");
+                    console.log(allUsers);
+                    cb(null, allUsers);
                 });
         },
-        
+
         getAllOnlineUsers: function (arrayWithIds, cb) {
             console.log("In get online users function..");
-            users.find({ _id: { $in: arrayWithIds }  })
+            users.find({ _id: { $in: arrayWithIds } })
                 .then(function (data) {
                     var onlineUsers = [];
-                    for(var index = 0; index < data.length; index++) {
+                    for (var index = 0; index < data.length; index++) {
                         // console.log("In the loop--->");
                         // console.log(data[index].socketId);
-                        if(data[index].socketId) {
+                        if (data[index].socketId) {
                             console.log(data[index]);
                             onlineUsers.push(data[index]);
                         }

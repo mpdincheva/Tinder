@@ -49,17 +49,24 @@
                                 <div id="gender" class="table-cell">
                                     <label>Мъже</label>
                                     <input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="male"
-                                        ng-true-value="'on'" ng-false-value="'off'">
+                                        ng-true-value="'on'" ng-false-value="'off'" required>
                                     <label>Жени</label>
                                     <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="female"
-                                        ng-true-value="'on'" ng-false-value="'off'">
+                                        ng-true-value="'on'" ng-false-value="'off'" required>
                                 </div>
+                            </div>
+                            <div class="table-row">
+                                <label class="table-cell">Години: </label>
+                                <div id="slider-range" ng-model="age">
+
+                                </div>
+                                <span>от {{ minAge }} до {{ maxAge }}</span>
                             </div>
                             <div class="table-row">
                                 <label class="table-cell">Интереси: </label>
                                 <div class="table-cell">
-                                    <select ng-model="selectedInterest">
-                                        <option ng-repeat="interest in interests" value="{{interest.value}}">{{ interest.name }}</option>
+                                    <select  ng-model="selectedInterest" ng-init="selectedInterest='all'">
+                                        <option ng-repeat="interest in interests" value="{{interest._id}}">{{ interest.name }}</option>
                                     </select>
                                 </div>
                             </div>

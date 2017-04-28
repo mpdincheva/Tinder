@@ -1,20 +1,5 @@
 <div ng-controller="mapController">
-    <div id="map" class="large">
+    <div id="map" class="col-sm-9">
     </div>
-
-    <div id="markPerson" ng-show="showme">
-        <div id="closeInformation">
-            <button type="button" class="close" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-        </div>
-        <img class="personProfileImg" src="{{ user.profilePicture }}">
-        <div class="personProfile">
-            <h1>{{ user.firstname }} {{ user.lastname }}</h1>
-            <h2>{{ user.age }}</h2>
-            <p>{{ user.gender }}</p>
-            <p>{{ user.description }}</p>
-            
-        </div>
-    </div>
+    <div ng-include="'assets/views/moreInfo.htm'"></div>
 </div>

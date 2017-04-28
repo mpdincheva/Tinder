@@ -1,4 +1,9 @@
-app.controller("mapController", function ($scope, $location, $rootScope, $http) {
+app.controller("mapController", function ($scope, $location, $window, $rootScope, $http) {
+    $("#map").css("height", ($window.innerHeight * 70 / 100) + "px");
+
+    window.onresize = function (event) {
+        $("#map").css("height", ($window.innerHeight * 70 / 100) + "px");
+    }
 
     function getPosition(position) {
         $http({
@@ -14,12 +19,13 @@ app.controller("mapController", function ($scope, $location, $rootScope, $http) 
             $scope.currentUser.lng = parseFloat(position.coords.longitude);
             $rootScope.map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 15,
-                center: { lat:  $scope.currentUser.lat, lng:  $scope.currentUser.lng},
+                center: { lat: $scope.currentUser.lat, lng: $scope.currentUser.lng },
                 styles: [{ "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#b71c1c" }] }, { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] }, { "featureType": "landscape.natural", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": "-23" }, { "lightness": "27" }, { "visibility": "on" }, { "gamma": "1" }, { "hue": "#ff1800" }, { "weight": "0.75" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "visibility": "on" }, { "color": "#e74c3c" }, { "saturation": "-59" }, { "lightness": "30" }] }, { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "on" }, { "hue": "#ff1800" }, { "saturation": "2" }, { "lightness": "2" }, { "weight": "0.75" }] }, { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "on" }, { "saturation": "-51" }, { "color": "#cbcbcb" }] }, { "featureType": "transit.station", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#2c3e50" }, { "visibility": "on" }] }]
             });
             var marker = new google.maps.Marker({
-                position: { lat:  $scope.currentUser.lat, lng:  $scope.currentUser.lng},
-                map: $rootScope.map
+                position: { lat: $scope.currentUser.lat, lng: $scope.currentUser.lng },
+                map: $rootScope.map,
+                icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
             });
         });
     }
@@ -33,14 +39,19 @@ app.controller("mapController", function ($scope, $location, $rootScope, $http) 
     $("#closeInformation").on("click", function () {
         $scope.$apply(function () {
             $scope.showme = !$scope.showme;
-            $("#map").toggleClass("small");
-            $("#map").toggleClass("large");
+            $("#map").removeClass("col-sm-6");
+            $("#map").addClass("col-sm-9");
+        });
+
+        $rootScope.markers.forEach(function (mark) {
+            mark.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
         });
         google.maps.event.trigger(map, 'resize');
-        // map.setCenter({ lat: x.lat, lng: x.lng });
     });
 
-    $rootScope.$on("updateMarkerUser", function(){
+    $rootScope.$on("updateMarkerUser", function () {
+        $scope.userInterests = $rootScope.userInterests;
+        console.log($scope.userInterests);
         $scope.user = $rootScope.user;
         $scope.showme = true;
     })

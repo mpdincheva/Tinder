@@ -47,7 +47,7 @@ module.exports = function (app, passport) {
     function (req, res, next) {
       // console.log(req.user);
       console.log("In /login route"),
-      console.log(req.user._id)
+        console.log(req.user._id)
       res.cookie('userid', req.user._id);
       res.json(req.user);
     }
@@ -178,39 +178,41 @@ module.exports = function (app, passport) {
     } else {
       var firstName = decodedName;
       userService.findUsersByFirstName(firstName, function (err, data) {
-          res.json(data);
+        res.json(data);
       });
     }
     // res.json(decodedName);
   });
 
-  app.get('/allMessagesBetween:friendId', function(req, res, next) {
+  app.get('/allMessagesBetween:friendId', function (req, res, next) {
     var friendId = req.params.friendId;
     console.log("In the server. My friends id is: ");
     console.log(friendId);
-    chatService.getMessages(req.cookies.userid, friendId, function(err, messages) {
-      if(messages) {
+    chatService.getMessages(req.cookies.userid, friendId, function (err, messages) {
+      if (messages) {
         res.json(messages);
       } else {
         res.status(200).send();
       }
-      if(err) {
+      if (err) {
         res.status(500).send();
       }
     })
   });
-  
-  app.get("/getInterests", function (req, res, next) {
-		interestsService.getAll(function (err, data) {
-			res.json(data);
-		})
-	});
 
-	app.post("/allUsers", function (req, res, next) {
-		userService.findUsers(req.body.radius, req.body.gender, req.body.interest, function (err, data) {
-			res.json(data);
-		});
-	});
+  app.get("/getInterests", function (req, res, next) {
+    interestsService.getAll(function (err, data) {
+      res.json(data);
+    })
+  });
+
+  app.post("/allUsers", function (req, res, next) {
+    userService.findUsers(req.body.lat, req.body.lng, req.body.radius, req.body.gender, req.body.age, req.body.interest, function (err, data) {
+      console.log("datata useri");
+      // console.log(data);
+      res.json(data);
+    });
+  });
 
 }
 

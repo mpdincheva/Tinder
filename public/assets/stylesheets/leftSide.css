@@ -1,3 +1,22 @@
+body {
+	overflow: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track-piece  {
+	background-color:rgb(169,169,169);
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	height: 30px;
+	background-color: #b71c1c;
+}
+
+
 #leftSide {
 	background-color: #333;
 	height: 800px;
@@ -72,17 +91,8 @@ form  {
 }
 
 #map {
-	height: 500px;
 	display: inline-block;
 	float: left;
-}
-
-.large {
-	width: 1020px;
-}
-
-.small {
-	width: 700px;
 }
 
 #map img {
@@ -91,10 +101,9 @@ form  {
 }
 
 #markPerson {
-	height: 500px;
-	width: 320px;
 	padding:0.5em;
 	overflow: scroll;
+	overflow-x: hidden;
 }
 
 .personProfileImg {
@@ -112,7 +121,7 @@ form  {
 .personProfile {
 	padding-left: 1em;
 }
-
+	
 #closeInformation {
 	float: left;
 	position: fixed;
@@ -135,3 +144,5 @@ form  {
 .updated-handle {
     background:  rgb(183, 28, 28) !important; 
 }
+
+

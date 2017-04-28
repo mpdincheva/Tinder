@@ -16,6 +16,7 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
         console.log($scope.friends[index]._id);
 
         // $scope.chatWith = !$scope.chatWith;
+        $scope.showMe = true;
         $rootScope.showMap = false;
         $rootScope.showChatRoom = true;
         $rootScope.friendId = friend_id;

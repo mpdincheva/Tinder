@@ -15,35 +15,34 @@ var passwordHash = require('password-hash');
 
 module.exports = (function () {
 
-    function User(provider, email, password, firstname, lastname) {
-        this.provider = provider;
+    function User(email, password, firstname, lastname) {
         this.email = email;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
 
+        this.description;
         this.lat = "";
         this.lng = "";
-        this.age;
-        this.gender;
-        this.description;
-        this.profilePicture;
         this.friends = [];
+        this.socketId;
     }
 
-    // function LocalUser(email, password, firstname, lastname) {
-    //     User.call(this, email, password, firstname, lastname);
-    // }
+    function LocalUser(email, password, firstname, lastname) {
+        this.provider = 'local';
+        this.age;
+        this.gender;
+        this.profilePicture;
+        User.call(this, email, password, firstname, lastname);
+    }
 
-    // function FacebookUser(facebookId, email, password, firstname, lastname) {
-    //     // this._id = facebookId;
-    //     User.call(this, email, password, firstname, lastname);
-    // }
-
-    // function GoogleUser(googleId, email, password, firstname, lastname) {
-    //     this.googleId = googleId;
-    //     User.call(this, email, password, firstname, lastname);
-    // }
+    function ExternalUser(provider, email, password, firstname, lastname, profilePicture, gender, age) {
+        this.provider = provider;
+        this.profilePicture = profilePicture;
+        this.gender = gender;
+        this.age = age;
+        User.call(this, email, password, firstname, lastname)
+    }
 
     function degreesToRadians(degrees) {
         return degrees * Math.PI / 180;
@@ -64,12 +63,35 @@ module.exports = (function () {
     }
 
     return {
-        createUser: function (provider, email, password, firstname, lastname) {
+        createLocalUser: function (email, password, firstname, lastname, cb) {
             var hashedPassword = passwordHash.generate(password);
-            var createdUser = new User(provider, email, hashedPassword, firstname, lastname)
-            users.insert(createdUser);
-            return createdUser;
+            var createdUser = new LocalUser(email, hashedPassword, firstname, lastname)
+            users.insert(createdUser, function (err, insertedUser) {
+                if (cb) {
+                    console.log("In database. Inserted user is: ");
+                    console.log(insertedUser);
+                    cb(null, insertedUser);
+                }
+            });
         },
+
+        createExtenalUser: function (provider, email, password,
+         firstname, lastname, profilePicture, gender, age, cb) {
+
+            var hashedPassword = passwordHash.generate(password);
+
+            var createdUser = new ExternalUser(provider, email, hashedPassword,
+             firstname, lastname, profilePicture, gender, age)
+
+            users.insert(createdUser, function (err, insertedUser) {
+                if (cb) {
+                    console.log("In database. Inserted user is: ");
+                    console.log(insertedUser);
+                    cb(null, insertedUser);
+                }
+            });
+        },
+
         // createLocalUser : function(email, password, firstname, lastname){
         //     users.insert(new LocalUser(email, password, firstname, lastname));
         // },

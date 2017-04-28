@@ -1,4 +1,4 @@
-app.controller("accountController", function ($scope, $http, $location) {
+app.controller("accountController", function ($scope, $http, $location, $window) {
     $scope.uploadFile = function (event) {
         var file = document.getElementById("file").files[0];
 
@@ -29,6 +29,12 @@ app.controller("accountController", function ($scope, $http, $location) {
                 'Content-Type': undefined
             }
         }).then(function (response) {
+            console.log("In account controller. Response is:");
+            console.log(response); 
+            window.localStorage.setItem('currentUser', JSON.stringify(response.data));
+
+            socket = io.connect('http://localhost:3000');
+            socket.emit('updateSocket', { user: response.data });
             $location.path("/home");
         });
     };

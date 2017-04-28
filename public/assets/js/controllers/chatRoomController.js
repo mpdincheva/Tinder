@@ -1,5 +1,10 @@
 app.controller("chatRoomController", function ($scope, $http, $window, $rootScope) {
 
+
+
+
+
+
   $rootScope.$on('friendUpdated', function () {
     $scope.friendId = $rootScope.friendId;
     // $http.get('')
@@ -16,8 +21,17 @@ app.controller("chatRoomController", function ($scope, $http, $window, $rootScop
   $('#sendMessage').click(function (event) {
     event.preventDefault();
     var message = $('#new-message').val()
-    socket.emit('new-msg', { fromUser: $scope.currentUser._id, toUser: $rootScope.friendId, msg: message });
+    socket.emit('new-msg', { fromUser: $scope.currentUser, toUser: $rootScope.friendId, msg: message });
     $('#new-message').val('');
+  })
+
+  $('#new-message').on('input', function () {
+    socket.emit('sendTypingNotification', { fromUser: $scope.currentUser, toUser: $rootScope.friendId })
+  })
+
+  socket.on('sendTypingNotification', function (typingUser) {
+    console.log("This user is typing you message: ");
+    console.log(typingUser);
   })
 
   // socket.on('updateOnlineUsers', function (data) {
@@ -47,6 +61,10 @@ app.controller("chatRoomController", function ($scope, $http, $window, $rootScop
 
   });
 })
+
+
+
+
 //   socket.on('offlineFriend', function(user) {
 //   console.log("Somebody exit the site:");
 //   console.log(user);

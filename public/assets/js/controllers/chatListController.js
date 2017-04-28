@@ -25,11 +25,8 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
         $rootScope.$broadcast('showUpdated');
 
         // Get all messages between them
-        console.log("Get all messages between these two peoples...");
         $http.get('/allMessagesBetween' + $rootScope.friendId)
             .then(function (response) {
-                console.log("Get all messages returns: ");
-                console.log(response.data);
                 $rootScope.messages = response.data;
             })
             // Catch database or server errors

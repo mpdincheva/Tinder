@@ -50,98 +50,117 @@ module.exports = function (app, passport) {
                 // console.log("Founded user is: ");
                 // console.log(user);
                 // console.log(user.socketId);
-                app.io.to(socket.id).to(user.socketId).emit('new-msg', { 'fromUserId': data.fromUser, 'message': data.msg });
+                app.io.to(data.fromUser).to(user.socketId).emit('new-msg', { 'fromUserId': data.fromUser, 'message': data.msg });
             })
 
         });
 
+        // Send chat request notification
+        socket.on('sendChatNotification', function (data) {
+            console.log("In send chat notification");
+            console.log(data.fromUser);
+            console.log(data.toUser);
+            app.io.to(data.toUser.socketId).emit('chatNotification', data.fromUser)
+        })
 
-        // socket.on('disconnect', function () {
-        //     console.log(socket.id);
-        //     userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
+        socket.on('new-msg', function (data) {
+            app.io.to(data.toUser)
+        })
 
-        //         myFriends.forEach(function (friend) {
-        //             console.log("My online friends are:  ");
-        //             console.log(friend);
-        //             app.io.to(friend.socketId).emit('offlineFriend', data.user);
-        //             // socket.emit('updateChatList', user);
-        //         })
+        socket.on('sendTypingNotification', function (data) {
+            console.log("Get typing notification");
+            console.log(data);
+            userService.findUserById(data.toUser, function (err, user) {
+                app.io.to(user.socketId).emit('sendTypingNotification', data.fromUser);
+            })
+        })
 
-        //     })
-        // });
+            // socket.on('disconnect', function () {
+            //     console.log(socket.id);
+            //     userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
 
-        // userService -> Find all my friends which are online
+            //         myFriends.forEach(function (friend) {
+            //             console.log("My online friends are:  ");
+            //             console.log(friend);
+            //             app.io.to(friend.socketId).emit('offlineFriend', data.user);
+            //             // socket.emit('updateChatList', user);
+            //         })
 
+            //     })
+            // });
 
-
-        // console.log(socket.id);
-        // userService.updateSocket()
-
-        // var dbUsers = db.get("users");
-        // Here socket provide uniqe socket id
-
-        // socket.on('join', function (data) {
-
-        //     for (var prop in users) {
-        //         if (users[prop] == null) {
-        //             users[prop] = socket.id;
-        //         }
-        //     }
-
-        //     console.log("All users are: ");
-        //     console.log(users);
-        //     console.log("My id is: " + socket.id);
-
-        //     // Add current user into users ANGLE_instanced_arrays. If exist it will update the socket id
-        //     users[data.username] = socket.id;
-
-        //     // console.log("All sockets are: ");
-        //     // console.log(app.io.sockets.sockets);
-        //     // Update user's socket id in database
-
-        //     dbUsers.update({ username: data.username }, { $set: { socketid: socket.id } });
-        //     // Create new room for this user
-        //     // socket.join(data.username);
-
-        //     // Get all users and refresh their chatlist -> 
-        //     for (var user in users) {
-        //         app.io.to(users[user]).emit('updateUsersList', users);
-        //     }
-        //     // console.log(socket.id)
-        // })
-
-        // socket.on('logout', function (data) {
-        //     delete users[data.username];
-        //     dbUsers.update({ username: data.username }, { $set: { socketid: null } });
-
-        //     // Get all users and refresh their chatlist -> 
-        //     for (var user in users) {
-        //         app.io.to(user)
-        //         app.io.to(users[user]).emit('updateUsersList', users);
-        //     }
-        // })
-
-        // socket.on('disconnect', function () {
-        //     console.log("disconted from server...")
-        //     console.log(socket.id)
-        //     for (var prop in users) {
-        //         if (users[prop] === socket.id) {
-        //             users[prop] == null;
-        //         }
-        //     }
-        //     setTimeout(function () {
-        //         // IF the user didnt come back, delete it from users array
-        //     }, 1000);
-        // });
-
-        // socket.on('currentUser', function (data) {
-        //   chatWith = data.chatWith;
-        //   chatWithId = users[data.chatWith];
-        //   // console.log(users);
-        // })
+            // userService -> Find all my friends which are online
 
 
 
+            // console.log(socket.id);
+            // userService.updateSocket()
 
-    })
-}
+            // var dbUsers = db.get("users");
+            // Here socket provide uniqe socket id
+
+            // socket.on('join', function (data) {
+
+            //     for (var prop in users) {
+            //         if (users[prop] == null) {
+            //             users[prop] = socket.id;
+            //         }
+            //     }
+
+            //     console.log("All users are: ");
+            //     console.log(users);
+            //     console.log("My id is: " + socket.id);
+
+            //     // Add current user into users ANGLE_instanced_arrays. If exist it will update the socket id
+            //     users[data.username] = socket.id;
+
+            //     // console.log("All sockets are: ");
+            //     // console.log(app.io.sockets.sockets);
+            //     // Update user's socket id in database
+
+            //     dbUsers.update({ username: data.username }, { $set: { socketid: socket.id } });
+            //     // Create new room for this user
+            //     // socket.join(data.username);
+
+            //     // Get all users and refresh their chatlist -> 
+            //     for (var user in users) {
+            //         app.io.to(users[user]).emit('updateUsersList', users);
+            //     }
+            //     // console.log(socket.id)
+            // })
+
+            // socket.on('logout', function (data) {
+            //     delete users[data.username];
+            //     dbUsers.update({ username: data.username }, { $set: { socketid: null } });
+
+            //     // Get all users and refresh their chatlist -> 
+            //     for (var user in users) {
+            //         app.io.to(user)
+            //         app.io.to(users[user]).emit('updateUsersList', users);
+            //     }
+            // })
+
+            // socket.on('disconnect', function () {
+            //     console.log("disconted from server...")
+            //     console.log(socket.id)
+            //     for (var prop in users) {
+            //         if (users[prop] === socket.id) {
+            //             users[prop] == null;
+            //         }
+            //     }
+            //     setTimeout(function () {
+            //         // IF the user didnt come back, delete it from users array
+            //     }, 1000);
+            // });
+
+            // socket.on('currentUser', function (data) {
+            //   chatWith = data.chatWith;
+            //   chatWithId = users[data.chatWith];
+            //   // console.log(users);
+            // })
+
+
+
+
+        })
+    }

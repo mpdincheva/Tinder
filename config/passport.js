@@ -20,11 +20,11 @@ module.exports = function (passport) {
 
   // used to deserialize the user
   passport.deserializeUser(function (userId, done) {
-    userService.findUserById(userId, function(err, user) {
-      if(err) {
+    userService.findUserById(userId, function (err, user) {
+      if (err) {
         done(err, false);
       }
-      if(user) {
+      if (user) {
         done(null, user);
       } else {
         done(null, false);
@@ -48,7 +48,7 @@ module.exports = function (passport) {
 
 
   // LOCAL LOGIN STRATEGY -------------->
-  
+
 
   passport.use('local', new LocalStrategy(function (username, password, done) {
     console.log("In local strategy");
@@ -66,7 +66,7 @@ module.exports = function (passport) {
   }))
 
 
-  
+
   // FACEBOOK STRATEGY ------------------------->
 
   passport.use('facebook', new FacebookStrategy({
@@ -78,18 +78,26 @@ module.exports = function (passport) {
     "profileFields": ["id", "birthday", "email", "first_name", "gender", "last_name", 'picture.type(large)']
   },
     function (accessToken, refreshToken, profile, done) {
+      console.log("Profile from facebook is: ");
+      console.log(profile);
 
-      userService.findUserByName('facebook', profile.emails[0].value, function(err, user) {
-        if(err) {
+      userService.findUserByName('facebook', profile.emails[0].value, function (err, user) {
+        if (err) {
           return done(err, null);
         }
-        if(user) {
+        if (user) {
           return done(null, user);
         } else {
-          var newUser = userService.createUser('facebook', profile.emails[0].value,
-           accessToken, profile.name.givenName, profile.name.familyName);
-           return done(null, newUser);
-        } 
+          console.log("Creating facebook user");
+          userService.createExtenalUser('facebook', profile.emails[0].value,
+            accessToken, profile.name.givenName, profile.name.familyName,
+            profile.photos[0].value, profile.gender, '', function (err, createdUser) {
+              console.log("In passport strategy");
+              console.log(createdUser);
+              return done(null, createdUser);
+            });
+
+        }
       })
     }))
 
@@ -105,23 +113,30 @@ module.exports = function (passport) {
     callbackURL: "http://localhost:3000/auth/google/callback",
 
     // Set what fields will expect from facebook
-    "profileFields": ["id", "birthday", "email", "first_name", "gender", "last_name", "photos"]
+    "profileFields": ["id", "birthday", "email", "first_name", "gender", "info", "age", "photos"]
   },
     function (accessToken, refreshToken, profile, done) {
+      console.log("From passport authenticate");
+      console.log(profile);
 
-
-      userService.findUserByName('google', profile.emails[0].value, function(err, user) {
-        if(err) {
+      userService.findUserByName('google', profile.emails[0].value, function (err, user) {
+        if (err) {
           return done(err, null);
         }
-        if(user) {
+        if (user) {
           return done(null, user);
         } else {
-          var newUser = userService.createUser('google', profile.emails[0].value,
-           accessToken, profile.name.givenName, profile.name.familyName);
-           return done(null, newUser);
-        } 
+          console.log("Creating google user");
+          userService.createExtenalUser('google', profile.emails[0].value,
+            accessToken, profile.name.givenName, profile.name.familyName,
+            profile.photos[0].value, profile.gender, '', function (err, createdUser) {
+              console.log("In passport strategy");
+              console.log(createdUser);
+              return done(null, createdUser);
+            });
 
+        }
       })
     }))
-};
+
+}

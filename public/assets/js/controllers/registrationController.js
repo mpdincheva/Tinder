@@ -18,7 +18,7 @@ app.controller("registrationController", function ($scope, $window, $location, $
 					'password': $scope.password
 				}
 				console.log(Indata);
-				$http.post("http://localhost:3000/register", Indata)
+				$http.post("/register", Indata)
 					.then(function (response, status, headers, config) {
 						console.log(response.data);
 						$window.localStorage.setItem("currentUser", JSON.stringify(response.data));

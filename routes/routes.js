@@ -23,16 +23,15 @@ var chatService = require("../config/chatService");
 module.exports = function (app, passport) {
 
   app.post('/register', function (req, res, next) {
+    console.log("You made post request to register page");
     userService.checkIfUsernameExist('local', req.body.email, function (isAvalilableUsername) {
       console.log(isAvalilableUsername);
       if (isAvalilableUsername) {
-        var createdUser = userService.createUser('local', req.body.email, req.body.password, req.body.firstName, req.body.lastName);
-
-        userService.findUserByName("local", createdUser.email, function (err, user) {
-          if (user) {
-            res.cookie("userid", user._id);
-            res.json(user);
-          }
+        userService.createLocalUser(req.body.email, req.body.password, req.body.firstName, req.body.lastName, function (err, insertedUser) {
+          console.log("From server: Inserted user is:")
+          console.log(insertedUser);
+          res.cookie("userid", insertedUser._id);
+          res.json(insertedUser);
         });
       }
       else {
@@ -47,7 +46,7 @@ module.exports = function (app, passport) {
     function (req, res, next) {
       // console.log(req.user);
       console.log("In /login route"),
-      console.log(req.user._id)
+        console.log(req.user._id)
       res.cookie('userid', req.user._id);
       res.json(req.user);
     }
@@ -55,10 +54,7 @@ module.exports = function (app, passport) {
 
   // We send the client on facebook to authenticate ->
   app.get('/auth/facebook',
-    passport.authenticate('facebook', { scope: 'email' }),
-    function () {
-      console.log("Vikna me");
-    });
+    passport.authenticate('facebook', { scope: 'email' }));
 
   // Waiting for response from facebook->
   app.get('/auth/facebook/callback',
@@ -105,7 +101,13 @@ module.exports = function (app, passport) {
     console.log(obj);
     userService.updateUserAccount(req.cookies.userid, obj);
 
-    res.status(200).send();
+    userService.findUserById(req.cookies.userid, function (err, user) {
+      if (user) {
+        res.json(user);
+      }
+    })
+
+    // res.status(200).send();
   });
 
   app.get('/getFriends', function (req, res) {
@@ -178,39 +180,39 @@ module.exports = function (app, passport) {
     } else {
       var firstName = decodedName;
       userService.findUsersByFirstName(firstName, function (err, data) {
-          res.json(data);
+        res.json(data);
       });
     }
     // res.json(decodedName);
   });
 
-  app.get('/allMessagesBetween:friendId', function(req, res, next) {
+  app.get('/allMessagesBetween:friendId', function (req, res, next) {
     var friendId = req.params.friendId;
     console.log("In the server. My friends id is: ");
     console.log(friendId);
-    chatService.getMessages(req.cookies.userid, friendId, function(err, messages) {
-      if(messages) {
+    chatService.getMessages(req.cookies.userid, friendId, function (err, messages) {
+      if (messages) {
         res.json(messages);
       } else {
         res.status(200).send();
       }
-      if(err) {
+      if (err) {
         res.status(500).send();
       }
     })
   });
-  
-  app.get("/getInterests", function (req, res, next) {
-		interestsService.getAll(function (err, data) {
-			res.json(data);
-		})
-	});
 
-	app.post("/allUsers", function (req, res, next) {
-		userService.findUsers(req.body.radius, req.body.gender, req.body.interest, function (err, data) {
-			res.json(data);
-		});
-	});
+  app.get("/getInterests", function (req, res, next) {
+    interestsService.getAll(function (err, data) {
+      res.json(data);
+    })
+  });
+
+  app.post("/allUsers", function (req, res, next) {
+    userService.findUsers(req.body.radius, req.body.gender, req.body.interest, function (err, data) {
+      res.json(data);
+    });
+  });
 
 }
 

@@ -44,4 +44,14 @@ app.controller("mapController", function ($scope, $location, $rootScope, $http) 
         $scope.user = $rootScope.user;
         $scope.showme = true;
     })
+
+    $('#sendChatNotification').on('click', function() {
+        console.log("You clicked start chat button");
+        socket.emit('sendChatNotification', {'fromUser': $scope.currentUser, 'toUser': $scope.user})
+    })
+
+    socket.on('chatNotification', function(user) {
+        console.log("Somebody wants to start chat with you.");
+        console.log(user);
+    })
 });

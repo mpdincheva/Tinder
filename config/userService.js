@@ -173,7 +173,29 @@ module.exports = (function () {
                 .then(function (data) {
                     cb(null, data);
                 });
-        }
+        },
+
+        getAllOnlineUsers: function (arrayWithIds, cb) {
+            console.log("In get online users function..");
+            users.find({ _id: { $in: arrayWithIds }  })
+                .then(function (data) {
+                    var onlineUsers = [];
+                    for(var index = 0; index < data.length; index++) {
+                        // console.log("In the loop--->");
+                        // console.log(data[index].socketId);
+                        if(data[index].socketId) {
+                            console.log(data[index]);
+                            onlineUsers.push(data[index]);
+                        }
+                    }
+                    console.log("Founded users from database are: ")
+                    // console.log(onlineUsers);
+                    cb(null, onlineUsers);
+                })
+                .catch(function (err) {
+                    cb(err, false);
+                })
+        },
     }
 
 })();

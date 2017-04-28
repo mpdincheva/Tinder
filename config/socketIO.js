@@ -3,44 +3,72 @@ var chatService = require('./chatService');
 var userService = require('./userService');
 module.exports = function (app, passport) {
 
-    var friends;
-    
+    var onlineUsers = [];
+
     app.io = require('socket.io')();
 
 
     app.io.on('connection', function (socket) {
+        console.log("Made new connection");
+
 
         socket.on('updateSocket', function (data) {
             // data is the full current person object
 
             console.log("Made new socket id");
 
-            console.log(data);
-            userService.updateSocket(data.userId, socket.id);
-            console.log("Sockets for current user: ");
-            console.log(socket.id);
-            console.log("Updated user id is: ");
+            // console.log(data.user);
+            console.log(data.user._id);
+            // console.log(typeof data.user)
+
+            userService.updateSocket(data.user._id, socket.id);
+            // console.log("Sockets for current user: ");
+            // console.log(socket.id);
+            // console.log("Updated user socket id is: ");
             // console.log(data.user.socketId);
 
-            // userService.getUsersFriends(data.user.friends, function(err, data) {
-            //     if(data) {
-            //         friends = data;
-            //         console.log("Function for getting all friends result is: ");
-            //         console.log(data);
-            //     }
-            // });
+            // Get all online friends
+            userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
+
+                myFriends.forEach(function (friend) {
+                    console.log("My online friends are:  ");
+                    console.log(friend);
+                    app.io.to(friend.socketId).emit('onlineFriend', data.user);
+                    // socket.emit('updateChatList', user);
+                })
+
+            })
         })
 
+
+
         socket.on('new-msg', function (data) {
-            console.log("Az sum survura i poluchavam suobshtenie.")
             // This is the final ------>
-            console.log("Idva ot---"+ data.fromUser+"---Izprashtam go na: " + data.toUser + "----a suobshtenieto e: :--- " + data.msg);
             chatService.insertMessage(data.fromUser, data.toUser, data.msg);
-            // socket.broadcast.to(users[data.toUser]).emit('new-msg', data.msg);
-            // Sending message to the user and me
-            app.io.to(socket.id).to(data.toUser).emit('new-msg', data.msg);
+
+            userService.findUserById(data.toUser, function (err, user) {
+                // console.log("Founded user is: ");
+                // console.log(user);
+                // console.log(user.socketId);
+                app.io.to(socket.id).to(user.socketId).emit('new-msg', { 'fromUserId': data.fromUser, 'message': data.msg });
+            })
+
         });
 
+
+        // socket.on('disconnect', function () {
+        //     console.log(socket.id);
+        //     userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
+
+        //         myFriends.forEach(function (friend) {
+        //             console.log("My online friends are:  ");
+        //             console.log(friend);
+        //             app.io.to(friend.socketId).emit('offlineFriend', data.user);
+        //             // socket.emit('updateChatList', user);
+        //         })
+
+        //     })
+        // });
 
         // userService -> Find all my friends which are online
 

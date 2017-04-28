@@ -4,7 +4,6 @@ var app = angular.module("myapp", ["ngRoute"]);
 // 	if (document.cookie) {
 // 		console.log("In app.service for getting all info for current user");
 // 		$http.get('/getAllInfoForMe').then(function (response) {
-// 			console.log("zapazwam user-a");
 // 			console.log(response.data);
 // 			$window.localStorage.setItem('currentUser', JSON.stringify(response.data));
 // 			var socket = io.connect('http://localhost:3000');

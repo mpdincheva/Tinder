@@ -14,6 +14,7 @@
 var multer = require("multer");
 
 var userService = require("../config/userService");
+var chatService = require("../config/chatService");
 
 
 // var passwordHash = require('password-hash');
@@ -126,8 +127,8 @@ module.exports = function (app, passport) {
     console.log(req.cookies.userid);
     userService.findUserById(req.cookies.userid, function (err, user) {
       if (user) {
-        console.log("Sending user to the client:");
-        console.log(user);
+        // console.log("Sending user to the client:");
+        // console.log(user);
         res.json(user);
       } else {
         res.status(404).send();
@@ -136,10 +137,10 @@ module.exports = function (app, passport) {
   })
 
   app.post("/updatePosition", function (req, res, next) {
-    console.log(req.body.lat);
-    console.log(req.body.lng);
-    console.log("Eto ti go user-a");
-    console.log(req.cookies.userid);
+    // console.log(req.body.lat);
+    // console.log(req.body.lng);
+    // console.log("Eto ti go user-a");
+    // console.log(req.cookies.userid);
     var user_id = (req.body.id) ? req.body.id : req.cookies.userid;
     userService.updatePosition(user_id, req.body.lat, req.body.lng);
     res.status(200).send();
@@ -181,5 +182,21 @@ module.exports = function (app, passport) {
     }
     // res.json(decodedName);
   });
+
+  app.get('/allMessagesBetween:friendId', function(req, res, next) {
+    var friendId = req.params.friendId;
+    console.log("In the server. My friends id is: ");
+    console.log(friendId);
+    chatService.getMessages(req.cookies.userid, friendId, function(err, messages) {
+      if(messages) {
+        res.json(messages);
+      } else {
+        res.status(200).send();
+      }
+      if(err) {
+        res.status(500).send();
+      }
+    })
+  })
 }
 

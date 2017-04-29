@@ -76,12 +76,12 @@ module.exports = (function () {
         },
 
         createExtenalUser: function (provider, email, password,
-         firstname, lastname, profilePicture, gender, age, cb) {
+            firstname, lastname, profilePicture, gender, age, cb) {
 
             var hashedPassword = passwordHash.generate(password);
 
             var createdUser = new ExternalUser(provider, email, hashedPassword,
-             firstname, lastname, profilePicture, gender, age)
+                firstname, lastname, profilePicture, gender, age)
 
             users.insert(createdUser, function (err, insertedUser) {
                 if (cb) {
@@ -227,26 +227,29 @@ module.exports = (function () {
             users.find(obj)
                 .then(function (data) {
                     var allUsers = [];
-                    for (var index = 0; index < data.length; index++) {
-                        var returnUser = false;
-                        if (interest !== "all") {
-
-                            for (var userInterest = 0; userInterest < data[index].interests.length; userInterest++) {
-                                if(data[index]["interests"][userInterest] == interest){
-                                    returnUser = true;
-                                    break;
+                    if (data.length > 0) {
+                        for (var index = 0; index < data.length; index++) {
+                            var returnUser = false;
+                            if (interest !== "all") {
+                                if (data[index]["interests"]) {
+                                    for (var userInterest = 0; userInterest < data[index]["interests"].length; userInterest++) {
+                                        if (data[index]["interests"][userInterest] == interest) {
+                                            returnUser = true;
+                                            break;
+                                        }
+                                    }
                                 }
+                            } else {
+                                returnUser = true;
                             }
-                        } else {
-                            returnUser = true;
+                            if (returnUser && parseInt(data[index]["age"]) >= ageInput.minAge && parseInt(data[index]["age"]) <= ageInput.maxAge && distanceInKmBetweenTwoUsers(lat, lng, data[index].lat, data[index].lng) <= radius) {
+                                allUsers.push(data[index]);
+                            }
                         }
-                        if (returnUser && parseInt(data[index]["age"]) >= ageInput.minAge && parseInt(data[index]["age"]) <= ageInput.maxAge && distanceInKmBetweenTwoUsers(lat, lng, data[index].lat, data[index].lng) <= radius) {
-                            allUsers.push(data[index]);
-                        }
+                        // console.log("Userite");
+                        console.log(allUsers);
+                        cb(null, allUsers);
                     }
-                    // console.log("Userite");
-                    console.log(allUsers);
-                    cb(null, allUsers);
                 });
         },
 

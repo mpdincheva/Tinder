@@ -164,7 +164,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                             window.onresize = function (event) {
                                 $("#markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
                             }
-                            google.maps.event.trigger(map, 'resize');
+                            // google.maps.event.trigger(map, 'resize');
                         });
                     });
                     $rootScope.markers.push(mark);

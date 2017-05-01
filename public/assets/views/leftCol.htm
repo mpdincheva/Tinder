@@ -36,7 +36,7 @@
                             </div>
                         </form>
                         <hr/>-->
-                        <form id="peopleForm" ng-submit="searchPeople()">
+                        <form id="peopleForm" ng-submit="searchPeople()" novalidate>
                             <div class="table-row">
                                 <label class="table-cell">Радиус: </label>
                                 <div id="slider" ng-model="radius">
@@ -85,7 +85,7 @@
                 </div>
                 <div id="collapse2" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <form ng-submit="searchEvents()">
+                        <form ng-submit="searchEvents()" novalidate>
                             <label class="table-cell">Радиус: </label>
                             <div id="sliderEv" ng-model="radiusEv">
 

@@ -1,9 +1,11 @@
 app.controller("moreInfoController", function ($rootScope, $scope, $http) {
+
     $rootScope.$on("updateMarkerUser", function () {
         $scope.userInterests = $rootScope.userInterests;
         console.log($scope.userInterests);
         $scope.user = $rootScope.user;
         $scope.showme = true;
+<<<<<<< HEAD
 
         $scope.alreadySent = false;
         $scope.isFriend = false;
@@ -88,3 +90,4 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
         // google.maps.event.trigger(map, 'resize');
     });
 });
+

@@ -11,6 +11,7 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
             console.log($scope.event["going"]);
         });
     }
+    
     $rootScope.$on("updateEventMarker", function () {
         $scope.event = $rootScope.event;
         $scope.event["date"] = new Date($scope.event["date"]).toDateString();

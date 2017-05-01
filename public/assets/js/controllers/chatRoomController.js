@@ -1,4 +1,9 @@
 app.controller("chatRoomController", function ($scope, $http, $window, $rootScope) {
+  $("#markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
+
+  window.onresize = function (event) {
+    $("#markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
+  }
 
 
   // objDiv.scrollTop = objDiv.scrollHeight;
@@ -123,6 +128,7 @@ app.controller("chatRoomController", function ($scope, $http, $window, $rootScop
 
       $('#message-container')
         .append($('<li>').addClass("message-from-friend")
+
           .append($('<li>').addClass("text-message")
             .append($('<img>').attr("src", $scope.friend.profilePicture)))
           .append($('<li>').addClass("img-box")

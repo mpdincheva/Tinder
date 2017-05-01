@@ -28,10 +28,24 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $rootScope.$broadcast('showSettings');
     };
 
-    $scope.showEventForm = function (event) {
+    $scope.showEventForm = function ($event) {
+        $event.preventDefault();
+        console.log("Clicked create event");
         $('<div class="modal-backdrop"></div>').appendTo(document.body);
         $rootScope.showEventForm = true;
+        console.log(document.getElementById("mapEvents"));
+        $rootScope.mapEvents = new google.maps.Map(document.getElementById('mapEvents'), {
+            zoom: 12,
+            center: new google.maps.LatLng(parseFloat($scope.currentUser.lat), parseFloat($scope.currentUser.lng)),
+            // center: { lat: 42.643619, lng: 23.340120 },
+            // center: { lat: , lng:  },
+            styles: [{ "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#b71c1c" }] }, { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] }, { "featureType": "landscape.natural", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": "-23" }, { "lightness": "27" }, { "visibility": "on" }, { "gamma": "1" }, { "hue": "#ff1800" }, { "weight": "0.75" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "visibility": "on" }, { "color": "#e74c3c" }, { "saturation": "-59" }, { "lightness": "30" }] }, { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "on" }, { "hue": "#ff1800" }, { "saturation": "2" }, { "lightness": "2" }, { "weight": "0.75" }] }, { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "on" }, { "saturation": "-51" }, { "color": "#cbcbcb" }] }, { "featureType": "transit.station", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#2c3e50" }, { "visibility": "on" }] }]
+        });
+        $rootScope.marker = null;
+        console.log($rootScope.mapEvents);
+        console.log($rootScope.marker);
         $rootScope.$broadcast('showEventForm');
+        $rootScope.$broadcast('updatedMapEvents');
     };
 
     $scope.showMapHideChat = function () {
@@ -147,12 +161,13 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                 interest: $scope.selectedInterest
             }
         }).then(function (response) {
-            // console.log(response.data);
+            console.log(response.data);
             $rootScope.markers.forEach(function (mark) {
                 mark.setMap(null);
             });
             $rootScope.markers = [];
             response.data.forEach(function (user) {
+                console.log(user);
                 if (user._id != $scope.currentUser._id) {
                     var mark = new google.maps.Marker({
                         position: { lat: parseFloat(user.lat), lng: parseFloat(user.lng) },
@@ -178,6 +193,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                                     }
                                 }
                             });
+
                             $rootScope.$broadcast("updateMarkerUser");
                             $("#map").addClass("col-sm-6");
                             $("#map").removeClass("col-sm-9");
@@ -230,6 +246,17 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                     console.log(this);
                     var self = this;
                     $scope.$apply(function () {
+                        $http({
+                            method: "POST",
+                            url: "/getUsersById",
+                            data: {
+                                users: self.event["going"]
+                            }
+                        }).then(function (response) {
+                            self.event["going"] = response.data;
+                            console.log("Are going");
+                            console.log(self.event["going"]);
+                        });
                         $rootScope.event = self.event;
                         $rootScope.$broadcast("updateEventMarker");
                         $("#map").addClass("col-sm-6");

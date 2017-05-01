@@ -26,10 +26,24 @@ module.exports = function (app, passport) {
 	var upload = multer({ dest: "public/assets/images/profilePhotos" });
 
 	app.post('/updateAccountInfo', upload.any(), function (req, res, next) {
+		console.log("Interesite ----------------------");
+		console.log(req.body.interests);
+		var interestsUser = [];
+		var interests = JSON.parse(req.body.interests);
+		var allInterests = JSON.parse(req.body.allInterests);
+		console.log(interests);
+		for (var index = 0; index < allInterests.length; index++) {
+			if (interests[index] === "true") {
+				console.log(req.body.interests[index]);
+				interestsUser.push(allInterests[index]._id);
+			}
+		}
+		console.log(interestsUser);
 		var obj = {
 			age: req.body.age,
 			gender: req.body.gender,
-			description: req.body.description
+			description: req.body.description,
+			interests: interestsUser
 		}
 		if (req.files.length > 0) {
 			obj["profilePicture"] = req.files[0].path.substr(7);
@@ -127,7 +141,7 @@ module.exports = function (app, passport) {
 	});
 
 
-	app.post("/getUsersById", function(req, res, next){
+	app.post("/getUsersById", function (req, res, next) {
 		userService.findUsersById(req.body.users, function (err, data) {
 			res.json(data);
 		});
@@ -144,7 +158,6 @@ module.exports = function (app, passport) {
 			res.json(data);
 		});
 	});
-
   
   app.get("/getUserInfo:userId", function(req, res, next) {
     userService.findUserById(req.params.userId, function(err, user) {
@@ -170,7 +183,6 @@ module.exports = function (app, passport) {
   //     userService.updateChatRequests(req.cookies.userid, req.body);
   //     res.status(200).send();
   // })
-  
 
 }
 

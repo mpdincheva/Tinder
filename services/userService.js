@@ -143,9 +143,9 @@ module.exports = (function () {
         },
 
         findAndUpdateSocketId: function (socketId) {
-                    users.findOneAndUpdate(
-                        { socketId: socketId },
-                        { $set: { socketId: "" } });
+            users.findOneAndUpdate(
+                { socketId: socketId },
+                { $set: { socketId: "" } });
         },
 
         // For sending events on disconnected ->
@@ -233,8 +233,14 @@ module.exports = (function () {
             users.findOneAndUpdate(
                 { _id: userId },
                 {
-                    $set: accountSettings
-                })
+                    $set: {
+                        age: accountSettings.age,
+                        gender: accountSettings.gender,
+                        description: accountSettings.description,
+                        interests: accountSettings.interests,
+                        profilePicture: accountSettings.profilePicture
+                    }
+                });
         },
 
         updateUserFriends: function (userId, friendId) {
@@ -297,7 +303,7 @@ module.exports = (function () {
             if (typeof genderInput === "string") {
                 obj.gender = genderInput;
             }
-        
+
             users.find(obj)
                 .then(function (data) {
                     var allUsers = [];

@@ -68,7 +68,7 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
             $scope.alreadySent = true;
             $scope.isFriend = false;
             $scope.chatRequestButton = false;
-        })
+        });
         event.stopImmediatePropagation();
         // $('#sendChatRequest').text('Вие изпратихте покана за приятелство за този потребител')
     })

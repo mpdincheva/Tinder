@@ -1,7 +1,7 @@
 <div ng-controller="chatListController">
 	<div id="bottom-chat-menu" class="col-sm-9">
 		<div class="row" style=" max-height: 203px; overflow-x:hidden;" id="friends-container">
-			<div class="col-sm-3" ng-repeat="friend in friends" style="padding: 1em;">
+			<div class="col-sm-3" ng-repeat="friend in friends" style="padding: 1em;" id="{{friend._id}}">
 				<div class="col-sm-12">
 					<img src="{{ friend.profilePicture }}" class="col-sm-6" />
 				</div>

@@ -7,7 +7,7 @@ app.controller("loginController", function ($scope, $location, $window, $http) {
             $scope.error = false;
             var Indata = { 'username': $scope.username, 'password': $scope.password };
 
-            $http.post("http://localhost:3000/login", Indata)
+            $http.post("/login", Indata)
                 .then(function (response, status, headers, config) {
 
                     if (response.data !== "") {

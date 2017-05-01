@@ -93,6 +93,8 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
         // $rootScope.friendId = friend_id;
 
         // Attach friend to $rootScope
+        console.log("From chat list controller:-----------");
+        console.log(friend_id);
         $http.get("/getUserInfo" + friend_id)
             .then(function (response) {
                 $rootScope.friend = response.data;

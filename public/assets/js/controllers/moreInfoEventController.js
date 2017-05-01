@@ -30,7 +30,7 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
 
         $http({
             method: "GET",
-            url: "/getUser" + $scope.event.createdby
+            url: "/getUserInfo" + $scope.event.createdby
         }).then(function (response) {
             $scope.event["createdByUser"] = response.data;
         });

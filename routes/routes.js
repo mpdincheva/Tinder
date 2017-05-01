@@ -227,11 +227,6 @@ module.exports = function (app, passport) {
 		});
 	});
 
-    app.get("/getUser:id", function (req, res, next) {
-		userService.findUserById(req.params.id, function (err, data) {
-			res.json(data);
-		});
-	});
 
 	app.post("/getUsersById", function(req, res, next){
 		userService.findUsersById(req.body.users, function (err, data) {
@@ -253,6 +248,8 @@ module.exports = function (app, passport) {
 
   
   app.get("/getUserInfo:userId", function(req, res, next) {
+	  console.log("FROM SERVER----------------");
+	  console.log(req.params.userId);
     userService.findUserById(req.params.userId, function(err, user) {
       if(user) {
         res.json(user);

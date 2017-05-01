@@ -119,11 +119,13 @@ module.exports = (function () {
                 })
         },
         findUserById: function (profileId, cb) {
-            // console.log("user service found user by id");
-            // console.log(profileId);
+            console.log("user service found user by id");
+            console.log(profileId);
             // console.log(ObjectId(profileId));
             users.find({ '_id': profileId })
                 .then(function (data) {
+                    console.log("FOUNDED USER IS--------------");
+                    console.log(data);
                     // console.log(data);
                     if (data.length > 0) {
                         cb(null, data[0]);

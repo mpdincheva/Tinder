@@ -1,7 +1,7 @@
 app.controller("headerController", function () {
     $("#top-site-button").on("click", function () {
         $('html, body').animate({
-            scrollTop: $(".mainPictures").eq(0).offset().top - 50
+            scrollTop: $("#myCarousel").eq(0).offset().top - 50
         }, 1000);
     });
 

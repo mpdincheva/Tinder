@@ -1,5 +1,4 @@
 app.controller("chatListController", function ($scope, $timeout, $http, $window, $rootScope) {
-
     if ($scope.currentUser.friends == 0) {
         $scope.nofriends = true;
     } else {
@@ -40,6 +39,13 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
                 // }
             })
     }
+    
+    // $scope.search="";
+    // $scope.filterFriends = function () {
+    //     return $scope.friends.filter(function (friend) {
+    //         return (friend.firstname.toLowerCase().indexOf($scope.search.toLowerCase()) > -1 || friend.lastname.toLowerCase().indexOf($scope.search.toLowerCase()) > -1)
+    //     });
+    // };
 
 
 

@@ -8,7 +8,7 @@
         <div id="myprofile">
             <img src="{{ currentUser.profilePicture }}" class="col-sm-4" />
             <p>{{ currentUser.firstname }} {{ currentUser.lastname }}</p>
-            <span id="accountSetting">Редактиране на профила</span>
+            <a id="accountSettings" ng-click="showSettings()">Редактиране на профила</a>
             <div>
                 <button class="btn btn-sm" onclick="angular.element(this).scope().logout()">Logout</button>
             </div>
@@ -23,7 +23,7 @@
                 </div>
                 <div id="collapse1" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <form method="POST">
+                        <!--<form method="POST">
                             <div class="col-sm-12">
                                 <div class="top dropdown" id="search-bar">
 
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                         </form>
-                        <hr/>
+                        <hr/>-->
                         <form id="peopleForm" ng-submit="searchPeople()">
                             <div class="table-row">
                                 <label class="table-cell">Радиус: </label>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="panel panel-default">
+            <div class="panel panel-default">
                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2" ng-click="showMapHideChat()">
                     <h4 class="panel-title">
                         Събития
@@ -85,9 +85,18 @@
                 </div>
                 <div id="collapse2" class="panel-collapse collapse">
                     <div class="panel-body">
+                        <form ng-submit="searchEvents()">
+                            <label class="table-cell">Радиус: </label>
+                            <div id="sliderEv" ng-model="radiusEv">
+
+                            </div>
+                            <span>{{radiusEv}}</span>
+                            <button type="submit" class="btn btn-danger">Търси</button>
+                            <button ng-click="showEventForm()" class="btn btn-success">Създай</button>
+                        </form>
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
 
         <div id="lastinvites">

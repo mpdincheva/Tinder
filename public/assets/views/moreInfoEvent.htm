@@ -1,0 +1,25 @@
+<div ng-controller="moreInfoEventController" id="markEvent" ng-show="showmeEvent" class="col-sm-3" style="overflow-y:scroll">
+    <div id="closeInformationEvent">
+        <button type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="eventInfo">
+        <h1 style="font-style:italic">{{ event.name }}</h1>
+        <p style="font-weight:bold">{{ event.date }}</p>
+        <hr/>
+        <p>{{ event.description }}</p>
+        <h2> Създадено от: </h2>
+        <div>
+            <img src="{{event.createdByUser.profilePicture}}" style="width:25px; height: 50px;">
+            <span style="font-weight:bold"> {{ event.createdByUser.firstname }} {{ event.createdByUser.lastname }}</span>
+        </div>
+        <h2> Ще отидат: </h2>
+        <div ng-repeat="user in event.going">
+            <img src="{{user.profilePicture}}" style="width:25px; height: 50px;">
+            <span style="font-style:italic"> {{ user.firstname }} {{ user.lastname }}</span>
+        </div>
+        <button class="btn btn-success" ng-click="addMe()" ng-show="!going"> Ще отида </button>
+        <button class="btn btn-danger" ng-click="removeMe()" ng-show="going"> Няма да отида </button>
+    </div>
+</div>

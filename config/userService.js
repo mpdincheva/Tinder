@@ -10,9 +10,6 @@ var ObjectId = require('mongodb').ObjectID;
 var passwordHash = require('password-hash');
 
 
-
-
-
 module.exports = (function () {
 
     function User(email, password, firstname, lastname) {
@@ -130,6 +127,24 @@ module.exports = (function () {
                     // console.log(data);
                     if (data.length > 0) {
                         cb(null, data[0]);
+                    } else {
+                        cb(null, false);
+                    }
+                })
+                .catch(function (err) {
+                    cb(err, false);
+                })
+        },
+
+        findUsersById: function (usersIds, cb) {
+            // console.log("user service found user by id");
+            // console.log(profileId);
+            // console.log(ObjectId(profileId));
+            users.find({ '_id': { $in : usersIds} })
+                .then(function (data) {
+                    // console.log(data);
+                    if (data.length > 0) {
+                        cb(null, data);
                     } else {
                         cb(null, false);
                     }
@@ -308,7 +323,7 @@ module.exports = (function () {
             if (typeof genderInput === "string") {
                 obj.gender = genderInput;
             }
-
+        
             users.find(obj)
                 .then(function (data) {
                     var allUsers = [];

@@ -8,43 +8,41 @@
                 <form ng-submit="saveAccountSettings()">
                     <div class="row">
 
-                        <div ng-init="image.filename='assets/images/profilePhotos/default.svg'" class="col-sm-6">
+                        <div class="col-sm-6">
                             <input type='file' id="file" custom-on-change="uploadFile">
-                            <div style="width:300px; height: 400px" >
-                                <img id="photo" ng-src="{{ image.filename }}" class="col-sm-12" />
+                            <div style="width:300px; height: 400px">
+                                <img id="photo" ng-src="{{ user.profilePicture }}" class="col-sm-12" />
                             </div>
                         </div>
 
                         <div class="col-sm-6">
-
                             <div>
                                 <label for="age">Години: </label>
-                                <input id="age" type="number" min="0" ng-model="user.age" required/>
+                                <input id="age" type="number" min="0" ng-model="user.age" ng-disabled="regUser" required/>
                             </div>
 
                             <div>
                                 <label for="gender"> Пол: </label>
-                                <input type="radio" ng-model="user.gender" value="male"> Male
-                                <input type="radio" ng-model="user.gender" value="female"> Female
+                                <input type="radio" ng-model="user.gender" value="male" ng-disabled="regUser"> Male
+                                <input type="radio" ng-model="user.gender" value="female" ng-disabled="regUser"> Female
                             </div>
 
-                            <div>  
+                            <div>
                                 <label for="description">Описание:</label>
                                 <textarea id="description" ng-model="user.description"></textarea>
                             </div>
 
                             <div>
                                 <label for="">Интереси: </label>
-                                <select ng-model="sport.model">
-                    <option ng-repeat="option in sport.options" value="{{option.id}}">{{option.name}}</option>
-                </select>
-                                <select ng-model="music.model">
-                    <option ng-repeat="option in music.options" value="{{option.id}}">{{option.name}}</option>
-                </select>
+                                <div ng-repeat="interest in interests">
+                                    <input type="checkbox" ng-model="interest.value" value="interest.value">
+                                    <label for="">{{interest.name}}</label>
+                                </div>
                             </div>
 
                             <div>
                                 <button type="submit">Запази</button>
+                                <button ng-show="showCancelButton" ng-click="cancel()">Отмени</button>
                             </div>
                         </div>
                     </div>

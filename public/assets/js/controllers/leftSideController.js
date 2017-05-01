@@ -10,6 +10,10 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     console.log("From left side controller");
     console.log($scope.currentUser);
 
+	$rootScope.$on("userUpdated", function(){
+		$scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
+	});
+    
     $http({
         method: "GET",
         url: "/getInterests",
@@ -18,17 +22,29 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $scope.$apply();
     });
 
+    $scope.showSettings = function () {
+        $('<div class="modal-backdrop"></div>').appendTo(document.body);
+        $rootScope.showSettings = true;
+        $rootScope.$broadcast('showSettings');
+    };
+
+    $scope.showEventForm = function(event){
+        $('<div class="modal-backdrop"></div>').appendTo(document.body);
+        $rootScope.showEventForm = true;
+        $rootScope.$broadcast('showEventForm');
+    };
+
     $scope.showMapHideChat = function () {
         $scope.radius = 0;
-        $scope.minAge = 20;
-        $scope.maxAge = 50;
+        $scope.minAge = 16;
+        $scope.maxAge = 60;
         $rootScope.showMap = true;
         $rootScope.showChatRoom = false;
         console.log($("#slider"));
         $("#slider").slider({
             value: 0,
             min: 0,
-            max: 500,
+            max: 100,
             step: 1,
             slide: function (event, ui) {
                 $scope.radius = ui.value;
@@ -36,11 +52,22 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
             }
         }).find(".ui-slider-handle").addClass("updated-handle");
 
-        $("#slider-range").slider({
-            range: true,
+        $("#sliderEv").slider({
+            value: 0,
             min: 0,
             max: 100,
-            values: [20, 50],
+            step: 1,
+            slide: function (event, ui) {
+                $scope.radiusEv = ui.value;
+                $scope.$apply();
+            }
+        }).find(".ui-slider-handle").addClass("updated-handle");
+
+        $("#slider-range").slider({
+            range: true,
+            min: 16,
+            max: 60,
+            values: [16, 60],
             slide: function (event, ui) {
                 $scope.minAge = ui.values[0];
                 $scope.maxAge = ui.values[1];
@@ -71,44 +98,38 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         });
     };
 
-    $scope.searchPeopleByName = function () {
-        var name = $scope.namePerson;
-        console.log(name);
-        if (name != "") {
-            var encodedName = encodeURIComponent(name);
-            $http({
-                method: 'GET',
-                url: '/users' + encodedName
-            }).then(function (response) {
-                if (response.data.length > 0) {
-                    $("ul.dropdown-menu").html("");
-                    $("ul.dropdown-menu").show();
+    // $scope.searchPeopleByName = function () {
+    //     var name = $scope.namePerson;
+    //     console.log(name);
+    //     if (name != "") {
+    //         var encodedName = encodeURIComponent(name);
+    //         $http({
+    //             method: 'GET',
+    //             url: '/users' + encodedName
+    //         }).then(function (response) {
+    //             if (response.data.length > 0) {
+    //                 $("ul.dropdown-menu").html("");
+    //                 $("ul.dropdown-menu").show();
 
-                    Array.prototype.forEach.call(response.data, function (element) {
-                        var pic = $("<img>");
-                        pic.src = element.profilePicture;
-                        var item = $("<li class='row'></li>");
-                        item.append(pic);
-                        var name = $("<div></div>").append($("<p></p>").text(element.firstname + " " + element.lastname));
-                        item.append(name);
-                        item.append("<hr/>");
-                        $("ul.dropdown-menu").append(name);
-                    });
-                    console.log(response.data);
-                }
-            });
-        }
-    };
+    //                 Array.prototype.forEach.call(response.data, function (element) {
+    //                     var pic = $("<img>");
+    //                     pic.src = element.profilePicture;
+    //                     var item = $("<li class='row'></li>");
+    //                     item.append(pic);
+    //                     var name = $("<div></div>").append($("<p></p>").text(element.firstname + " " + element.lastname));
+    //                     item.append(name);
+    //                     item.append("<hr/>");
+    //                     $("ul.dropdown-menu").append(name);
+    //                 });
+    //                 console.log(response.data);
+    //             }
+    //         });
+    //     }
+    // };
 
     $scope.searchPeople = function () {
-        console.log($scope.radius);
-        console.log($scope.male);
-        console.log($scope.female);
-        console.log($scope.selectedInterest);
-        console.log($scope.minAge);
-        console.log($scope.maxAge);
-        var gender = ($scope.male == "on" && $scope.female == "on") ? new RegExp(".*male$") : (($scope.male == "on") ? "male" : "female");
-        console.log(gender);
+        var opositeGender = ($scope.currentUser.gender == "male") ? "female" : "male";
+        var gender = ($scope.male == "on" && $scope.female == "on") ? new RegExp(".*male$") : (($scope.male == "on") ? "male" : (($scope.female == "on") ? "female" : opositeGender));
 
         $http({
             url: "/allUsers",
@@ -168,11 +189,64 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                         });
                     });
                     $rootScope.markers.push(mark);
-                }    
+                }
             });
 
             var circle = new google.maps.Circle({ radius: $scope.radius * 500, center: { lat: parseFloat($scope.currentUser.lat), lng: parseFloat($scope.currentUser.lng) } });
             $rootScope.map.fitBounds(circle.getBounds());
         });
     };
+
+
+    $scope.searchEvents = function () {
+        $http({
+            url: "/findEvents",
+            method: "POST",
+            data: {
+                lat: $scope.currentUser.lat,
+                lng: $scope.currentUser.lng,
+                radius: $scope.radiusEv,
+            }
+        }).then(function (response) {
+            // console.log(response.data);
+            $rootScope.markers.forEach(function (mark) {
+                mark.setMap(null);
+            });
+            $rootScope.markers = [];
+            response.data.forEach(function (event) {
+                var mark = new google.maps.Marker({
+                    position: { lat: parseFloat(event.lat), lng: parseFloat(event.lng) },
+                    map: $rootScope.map,
+                    event: event,
+                    icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                });
+
+                mark.addListener('click', function () {
+                    $rootScope.markers.forEach(function (mark) {
+                        mark.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
+                    });
+                    mark.setIcon("http://maps.google.com/mapfiles/ms/icons/purple-dot.png");
+
+                    console.log(this);
+                    var self = this;
+                    $scope.$apply(function () {
+                        $rootScope.event = self.event;
+                        $rootScope.$broadcast("updateEventMarker");
+                        $("#map").addClass("col-sm-6");
+                        $("#map").removeClass("col-sm-9");
+                        $("#markEvent").css("height", ($window.innerHeight * 70 / 100) + "px");
+
+                        window.onresize = function (event) {
+                            $("#markEvent").css("height", ($window.innerHeight * 70 / 100) + "px");
+                        };
+                    });
+                });
+                $rootScope.markers.push(mark);
+            });
+
+            var circle = new google.maps.Circle({ radius: $scope.radiusEv * 500, center: { lat: parseFloat($scope.currentUser.lat), lng: parseFloat($scope.currentUser.lng) } });
+            $rootScope.map.fitBounds(circle.getBounds());
+        });
+    };
+
 });

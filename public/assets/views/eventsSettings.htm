@@ -5,34 +5,29 @@
                 <h4 class="modal-title">Моля попълнете</h4>
             </div>
             <div class="modal-body">
-                <form ng-submit="saveAccountSettings()">
+                <form name="formEvents" ng-submit="saveEvent()">
                     <div class="row">
+                        <div class="col-sm-8">
+                            <div id="mapEvents" style="width: 400px; height:400px;"></div>
+                        </div>
 
-                        <div id="mapEvents" style="width:400px;height:400px; cursor:pointer"></div>
-
-                        <div class="col-sm-6">
+                        <div class="col-sm-3">
                             <div>
-                                <label for="firstname">Име на събитие: </label>
-                                <input id="firstname" type="text" ng-model="user.firstname" required/>
+                                <label for="nameEvent">Име на събитие: </label>
+                                <input id="nameEvent" type="text" ng-model="nameEvent" required/>
                             </div>
-
-                            <div>  
-                                <label for="">Описание:</label>
-                                <textarea></textarea>
-                            </div>
-
                             <div>
-                                <label for="">Свързано с: </label>
-                                <select ng-model="sport.model">
-                    <option ng-repeat="option in sport.options" value="{{option.id}}">{{option.name}}</option>
-                </select>
-                                <select ng-model="music.model">
-                    <option ng-repeat="option in music.options" value="{{option.id}}">{{option.name}}</option>
-                </select>
+                                <label for="dateEvent">Кога?</label>
+                                <input id="dateEvent" type="date" data-date-inline-picker="true" ng-model="dateEvent" required/>
+                            </div>
+                            <div>
+                                <label>Описание:</label>
+                                <textarea ng-model="desc"></textarea>
                             </div>
 
                             <div>
                                 <button type="submit">Запази</button>
+                                <button ng-click="closeForm($event)">Отмени</button>
                             </div>
                         </div>
                     </div>

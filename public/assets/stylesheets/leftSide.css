@@ -122,27 +122,16 @@ form  {
 	padding-left: 1em;
 }
 	
-#closeInformation {
+#closeInformation, #closeInformationEvent {
 	float: left;
 	position: fixed;
 	top: 2px;
-}
-
-#accountSettingForm {
-	height: 500px;
-	width: 1020px;
-	display: none;
-	float: left;
-}
-
-#accountSettingForm img.personProfileImg,  #accountSettingForm div.personProfile, #accountSettingForm div.photos {
-	display: inline-block;
-	width: 320px;
-	float: left;
 }
 
 .updated-handle {
     background:  rgb(183, 28, 28) !important; 
 }
 
-
+.modal-backdrop {
+	opacity: 0.7;
+}

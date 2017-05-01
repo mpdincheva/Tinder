@@ -1,5 +1,4 @@
 app.controller("chatListController", function ($scope, $timeout, $http, $window, $rootScope) {
-
     if ($scope.currentUser.friends == 0) {
         $scope.nofriends = true;
     } else {
@@ -9,6 +8,13 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
                 $scope.friends = response.data;
             })
     }
+    
+    // $scope.search="";
+    // $scope.filterFriends = function () {
+    //     return $scope.friends.filter(function (friend) {
+    //         return (friend.firstname.toLowerCase().indexOf($scope.search.toLowerCase()) > -1 || friend.lastname.toLowerCase().indexOf($scope.search.toLowerCase()) > -1)
+    //     });
+    // };
 
     $scope.startChat = function (index) {
         // Gets the id of clicked user-->
@@ -30,7 +36,7 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
                 $rootScope.messages = response.data;
             })
             // Catch database or server errors
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log(err);
             })
 

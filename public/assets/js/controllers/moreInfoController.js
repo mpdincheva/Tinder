@@ -16,6 +16,5 @@ app.controller("moreInfoController", function ($rootScope, $scope) {
         $rootScope.markers.forEach(function (mark) {
             mark.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
         });
-        // google.maps.event.trigger(map, 'resize');
     });
 });

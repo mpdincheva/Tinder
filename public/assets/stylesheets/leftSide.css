@@ -67,6 +67,9 @@ body {
 .invites p{
 	color: black;
 }
+.invites img{
+	width: 50px;
+}
 
 
 .slider-selection {

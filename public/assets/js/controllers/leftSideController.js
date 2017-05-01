@@ -5,15 +5,15 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $("#leftSide").css("height", $window.innerHeight + "px");
     }
 
-    $scope.showme = false;
+    // $scope.showme = false;
     $rootScope.markers = [];
     console.log("From left side controller");
     console.log($scope.currentUser);
 
-	$rootScope.$on("userUpdated", function(){
-		$scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
-	});
-    
+    $rootScope.$on("userUpdated", function () {
+        $scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
+    });
+
     $http({
         method: "GET",
         url: "/getInterests",
@@ -28,7 +28,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $rootScope.$broadcast('showSettings');
     };
 
-    $scope.showEventForm = function(event){
+    $scope.showEventForm = function (event) {
         $('<div class="modal-backdrop"></div>').appendTo(document.body);
         $rootScope.showEventForm = true;
         $rootScope.$broadcast('showEventForm');
@@ -97,6 +97,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
             $location.path("/");
         });
     };
+
 
     // $scope.searchPeopleByName = function () {
     //     var name = $scope.namePerson;
@@ -197,7 +198,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         });
     };
 
-
     $scope.searchEvents = function () {
         $http({
             url: "/findEvents",
@@ -249,4 +249,76 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         });
     };
 
+    // This doesnt WorkerEventMap.. must be in apply
+    $scope.missingChatRequests = true;
+
+    // Check if user has chat requests
+    if ($scope.currentUser.chatRequests.length !== 0) {
+        $scope.missingChatRequests = false;
+
+        var requests = $scope.currentUser.chatRequests;
+        console.log("From chat request:");
+        console.log($scope.currentUser.chatRequests);
+        for (var index = 0; index < requests.length; index++) {
+            $http.get('/getUserInfo' + requests[index])
+                .then(function (response) {
+                    var user = response.data;
+                    $('#lastinvites')
+                        .append($('<div>').addClass("invites")
+                            .append($('<img>').attr("src", user.profilePicture))
+                            .append($('<span>').text(user.firstname + " " + user.lastname + " пожела да започне чат с вас."))
+                            .append($('<button>').text('Приеми').click(function () {
+                                console.log("You click me.");
+                                console.log(user);
+                                $http({
+                                    'method': 'POST',
+                                    'url': '/updateUserFriends',
+                                    data: { currentUserId: $scope.currentUser._id, friendId: user._id },
+                                })
+
+                                socket.emit('IAcceptRequest', { friend: user, currentUser: $scope.currentUser });
+
+                                $(this).parent().remove();
+
+                                $rootScope.$broadcast('newFriends', user);
+
+                                if ($scope.currentUser.chatRequests == []) {
+                                    $scope.missingChatRequests = true;
+                                }
+                            }
+                            )));
+                })
+        }
+    }
+
+
+
+
+
+    // Receive chat request notification -->
+    socket.on('receiveChatRequest', function (user) {
+        $('#lastinvites')
+            .append($('<div>').addClass("invites")
+                .append($('<img>').attr("src", user.profilePicture))
+                .append($('<span>').text(user.firstname + " " + user.lastname + " пожела да започне чат с вас."))
+                .append($('<button>').text('Приеми').click(function () {
+                    $http({
+                        'method': 'POST',
+                        'url': '/updateUserFriends',
+                        data: { currentUserId: $scope.currentUser._id, friendId: user._id },
+                    })
+
+                    socket.emit('IAcceptRequest', { friend: user, currentUser: $scope.currentUser });
+
+                    $(this).parent().remove();
+
+                    $rootScope.user = user;
+                    $rootScope.$broadcast('newFriends');
+
+                    if ($scope.currentUser.chatRequests == []) {
+                        $scope.missingChatRequests = true;
+                    }
+                }
+                )));
+    })
 });

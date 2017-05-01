@@ -16,6 +16,7 @@ module.exports = (function () {
         this.message = message;
         this.message = message;
         this.date = new Date();
+        this.seen = false;
     }
 
     return {
@@ -26,7 +27,7 @@ module.exports = (function () {
         getMessages: function (fromUserId, toUserId, cb) {
             console.log("In the chat service");
             // chat.find({fromUserId: fromUserId, toUserId: toUserId}).sort({date: -1})
-            chat.find({ $or: [{ fromUserId: fromUserId, toUserId: toUserId }, { fromUserId: toUserId, toUserId: fromUserId }] }, {'sort': [['date', 'asc']]})
+            chat.find({ $or: [{ fromUserId: fromUserId, toUserId: toUserId }, { fromUserId: toUserId, toUserId: fromUserId }] }, { 'sort': [['date', 'asc']] })
                 // .sort({ date: 1 })
                 .then(function (data) {
                     if (data) {
@@ -37,6 +38,32 @@ module.exports = (function () {
                 })
                 .catch(function (err) {
                     cb(err, false);
+                })
+        },
+
+        setAllMessagesSeen: function (fromUserId, toUserId) {
+            console.log("From database. Every message must be updated");
+            chat.find({ fromUserId: fromUserId, toUserId: toUserId})
+                .then(function(data) {
+                    if(data) {
+                        console.log("From database. founded messages are: ");
+                        console.log(data);
+                        for(var index = 0; index < data.length; index++) {
+                            chat.update({ _id: data[index]._id}, {$set: { seen: true }});
+                        }
+                    }
+                })
+
+            // chat.updateMany({ $or: [{ fromUserId: fromUserId, toUserId: toUserId },
+            //  { fromUserId: toUserId, toUserId: fromUserId }] }, {$set: {seen: true}} )
+        },
+
+        getAllUnseenMessages: function(fromUserid, cb) {
+            chat.find({toUser: fromUserid, seen: false})
+                .then(function(messages) {
+                    console.log("From the database: All unseen messages are: ");
+                    console.log(messages);
+                    cb(messages);
                 })
         }
 

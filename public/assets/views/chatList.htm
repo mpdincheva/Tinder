@@ -1,17 +1,18 @@
 <div ng-controller="chatListController">
 	<div id="bottom-chat-menu" class="col-sm-9">
-		<!--<input ng-model="search" placeholder="Търси в чата"></input>-->
-		<div class="row" style=" max-height: 203px; overflow-x:hidden;">
+		<div class="row" style=" max-height: 203px; overflow-x:hidden;" id="friends-container">
 			<div class="col-sm-3" ng-repeat="friend in friends" style="padding: 1em;">
 				<div class="col-sm-12">
-					<img src="{{ friend.profilePicture }}" class="col-sm-8" />
+					<img src="{{ friend.profilePicture }}" class="col-sm-6" />
 				</div>
 				<div class="col-sm-12">
 					<h3>{{friend.firstname}} {{friend.lastname}}</h3>
+					<!--<span ng-if="friend.socketId" id="onlineFriend{{$index}}">На линия</span>
+					<span ng-if="!friend.socketId" id="onlineFriend{{$index}}">Отсъства</span>-->
+					<span id="friendStatus{{$index}}"></span>
 				</div>
 				<div class="col-sm-12">
 					<button class="btn" ng-click="startChat($index)">Напиши съобщение</button>
-					<!--<button class="btn">Разгледай профила</button>-->
 				</div>
 			</div>
 			<div ng-show="nofriends ">

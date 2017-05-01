@@ -1,22 +1,31 @@
-<div id="chatPage" ng-controller="chatRoomController">
+<div ng-controller="chatRoomController">
+
+	<div id="message-container" class="col-sm-6">
+		<!--Here will print all messages-->
+	</div>
+		<p ng-show="friendIsTyping" id="friendIsTyping">Потребителя пише съобщение</p>
+
+
+
+	<form id="send-message-form" class="col-sm-6">
+		<input id="new-message" type="text" name="message" />
+		<button id="sendMessage">Send</button>
+	</form>
+
+
+	<!--<div class="col-sm-9">
+				<h2>Welcome in my chatroom</h2>
+				<p>Here you can chat with your friends</p>
+				<h1>You are chatting with: {{friendId}}</h1>
+
+				<div id="chatWrapper">
+					<ul id="messages-area">
+						<li ng-repeat="message in messages">
+							{{message.message}}
+						</li>
+					</ul>
+				</div>-->
+
 
 	<div ng-include="'assets/views/moreInfo.htm'"></div>
-	<div class="col-sm-9">
-		<h2>Welcome in my chatroom</h2>
-		<p>Here you can chat with your friends</p>
-		<h1>You are chatting with: {{friendId}}</h1>
-
-		<div id="chatWrapper">
-			<ul id="messages-area">
-				<li ng-repeat="message in messages">
-					{{message.message}}
-				</li>
-			</ul>
-		</div>
-		<form id="form" action="/chatroom" method="POST">
-			<input id="new-message" type="text" name="message" />
-			<button id="sendMessage">Send</button>
-		</form>
-	</div>
-
 </div>

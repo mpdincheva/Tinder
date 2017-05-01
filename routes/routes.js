@@ -251,5 +251,35 @@ module.exports = function (app, passport) {
 		});
 	});
 
+  
+  app.get("/getUserInfo:userId", function(req, res, next) {
+    userService.findUserById(req.params.userId, function(err, user) {
+      if(user) {
+        res.json(user);
+      }
+    })
+  })
+
+  app.post('/receiveChatRequest', function(req, res, next) {
+    // userService
+    console.log("Receiving chat request from server");
+    console.log(req.body.user);
+    userService.findAndUpdateChatRequests(req.cookies.userid, req.body.user);
+  })
+
+  app.post('/updateUserFriends', function(req, res, next) {
+    console.log("I will update users friends")
+    console.log(req.body.currentUserId);
+    console.log(req.body.friendId);
+    userService.updateUserFriends(req.body.currentUserId, req.body.friendId);
+    res.status(200).send();
+  })
+
+  // app.post('/sendedChatRequests', function(req, res, next) {
+  //     userService.updateChatRequests(req.cookies.userid, req.body);
+  //     res.status(200).send();
+  // })
+  
+
 }
 

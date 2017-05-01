@@ -1,11 +1,9 @@
 app.controller("moreInfoController", function ($rootScope, $scope, $http) {
-
     $rootScope.$on("updateMarkerUser", function () {
         $scope.userInterests = $rootScope.userInterests;
         console.log($scope.userInterests);
         $scope.user = $rootScope.user;
         $scope.showme = true;
-<<<<<<< HEAD
 
         $scope.alreadySent = false;
         $scope.isFriend = false;
@@ -70,12 +68,13 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
             $scope.alreadySent = true;
             $scope.isFriend = false;
             $scope.chatRequestButton = false;
-        })
+        });
+        event.stopImmediatePropagation();
         // $('#sendChatRequest').text('Вие изпратихте покана за приятелство за този потребител')
     })
 
 
-    $("#closeInformation").on("click", function () {
+    $("#closeInformation").on("click", function (event) {
         $scope.$apply(function () {
             console.log("You clicked close information button");
             $scope.showme = false;
@@ -87,6 +86,6 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
         $rootScope.markers.forEach(function (mark) {
             mark.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
         });
+        event.stopImmediatePropagation();
     });
 });
-

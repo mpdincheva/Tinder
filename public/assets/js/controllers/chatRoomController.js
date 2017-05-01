@@ -1,4 +1,9 @@
 app.controller("chatRoomController", function ($scope, $http, $window, $rootScope) {
+  $("#markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
+
+  window.onresize = function (event) {
+    $("#markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
+  }
 
   $scope.friendIsTyping = false;
   $rootScope.$on('friendUpdated', function () {
@@ -81,45 +86,45 @@ app.controller("chatRoomController", function ($scope, $http, $window, $rootScop
 
 
 
-    // Receiving new message
-    socket.on('new-msg', function (info) {
-      // info is message object. Contains fromUserId and current message
-      console.log("Message that I receive from the server are:")
-      console.log(info);
+  // Receiving new message
+  socket.on('new-msg', function (info) {
+    // info is message object. Contains fromUserId and current message
+    console.log("Message that I receive from the server are:")
+    console.log(info);
 
-      if (info.fromUserId == $scope.currentUser._id) {
-        // This message was sent from me
-        console.log("This message was sent from me.");
-           if ($('.seenMessage').length >= 1) {
-             $('.seenMessage').remove();
-           }
-        $('#message-container')
-          .append($('<li>').addClass("message-from-me")
-            .append($('<span>').text(info.message))
-            .append($('<img>').attr("src", $scope.currentUser.profilePicture)));
-            
-      } else if (info.fromUserId == $scope.user._id) {
-        // This message was send from friend
-        // Must set different style here
-        console.log("This message was sent from my friend");
-
-        if ($('.seenMessage').length >= 1) {
-             $('.seenMessage').remove();
-           }
-
-        $('#message-container')
-          .append($('<li>').addClass("message-from-friend")
-            .append($('<img>').attr("src", $scope.friend.profilePicture))
-            .append($('<span>').text(info.message)));
+    if (info.fromUserId == $scope.currentUser._id) {
+      // This message was sent from me
+      console.log("This message was sent from me.");
+      if ($('.seenMessage').length >= 1) {
+        $('.seenMessage').remove();
       }
-    });
+      $('#message-container')
+        .append($('<li>').addClass("message-from-me")
+          .append($('<span>').text(info.message))
+          .append($('<img>').attr("src", $scope.currentUser.profilePicture)));
 
-    // Sending typing notification
-    $('#new-message').on('input', function () {
-      setTimeout(function () {
-        socket.emit('sendTypingNotification', { fromUser: $scope.user._id , toUser: $scope.currentUser })
-      }, 200);
-    })
+    } else if (info.fromUserId == $scope.user._id) {
+      // This message was send from friend
+      // Must set different style here
+      console.log("This message was sent from my friend");
+
+      if ($('.seenMessage').length >= 1) {
+        $('.seenMessage').remove();
+      }
+
+      $('#message-container')
+        .append($('<li>').addClass("message-from-friend")
+          .append($('<img>').attr("src", $scope.friend.profilePicture))
+          .append($('<span>').text(info.message)));
+    }
+  });
+
+  // Sending typing notification
+  $('#new-message').on('input', function () {
+    setTimeout(function () {
+      socket.emit('sendTypingNotification', { fromUser: $scope.user._id, toUser: $scope.currentUser })
+    }, 200);
+  })
 
 
 

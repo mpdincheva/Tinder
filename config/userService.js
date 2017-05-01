@@ -119,11 +119,13 @@ module.exports = (function () {
                 })
         },
         findUserById: function (profileId, cb) {
-            // console.log("user service found user by id");
-            // console.log(profileId);
+            console.log("user service found user by id");
+            console.log(profileId);
             // console.log(ObjectId(profileId));
             users.find({ '_id': profileId })
                 .then(function (data) {
+                    console.log("FOUNDED USER IS--------------");
+                    console.log(data);
                     // console.log(data);
                     if (data.length > 0) {
                         cb(null, data[0]);
@@ -140,7 +142,7 @@ module.exports = (function () {
             // console.log("user service found user by id");
             // console.log(profileId);
             // console.log(ObjectId(profileId));
-            users.find({ '_id': { $in : usersIds} })
+            users.find({ '_id': { $in: usersIds } })
                 .then(function (data) {
                     // console.log(data);
                     if (data.length > 0) {
@@ -168,9 +170,9 @@ module.exports = (function () {
         },
 
         findAndUpdateSocketId: function (socketId) {
-                    users.findOneAndUpdate(
-                        { socketId: socketId },
-                        { $set: { socketId: "" } });
+            users.findOneAndUpdate(
+                { socketId: socketId },
+                { $set: { socketId: "" } });
         },
 
         // For sending events on disconnected ->
@@ -253,8 +255,14 @@ module.exports = (function () {
             users.findOneAndUpdate(
                 { _id: userId },
                 {
-                    $set: accountSettings
-                })
+                    $set: {
+                        age: accountSettings.age,
+                        gender: accountSettings.gender,
+                        description: accountSettings.description,
+                        interests: accountSettings.interests,
+                        profilePicture: accountSettings.profilePicture
+                    }
+                });
         },
 
 
@@ -323,7 +331,7 @@ module.exports = (function () {
             if (typeof genderInput === "string") {
                 obj.gender = genderInput;
             }
-        
+
             users.find(obj)
                 .then(function (data) {
                     var allUsers = [];

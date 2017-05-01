@@ -18,13 +18,13 @@
                         <div class="col-sm-6">
                             <div>
                                 <label for="age">Години: </label>
-                                <input id="age" type="number" min="0" ng-model="user.age" ng-disabled="regUser" required/>
+                                <input id="age" type="number" min="0" ng-model="user.age" required/>
                             </div>
 
                             <div>
                                 <label for="gender"> Пол: </label>
-                                <input type="radio" ng-model="user.gender" value="male" ng-disabled="regUser"> Male
-                                <input type="radio" ng-model="user.gender" value="female" ng-disabled="regUser"> Female
+                                <input type="radio" ng-model="user.gender" value="male"> Male
+                                <input type="radio" ng-model="user.gender" value="female"> Female
                             </div>
 
                             <div>
@@ -35,14 +35,14 @@
                             <div>
                                 <label for="">Интереси: </label>
                                 <div ng-repeat="interest in interests">
-                                    <input type="checkbox" ng-model="interest.value" value="interest.value">
+                                    <input type="checkbox" ng-model="user.interests[$index]" ng-true-value="'true'" ng-false-value="'false'">
                                     <label for="">{{interest.name}}</label>
                                 </div>
                             </div>
 
                             <div>
                                 <button type="submit">Запази</button>
-                                <button ng-show="showCancelButton" ng-click="cancel()">Отмени</button>
+                                <button ng-show="showCancelButton" ng-click="cancel($event)">Отмени</button>
                             </div>
                         </div>
                     </div>

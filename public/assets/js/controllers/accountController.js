@@ -11,9 +11,10 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
         console.log("In home");
         $scope.user = JSON.parse($window.localStorage.getItem("currentUser"));
         $scope.user["age"] = parseInt($scope.user["age"]);
-        $scope.regUser = true;
         $scope.showCancelButton = true;
-        $scope.cancel = function () {
+        $scope.cancel = function ($event) {
+            $event.preventDefault();
+            console.log("Cancel");
             $(".modal-backdrop").remove();
             $rootScope.showSettings = false;
             $rootScope.$broadcast('showSettings');
@@ -46,11 +47,15 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
         var file = document.getElementById("file").files[0];
 
         for (prop in $scope.user) {
-            console.log(prop)
+            console.log(prop);
             console.log($scope.user[prop]);
-            formData.append(prop, $scope.user[prop]);
+            if (Array.isArray($scope.user[prop])) {
+                formData.append(prop, JSON.stringify($scope.user[prop]));
+            } else {
+                formData.append(prop, $scope.user[prop]);
+            }
         }
-
+        formData.append("allInterests", JSON.stringify($scope.interests));
         formData.append("image", file);
 
         $http.post("http://localhost:3000/updateAccountInfo", formData, {

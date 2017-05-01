@@ -16,151 +16,132 @@ module.exports = function (app, passport) {
             // data is the full current person object
 
             console.log("Made new socket id");
+            console.log(socket.id);
 
-            // console.log(data.user);
-            console.log(data.user._id);
-            // console.log(typeof data.user)
 
             userService.updateSocket(data.user._id, socket.id);
-            // console.log("Sockets for current user: ");
-            // console.log(socket.id);
-            // console.log("Updated user socket id is: ");
-            // console.log(data.user.socketId);
 
             // Get all online friends
-            userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
+            // userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
 
-                myFriends.forEach(function (friend) {
-                    console.log("My online friends are:  ");
-                    console.log(friend);
-                    app.io.to(friend.socketId).emit('onlineFriend', data.user);
-                    // socket.emit('updateChatList', user);
-                })
+            //     myFriends.forEach(function (friend) {
+            //         // console.log("My online friends are:  ");
+            //         // console.log(friend);
+            //         app.io.to(friend.socketId).emit('onlineFriend', data.user);
+            //         // socket.emit('updateChatList', user);
+            //     })
 
-            })
+            // })
         })
 
-
-
         socket.on('new-msg', function (data) {
-            // This is the final ------>
-            chatService.insertMessage(data.fromUser, data.toUser, data.msg);
+            chatService.insertMessage(data.fromUser._id, data.toUser._id, data.msg);
 
-            userService.findUserById(data.toUser, function (err, user) {
-                // console.log("Founded user is: ");
-                // console.log(user);
-                // console.log(user.socketId);
-                app.io.to(data.fromUser).to(user.socketId).emit('new-msg', { 'fromUserId': data.fromUser, 'message': data.msg });
+
+            userService.getUsersSockets(data.fromUser._id, data.toUser._id, function (fromUser, toUser) {
+                app.io.to(fromUser.socketId).to(toUser.socketId)
+                    .emit('new-msg', { 'fromUserId': data.fromUser._id, 'message': data.msg });
             })
-
         });
+
 
         // Send chat request notification
         socket.on('sendChatNotification', function (data) {
-            console.log("In send chat notification");
-            console.log(data.fromUser);
-            console.log(data.toUser);
-            app.io.to(data.toUser.socketId).emit('chatNotification', data.fromUser)
-        })
-
-        socket.on('new-msg', function (data) {
-            app.io.to(data.toUser)
+            userService.findUserById(data.toUser._id, function (err, user) {
+                app.io.to(user.socketId).emit('chatNotification', data.fromUser)
+            })
         })
 
         socket.on('sendTypingNotification', function (data) {
             console.log("Get typing notification");
-            console.log(data);
+            console.log(data.toUser);
             userService.findUserById(data.toUser, function (err, user) {
                 app.io.to(user.socketId).emit('sendTypingNotification', data.fromUser);
             })
         })
 
-            // socket.on('disconnect', function () {
-            //     console.log(socket.id);
-            //     userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
 
+
+        socket.on('sendChatRequest', function (data) {
+            // data contains: fromUser: $scope.currentUser, toUser: $scope.user
+
+            console.log("Just receive send chat request");
+            userService.updateChatRequests(data.fromUser._id, data.toUser._id);
+
+
+            userService.getUsersSockets(data.fromUser._id, data.toUser._id, function (fromUser, toUser) {
+                console.log("Chat request is SENT FROM-------------");
+                console.log(fromUser);
+                console.log("Chat request MUST BE TO-------------");
+                console.log(toUser);
+                app.io.to(toUser.socketId).emit('receiveChatRequest', fromUser)
+            })
+        })
+
+
+
+
+
+        socket.on('IAcceptRequest', function (data) {
+            // data contains: friend and currentUser
+            console.log(data.friend);
+            console.log(data.currentUser);
+
+            // userService.addNewFriend(data.currentUser._id, data.friend._id);
+
+            userService.getUsersSockets(data.currentUser._id, data.friend._id, function (fromUser, toUser) {
+                app.io.to(toUser.socketId).emit('friendAcceptMyRequest', data.currentUser);
+            })
+        })
+
+
+
+        socket.on('seenAllMessages', function(data) {
+            // data contains fromUser and toUser
+            console.log("In see all messages.");
+            chatService.setAllMessagesSeen(data.fromUser._id, data.toUser._id);
+             app.io.to(data.toUser.socketId).emit('allMessagesAreSeen', data.fromUser);
+        })
+
+        socket.on('getAllUnseenMessages', function(currentUser) {
+            console.log("From get all unseen messages in socket. The user is:");
+            console.log(currentUser);
+            chatService.getAllUnseenMessages(currentUser._id, function(messages) {
+                socket.emit('receiveAllUnseenMessages', messages);
+            })
+        })
+
+
+        // Must delete socket id from database
+        socket.on('disconnect', function () {
+            console.log("On disconnect. This id was disconected..");
+            console.log(socket.id);
+            
+            userService.findAndUpdateSocketId(socket.id);
+
+            // userService.findAndUpdateSocketId(socket.id, function (user) {
+            //     console.log("Updated user is:");
+            //     console.log(user);
+            //     console.log(user.friends);
+            //     userService.getAllOnlineUsers(user.friends, function (err, myFriends) {
+            //         console.log("My all friends are:");
+            //         console.log(myFriends);
             //         myFriends.forEach(function (friend) {
             //             console.log("My online friends are:  ");
             //             console.log(friend);
-            //             app.io.to(friend.socketId).emit('offlineFriend', data.user);
-            //             // socket.emit('updateChatList', user);
+            //             app.io.to(friend.socketId).emit('offlineUser', data.user);
             //         })
 
             //     })
-            // });
-
-            // userService -> Find all my friends which are online
-
-
-
-            // console.log(socket.id);
-            // userService.updateSocket()
-
-            // var dbUsers = db.get("users");
-            // Here socket provide uniqe socket id
-
-            // socket.on('join', function (data) {
-
-            //     for (var prop in users) {
-            //         if (users[prop] == null) {
-            //             users[prop] = socket.id;
-            //         }
-            //     }
-
-            //     console.log("All users are: ");
-            //     console.log(users);
-            //     console.log("My id is: " + socket.id);
-
-            //     // Add current user into users ANGLE_instanced_arrays. If exist it will update the socket id
-            //     users[data.username] = socket.id;
-
-            //     // console.log("All sockets are: ");
-            //     // console.log(app.io.sockets.sockets);
-            //     // Update user's socket id in database
-
-            //     dbUsers.update({ username: data.username }, { $set: { socketid: socket.id } });
-            //     // Create new room for this user
-            //     // socket.join(data.username);
-
-            //     // Get all users and refresh their chatlist -> 
-            //     for (var user in users) {
-            //         app.io.to(users[user]).emit('updateUsersList', users);
-            //     }
-            //     // console.log(socket.id)
-            // })
-
-            // socket.on('logout', function (data) {
-            //     delete users[data.username];
-            //     dbUsers.update({ username: data.username }, { $set: { socketid: null } });
-
-            //     // Get all users and refresh their chatlist -> 
-            //     for (var user in users) {
-            //         app.io.to(user)
-            //         app.io.to(users[user]).emit('updateUsersList', users);
-            //     }
-            // })
-
-            // socket.on('disconnect', function () {
-            //     console.log("disconted from server...")
-            //     console.log(socket.id)
-            //     for (var prop in users) {
-            //         if (users[prop] === socket.id) {
-            //             users[prop] == null;
-            //         }
-            //     }
-            //     setTimeout(function () {
-            //         // IF the user didnt come back, delete it from users array
-            //     }, 1000);
-            // });
-
-            // socket.on('currentUser', function (data) {
-            //   chatWith = data.chatWith;
-            //   chatWithId = users[data.chatWith];
-            //   // console.log(users);
             // })
 
 
+        });
 
 
-        })
-    }
+        // userService -> Find all my friends which are online
+
+
+
+    })
+}

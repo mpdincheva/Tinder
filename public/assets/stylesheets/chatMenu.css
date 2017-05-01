@@ -3,11 +3,11 @@
     bottom: 0;
     right: 0;
     height: 30%;
-    background-color: pink;
+    background-color: #a08888;
 }
 
 /*Temporary styling*/
-
+/*
 #chatPage {
     position: fixed;
     top: 0;
@@ -16,6 +16,8 @@
     height:70%;
     background-color: lightblue;
 }
+
+
 
 
 
@@ -50,4 +52,60 @@
     margin-top: 2em;
     background-color: pink;
     list-style-type: none;
-  }
+  }*/
+
+#message-container {
+  /*position: relative;
+  top:0;
+  left:0;*/
+    /*position: absolute;
+    left: 25%;
+    height: 65%;*/
+    background-color: #acadaf;
+    overflow: auto;
+}
+
+
+#message-container li {
+      list-style-type: none;
+}
+
+#message-container img {
+  width:75px;
+}
+/*Messages from me*/
+#message-container li.message-from-me {
+  text-align: right;
+}
+
+#message-container li.message-from-me span {
+    padding: 2em;
+    background-color: #e5e5e5;
+    border-radius: 40% 40% 0% 40%;
+}
+
+#message-container li.message-from-friend span {
+    padding: 2em;
+    background-color: #e5e5e5;
+    border-radius: 40% 40% 40% 0%;
+}
+
+
+
+#send-message-form {
+  position: absolute;
+  bottom: 30%;
+  left: 25%;
+  padding: 0;
+  color:rgb(183, 28, 28);
+}
+
+#send-message-form input {
+  width: 80%;
+  height: 45px;
+}
+#send-message-form button {
+  width: 20%;
+  height: 45px;
+  color: rgb(183, 28, 28);
+}

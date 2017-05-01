@@ -36,26 +36,6 @@ app.controller("mapController", function ($scope, $location, $window, $rootScope
         }
     })();
 
-    $("#closeInformation").on("click", function () {
-        $scope.$apply(function () {
-            $scope.showme = !$scope.showme;
-            $("#map").removeClass("col-sm-6");
-            $("#map").addClass("col-sm-9");
-        });
-
-        $rootScope.markers.forEach(function (mark) {
-            mark.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
-        });
-        google.maps.event.trigger(map, 'resize');
-    });
-
-    $rootScope.$on("updateMarkerUser", function () {
-        $scope.userInterests = $rootScope.userInterests;
-        console.log($scope.userInterests);
-        $scope.user = $rootScope.user;
-        $scope.showme = true;
-    })
-
     $('#sendChatNotification').on('click', function() {
         console.log("You clicked start chat button");
         socket.emit('sendChatNotification', {'fromUser': $scope.currentUser, 'toUser': $scope.user})

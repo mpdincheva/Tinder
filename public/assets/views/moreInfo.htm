@@ -1,4 +1,4 @@
-<div id="markPerson" ng-show="showme" class="col-sm-3">
+<div ng-controller="moreInfoController" id="markPerson" ng-show="showme" class="col-sm-3">
     <div id="closeInformation">
         <button type="button" class="close" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
@@ -7,11 +7,15 @@
     <img class="personProfileImg" src="{{ user.profilePicture }}">
     <div class="personProfile">
         <h1>{{ user.firstname }} {{ user.lastname }}</h1>
+        <span ng-show="userIsOnline">На линия</span>
+        <span ng-show="userIsOffline">Отсъства</span>
         <h2>{{ user.age }}</h2>
         <p>{{ user.gender }}</p>
         <p>{{ user.description }}</p>
         <h2>Интереси</h2>
         <p ng-repeat="interest in userInterests"> {{interest.name}}</p>
-
+        <span ng-show="isFriend">Този потребител е Ваш приятел и може да започнете чат с него</span>
+        <span ng-show="alreadySent">Потребителя все още не е отговорил на поканата Ви.</span>
+        <button id="sendChatRequest" ng-show="chatRequestButton">Започни чат</button>
     </div>
 </div>

@@ -49,10 +49,10 @@
                                 <div id="gender" class="table-cell">
                                     <label>Мъже</label>
                                     <input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="male"
-                                        ng-true-value="'on'" ng-false-value="'off'" required>
+                                        ng-true-value="'on'" ng-false-value="'off'">
                                     <label>Жени</label>
                                     <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="female"
-                                        ng-true-value="'on'" ng-false-value="'off'" required>
+                                        ng-true-value="'on'" ng-false-value="'off'">
                                 </div>
                             </div>
                             <div class="table-row">
@@ -65,7 +65,7 @@
                             <div class="table-row">
                                 <label class="table-cell">Интереси: </label>
                                 <div class="table-cell">
-                                    <select  ng-model="selectedInterest" ng-init="selectedInterest='all'">
+                                    <select ng-model="selectedInterest" ng-init="selectedInterest='all'">
                                         <option ng-repeat="interest in interests" value="{{interest._id}}">{{ interest.name }}</option>
                                     </select>
                                 </div>
@@ -91,7 +91,15 @@
         </div>
 
         <div id="lastinvites">
-            <div class="invites">
+
+            <span ng-show="missingChatRequests">Все още нямате предложения за чат</span>
+
+            <!--<div class="invites">
+                <img src="{{user.profilePicture}}" class="col-sm-3">
+                <p> {{user.firstname}} {{user.lastname}} пожела да започне чат с Вас</p>
+            </div>-->
+
+            <!--<div class="invites">
                 <img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
                 <p> George пожела да започне чат с Вас</p>
             </div>
@@ -102,7 +110,7 @@
             <div class="invites">
                 <img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
                 <p> George пожела да започне чат с Вас</p>
-            </div>
+            </div>-->
         </div>
 
     </aside>

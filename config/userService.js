@@ -25,7 +25,9 @@ module.exports = (function () {
         this.lat = "";
         this.lng = "";
         this.friends = [];
-        this.socketId;
+        this.socketId = "";
+        this.chatRequests = [];
+        this.sendedChatRequests = [];
     }
 
     function LocalUser(email, password, firstname, lastname) {
@@ -76,12 +78,12 @@ module.exports = (function () {
         },
 
         createExtenalUser: function (provider, email, password,
-         firstname, lastname, profilePicture, gender, age, cb) {
+            firstname, lastname, profilePicture, gender, age, cb) {
 
             var hashedPassword = passwordHash.generate(password);
 
             var createdUser = new ExternalUser(provider, email, hashedPassword,
-             firstname, lastname, profilePicture, gender, age)
+                firstname, lastname, profilePicture, gender, age)
 
             users.insert(createdUser, function (err, insertedUser) {
                 if (cb) {
@@ -135,6 +137,45 @@ module.exports = (function () {
                 .catch(function (err) {
                     cb(err, false);
                 })
+        },
+
+        getUsersSockets: function (fromUser, toUser, cb) {
+            users.find({ _id: fromUser })
+                .then(function (fromUser) {
+                    users.find({ _id: toUser })
+                        .then(function (toUser) {
+                            console.log("From database. The users i found are:");
+                            console.log(fromUser);
+                            console.log(toUser);
+                            cb(fromUser[0], toUser[0]);
+                        })
+                })
+        },
+
+        findAndUpdateSocketId: function (socketId) {
+                    users.findOneAndUpdate(
+                        { socketId: socketId },
+                        { $set: { socketId: "" } });
+        },
+
+        // For sending events on disconnected ->
+
+        // findAndUpdateSocketId: function (socketId, cb) {
+        //     console.log(socketId);
+        //     users.find({ socketId: socketId })
+        //         .then(function (user) {
+        //             users.findOneAndUpdate(
+        //                 { socketId: socketId },
+        //                 { $set: { socketId: "" } });
+        //             cb(user[0]);
+        //         })
+        // },
+
+        findAndUpdateChatRequests: function (userId, requestFrom, cb) {
+            users.findOneAndUpdate({ _id: userId },
+                { $push: { chatRequests: requestFrom } }
+            )
+            console.log("In thwe database. User is updated");
         },
 
         checkUserPassword: function (provider, username, password, cb) {
@@ -201,6 +242,50 @@ module.exports = (function () {
                 })
         },
 
+
+
+        updateUserFriends: function (userId, friendId) {
+            console.log("From database when update user friends");
+            console.log(userId + "--------" + friendId);
+            users.findOneAndUpdate(
+                { _id: userId },
+                {
+                    $push: { friends: friendId },
+                    $pull: { chatRequests: friendId }
+                });
+
+            users.findOneAndUpdate(
+                { _id: friendId },
+                {
+                    $push: { friends: userId },
+                    $pull: { sendedChatRequests: userId }
+                });
+        },
+
+
+
+
+        // Set chat requests to both of the users
+        updateChatRequests: function (fromUserId, toUserId) {
+            console.log("Will update user sended chat requests");
+            users.findOneAndUpdate(
+                { _id: fromUserId },
+                { $push: { sendedChatRequests: toUserId } });
+
+            users.findOneAndUpdate(
+                { _id: toUserId },
+                { $push: { chatRequests: fromUserId } });
+        },
+
+
+
+
+        addNewFriend: function (userId, friend) {
+            users.findOneAndUpdate(
+                { _id: userId },
+                { $push: { friends: friend } })
+        },
+
         findUsersByFullName: function (firstname, lastname, cb) {
             var lastName = new RegExp("^" + lastname);
             users.find({ firstname: firstname, lastname: lastName })
@@ -227,50 +312,56 @@ module.exports = (function () {
             users.find(obj)
                 .then(function (data) {
                     var allUsers = [];
-                    for (var index = 0; index < data.length; index++) {
-                        var returnUser = false;
-                        if (interest !== "all") {
-
-                            for (var userInterest = 0; userInterest < data[index].interests.length; userInterest++) {
-                                if(data[index]["interests"][userInterest] == interest){
-                                    returnUser = true;
-                                    break;
+                    if (data.length > 0) {
+                        for (var index = 0; index < data.length; index++) {
+                            var returnUser = false;
+                            if (interest !== "all") {
+                                if (data[index]["interests"]) {
+                                    for (var userInterest = 0; userInterest < data[index]["interests"].length; userInterest++) {
+                                        if (data[index]["interests"][userInterest] == interest) {
+                                            returnUser = true;
+                                            break;
+                                        }
+                                    }
                                 }
+                            } else {
+                                returnUser = true;
                             }
-                        } else {
-                            returnUser = true;
+                            if (returnUser && parseInt(data[index]["age"]) >= ageInput.minAge && parseInt(data[index]["age"]) <= ageInput.maxAge && distanceInKmBetweenTwoUsers(lat, lng, data[index].lat, data[index].lng) <= radius) {
+                                allUsers.push(data[index]);
+                            }
                         }
-                        if (returnUser && parseInt(data[index]["age"]) >= ageInput.minAge && parseInt(data[index]["age"]) <= ageInput.maxAge && distanceInKmBetweenTwoUsers(lat, lng, data[index].lat, data[index].lng) <= radius) {
-                            allUsers.push(data[index]);
-                        }
+                        // console.log("Userite");
+                        console.log(allUsers);
+                        cb(null, allUsers);
                     }
-                    // console.log("Userite");
-                    console.log(allUsers);
-                    cb(null, allUsers);
                 });
         },
 
-        getAllOnlineUsers: function (arrayWithIds, cb) {
-            console.log("In get online users function..");
-            users.find({ _id: { $in: arrayWithIds } })
-                .then(function (data) {
-                    var onlineUsers = [];
-                    for (var index = 0; index < data.length; index++) {
-                        // console.log("In the loop--->");
-                        // console.log(data[index].socketId);
-                        if (data[index].socketId) {
-                            console.log(data[index]);
-                            onlineUsers.push(data[index]);
-                        }
-                    }
-                    console.log("Founded users from database are: ")
-                    // console.log(onlineUsers);
-                    cb(null, onlineUsers);
-                })
-                .catch(function (err) {
-                    cb(err, false);
-                })
-        },
+        // getAllOnlineUsers: function (arrayWithIds, cb) {
+        //     console.log("In get online users function..");
+        //     users.find({ _id: { $in: arrayWithIds } })
+        //         .then(function (data) {
+        //             console.log("From the database.. all friends are:");
+        //             // console.log(data);
+        //             var onlineUsers = [];
+        //             for (var index = 0; index < data.length; index++) {
+        //                 // console.log("In the loop--->");
+        //                 // console.log(data[index].socketId);
+        //                 if (data[index].socketId) {
+        //                     console.log(data[index]);
+        //                     onlineUsers.push(data[index]);
+        //                 }
+        //             }
+        //             console.log("Founded users from database are: ")
+        //             console.log(onlineUsers);
+        //             // console.log(onlineUsers);
+        //             cb(null, onlineUsers);
+        //         })
+        //         .catch(function (err) {
+        //             cb(err, false);
+        //         })
+        // },
 
     }
 })();

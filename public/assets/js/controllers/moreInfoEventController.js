@@ -7,12 +7,13 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
                 users: $scope.event["going"]
             }
         }).then(function (response) {
-            $scope.event["going"] = response.data;
+            $scope.people = response.data;
             console.log($scope.event["going"]);
         });
     }
     
     $rootScope.$on("updateEventMarker", function () {
+        $scope.people = $rootScope.people;
         $scope.event = $rootScope.event;
         $scope.event["date"] = new Date($scope.event["date"]).toDateString();
 

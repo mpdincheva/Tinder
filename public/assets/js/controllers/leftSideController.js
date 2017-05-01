@@ -253,7 +253,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                                 users: self.event["going"]
                             }
                         }).then(function (response) {
-                            self.event["going"] = response.data;
+                            $rootScope.people = response.data;
                             console.log("Are going");
                             console.log(self.event["going"]);
                         });

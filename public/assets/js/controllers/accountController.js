@@ -53,7 +53,7 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
 
         formData.append("image", file);
 
-        $http.post("http://localhost:3000/updateAccountInfo", formData, {
+        $http.post("/updateAccountInfo", formData, {
             transformRequest: angular.identify,
             headers: {
                 'Content-Type': undefined

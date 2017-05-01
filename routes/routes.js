@@ -168,24 +168,6 @@ module.exports = function (app, passport) {
 	//     });
 	// });
 
-	app.get("/users:name", function (req, res, next) {
-		var decodedName = decodeURIComponent(req.params.name);
-		var firstNameIndex = decodedName.indexOf(" ");
-		console.log(firstNameIndex);
-		if (firstNameIndex != -1) {
-			var firstName = decodedName.slice(0, firstNameIndex);
-			var lastName = decodedName.slice(firstNameIndex + 1, decodedName.length);
-			userService.findUsersByFullName(firstName, lastName, function (err, data) {
-				console.log(data);
-			});
-		} else {
-			var firstName = decodedName;
-			userService.findUsersByFirstName(firstName, function (err, data) {
-				res.json(data);
-			});
-		}
-		// res.json(decodedName);
-	});
 
 	app.get('/allMessagesBetween:friendId', function (req, res, next) {
 		var friendId = req.params.friendId;

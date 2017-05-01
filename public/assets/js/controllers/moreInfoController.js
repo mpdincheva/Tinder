@@ -58,7 +58,7 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
 
 
 
-    $('#sendChatRequest').on('click', function () {
+    $('#sendChatRequest').on('click', function (event) {
         console.log("Chat request is SENT FROM-------------");
         console.log($scope.currentUser);
         console.log("Chat request MUST BE TO-------------");
@@ -69,21 +69,27 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
             $scope.isFriend = false;
             $scope.chatRequestButton = false;
         })
+        event.stopImmediatePropagation();
         // $('#sendChatRequest').text('Вие изпратихте покана за приятелство за този потребител')
     })
 
 
-    $("#closeInformation").on("click", function () {
+    $("#closeInformation").on("click", function (event) {
         $scope.$apply(function () {
             console.log("You clicked close information button");
             $scope.showme = false;
             console.log($scope.showme);
             $("#map").removeClass("col-sm-6");
             $("#map").addClass("col-sm-9");
+            
         });
 
         $rootScope.markers.forEach(function (mark) {
             mark.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
         });
+        event.stopImmediatePropagation();
     });
 });
+
+
+

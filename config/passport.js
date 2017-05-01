@@ -1,11 +1,10 @@
-
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 
 
-var userService = require('./userService');
+var userService = require('../services/userService');
 
 // expose this function to our app using module.exports
 module.exports = function (passport) {
@@ -30,20 +29,6 @@ module.exports = function (passport) {
         done(null, false);
       }
     })
-
-    // var users = db.get("users");
-    // users.find({ _id: userId })
-    //   .then(function (data) {
-    //     var user = data[0];
-    //     if (user) {
-    //       done(null, user);
-    //     } else {
-    //       done(null, false);
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     done(error, false);
-    //   })
   });
 
 
@@ -92,8 +77,6 @@ module.exports = function (passport) {
           userService.createExtenalUser('facebook', profile.emails[0].value,
             accessToken, profile.name.givenName, profile.name.familyName,
             profile.photos[0].value, profile.gender, '', function (err, createdUser) {
-              console.log("In passport strategy");
-              console.log(createdUser);
               return done(null, createdUser);
             });
 
@@ -104,8 +87,6 @@ module.exports = function (passport) {
 
 
   // GOOGLE STRATEGY--------------------------->
-
-
 
   passport.use('google', new GoogleStrategy({
     clientID: '974128199188-9csvji2p5goecra3jjf1a97532lrbvkf.apps.googleusercontent.com',
@@ -126,12 +107,9 @@ module.exports = function (passport) {
         if (user) {
           return done(null, user);
         } else {
-          console.log("Creating google user");
           userService.createExtenalUser('google', profile.emails[0].value,
             accessToken, profile.name.givenName, profile.name.familyName,
             profile.photos[0].value, profile.gender, '', function (err, createdUser) {
-              console.log("In passport strategy");
-              console.log(createdUser);
               return done(null, createdUser);
             });
 

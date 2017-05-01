@@ -1,4 +1,4 @@
-var configDB = require('./database.js');
+var configDB = require('../config/database.js');
 var mongodb = require('mongodb');
 var monk = require('monk');
 var db = monk(configDB.url);

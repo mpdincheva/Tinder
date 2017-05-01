@@ -19,9 +19,9 @@
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                         <input id="password" type="password" class="form-control" name="password" placeholder="Парола" ng-model="password">
                     </div>
+                    <p ng-show="error" id="login-error">{{ errorMessage }}</p>
                     <button class=" btn btn-primary btn-lg pull-right">Вход</button>
                 </form>
-                <p ng-show="error">{{ errorMessage }}</p>
             </div>
         </div>
     </div>

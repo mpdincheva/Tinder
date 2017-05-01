@@ -252,6 +252,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     // This doesnt WorkerEventMap.. must be in apply
     $scope.missingChatRequests = true;
 
+
     // Check if user has chat requests
     if ($scope.currentUser.chatRequests.length !== 0) {
         $scope.missingChatRequests = false;
@@ -280,7 +281,8 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
 
                                 $(this).parent().remove();
 
-                                $rootScope.$broadcast('newFriends', user);
+                                $rootScope.user = user;
+                                $rootScope.$broadcast('newFriends');
 
                                 if ($scope.currentUser.chatRequests == []) {
                                     $scope.missingChatRequests = true;
@@ -297,6 +299,10 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
 
     // Receive chat request notification -->
     socket.on('receiveChatRequest', function (user) {
+        $scope.$apply(function () {
+            $scope.missingChatRequests = false;
+        })
+        console.log("JUST RECEIVE CHAT REQUEST HERE --------");
         $('#lastinvites')
             .append($('<div>').addClass("invites")
                 .append($('<img>').attr("src", user.profilePicture))

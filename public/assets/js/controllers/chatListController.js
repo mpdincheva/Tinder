@@ -6,7 +6,7 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
         $http.get('/getFriends')
             .then(function (response) {
                 $scope.friends = response.data;
-                
+
 
                 // var friends = response.data;
                 // for(var index = 0; index < friends.length; index++) {
@@ -39,7 +39,7 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
                 // }
             })
     }
-    
+
     // $scope.search="";
     // $scope.filterFriends = function () {
     //     return $scope.friends.filter(function (friend) {
@@ -61,13 +61,13 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
 
     socket.emit('getAllUnseenMessages', $scope.currentUser);
 
-    socket.on('receiveAllUnseenMessages', function(messages) {
+    socket.on('receiveAllUnseenMessages', function (messages) {
         console.log("From client when receive the messages..");
         console.log(messages);
     });
-    
 
-    $rootScope.$on('newFriends', function (newFriend) {
+
+    $rootScope.$on('newFriends', function () {
         console.log("From chat list controller. My new friends are");
         // console.log($rootScope.friends);
         $scope.$apply(function () {
@@ -117,15 +117,19 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
                         // messagesFromMe.push(message);
                         $('#message-container')
                             .append($('<li>').addClass("message-from-me")
-                                .append($('<span>').text(message.message))
-                                .append($('<img>').attr("src", $scope.currentUser.profilePicture)));
+                                .append($('<li>').addClass("text-message")
+                                    .append($('<span>').text(message.message)))
+                                .append($('<li>').addClass("img-box")
+                                    .append($('<img>').attr("src", $scope.currentUser.profilePicture))));
 
                     } else {
                         // messagesFromFriend.push(message);
                         $('#message-container')
                             .append($('<li>').addClass("message-from-friend")
-                                .append($('<img>').attr("src", $rootScope.friend.profilePicture))
-                                .append($('<span>').text(message.message)));
+                                .append($('<li>').addClass("img-box")
+                                    .append($('<img>').attr("src", $rootScope.friend.profilePicture)))
+                                .append($('<li>').addClass("text-message")
+                                    .append($('<span>').text(message.message))));
                     }
                 })
             })
@@ -137,31 +141,38 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
     };
 
 
-    // socket.on('offlineUser', function(user) {
-    //     console.log("This user is offline now");
-    //     console.log(user);
-    // })
 
 
-    // setInterval(function () {
-        // Set status to every friend
-        $http.get('/getFriends')
-            .then(function (response) {
-                // $scope.friends = response.data;
-                // Set status of each friend
-                var friends = response.data;
-                for (var index = 0; index < friends.length; index++) {
-                    var selector = 'friendStatus' + index;
-                    if (friends[index].socketId) {
-                        console.log(selector);
-                        console.log($('#' + selector))
-                        $('#' + selector).text('Онлайн');
-                    } else {
-                        $('#' + selector).text('Отсъства');
-                    }
+    // Set status to every friend when the page load
+    $http.get('/getFriends')
+        .then(function (response) {
+            // $scope.friends = response.data;
+            // Set status of each friend
+            var friends = response.data;
+            for (var index = 0; index < friends.length; index++) {
+                var selector = 'friendStatus' + index;
+                if (friends[index].socketId) {
+                    console.log(selector);
+                    console.log($('#' + selector))
+                    $('#' + selector).text('Онлайн');
+                } else {
+                    $('#' + selector).text('Отсъства');
                 }
-            })
-    // }, 3000)
+            }
+        })
+
+    socket.on('offlineFriend', function (user) {
+        console.log("This user is offline now");
+        console.log(user);
+        $('#' + user._id + " > div > span").text('Офлайн');
+    })
+
+
+    socket.on('onlineFriend', function (user) {
+        console.log("Somebody just came online");
+        console.log(user);
+        $('#' + user._id + " > div > span").text('Онлайн');
+    })
 
 })
 

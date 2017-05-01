@@ -49,4 +49,12 @@ header .btn-lg{
 }*/
 
 
+#login-error {
+  color:red;
+  font-weight: bold;
+}
 
+#registration-error {
+  color:red;
+  font-weight: bold;
+}

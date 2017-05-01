@@ -51,24 +51,42 @@ body {
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	margin: 0px 1em;
-	background-color: white;
+	/*margin: 0px 1em;*/
+	border-top: 8px solid rgb(183, 28, 28);
+	background-color: #e5e5e5;
 	display: block;
 	height: 150px;
+	width: 100%;
 	overflow-y: scroll;
 }
 
+#lastinvites #noRequests {
+	margin-top:1em;
+	text-align: center;
+	font-weight: bold;
+	font-size: 2em;
+	color: rgb(183, 28, 28);
+}
+
 .invites {
-	display: inline-block;
-	padding: 1em 0px;
-	border-bottom: 1px solid grey;
+    display: inline-block;
+    padding: 1em 1em;
+    border-bottom: 1px solid rgb(183, 28, 28);
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rgb(183, 28, 28);
 }
 
 .invites p{
 	color: black;
 }
 .invites img{
-	width: 50px;
+	    width: 80px;
+    margin-right: 1em;
+}
+
+.invites button {
+	    float: right;
 }
 
 

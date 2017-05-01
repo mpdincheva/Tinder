@@ -22,14 +22,15 @@ module.exports = function (app, passport) {
             userService.updateSocket(data.user._id, socket.id);
 
             // Get all online friends
-            // userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
+            userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
 
-            //     myFriends.forEach(function (friend) {
-            //         // console.log("My online friends are:  ");
-            //         // console.log(friend);
-            //         app.io.to(friend.socketId).emit('onlineFriend', data.user);
-            //         // socket.emit('updateChatList', user);
-            //     })
+                myFriends.forEach(function (friend) {
+                    console.log("My online friends are:  ");
+                    console.log(friend);
+                    app.io.to(friend.socketId).emit('onlineFriend', data.user);
+                    // socket.emit('updateChatList', user);
+                })
+            });
 
             // })
         })
@@ -55,8 +56,8 @@ module.exports = function (app, passport) {
         socket.on('sendTypingNotification', function (data) {
             console.log("Get typing notification");
             console.log(data.toUser);
-            userService.findUserById(data.toUser, function (err, user) {
-                app.io.to(user.socketId).emit('sendTypingNotification', data.fromUser);
+            userService.findUserById(data.fromUser, function (err, user) {
+                app.io.to(user.socketId).emit('sendTypingNotification', data.toUser);
             })
         })
 
@@ -96,17 +97,17 @@ module.exports = function (app, passport) {
 
 
 
-        socket.on('seenAllMessages', function(data) {
+        socket.on('seenAllMessages', function (data) {
             // data contains fromUser and toUser
             console.log("In see all messages.");
             chatService.setAllMessagesSeen(data.fromUser._id, data.toUser._id);
-             app.io.to(data.toUser.socketId).emit('allMessagesAreSeen', data.fromUser);
+            app.io.to(data.toUser.socketId).emit('allMessagesAreSeen', data.fromUser);
         })
 
-        socket.on('getAllUnseenMessages', function(currentUser) {
+        socket.on('getAllUnseenMessages', function (currentUser) {
             console.log("From get all unseen messages in socket. The user is:");
             console.log(currentUser);
-            chatService.getAllUnseenMessages(currentUser._id, function(messages) {
+            chatService.getAllUnseenMessages(currentUser._id, function (messages) {
                 socket.emit('receiveAllUnseenMessages', messages);
             })
         })
@@ -116,7 +117,20 @@ module.exports = function (app, passport) {
         socket.on('disconnect', function () {
             console.log("On disconnect. This id was disconected..");
             console.log(socket.id);
-            
+
+
+            userService.findUserBySocketId(socket.id, function (user) {
+                userService.getAllOnlineUsers(user.friends, function (err, myFriends) {
+
+                    myFriends.forEach(function (friend) {
+                        console.log("My online friends are:  ");
+                        console.log(friend);
+                        app.io.to(friend.socketId).emit('offlineFriend', user);
+                        // socket.emit('updateChatList', user);
+                    })
+                });
+
+            })
             userService.findAndUpdateSocketId(socket.id);
 
             // userService.findAndUpdateSocketId(socket.id, function (user) {

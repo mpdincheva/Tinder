@@ -13,7 +13,8 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
         $scope.user["age"] = parseInt($scope.user["age"]);
         $scope.regUser = true;
         $scope.showCancelButton = true;
-        $scope.cancel = function () {
+        $scope.cancel = function ($event) {
+            $event.preventDefault();
             $(".modal-backdrop").remove();
             $rootScope.showSettings = false;
             $rootScope.$broadcast('showSettings');
@@ -63,6 +64,8 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
             console.log(response);
             $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
 
+            $rootScope.$broadcast('userUpdated');
+
             socket = io.connect('http://localhost:3000');
             socket.emit('updateSocket', { user: response.data });
             $(".modal-backdrop").remove();
@@ -71,7 +74,6 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
             } else {
                 $rootScope.showSettings = false;
                 $rootScope.$broadcast('showSettings');
-                $rootScope.$broadcast('userUpdated');
             }
         });
     };

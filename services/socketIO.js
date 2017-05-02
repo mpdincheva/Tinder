@@ -51,21 +51,16 @@ module.exports = function (app, passport) {
         })
 
 
-
         socket.on('sendChatRequest', function (data) {
             // data contains: fromUser: $scope.currentUser, toUser: $scope.user
 
             userService.updateChatRequests(data.fromUser._id, data.toUser._id);
-
-
+            
             userService.getUsersSockets(data.fromUser._id, data.toUser._id, function (fromUser, toUser) {
                 app.io.to(toUser.socketId).emit('receiveChatRequest', fromUser)
-            })
-        })
+            });
 
-
-
-
+        });
 
         socket.on('IAcceptRequest', function (data) {
             // data contains: friend and currentUser

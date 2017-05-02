@@ -4,7 +4,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <img class="personProfileImg" src="{{ user.profilePicture }}">
+    <img class="personProfileImg" ng-src="{{ user.profilePicture }}">
     <div class="personProfile">
         <h1>{{ user.firstname }} {{ user.lastname }}</h1>
         <span ng-show="userIsOnline">На линия</span>

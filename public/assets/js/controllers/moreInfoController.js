@@ -38,6 +38,7 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
 
     $rootScope.$on("chooseFriendToChat", function () {
         $scope.user = $rootScope.friend;
+        $scope.userInterests = $rootScope.userInterests;
         $scope.showme = true;
 
         $scope.alreadySent = false;
@@ -73,7 +74,7 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
             $scope.showme = false;
             $("#map").removeClass("col-sm-6");
             $("#map").addClass("col-sm-9");
-            
+
         });
 
         $rootScope.markers.forEach(function (mark) {

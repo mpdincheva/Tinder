@@ -168,7 +168,9 @@ module.exports = (function () {
         findAndUpdateChatRequests: function (userId, requestFrom, cb) {
             users.findOneAndUpdate({ _id: userId },
                 { $push: { chatRequests: requestFrom } }
-            )
+            ).then(function(){
+                cb();
+            })
         },
 
         checkUserPassword: function (provider, username, password, cb) {

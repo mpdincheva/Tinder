@@ -80,7 +80,15 @@ app.controller("chatListController", function ($scope, $timeout, $http, $window,
         // Attach friend to $rootScope
         $http.get("/getUserInfo" + friend_id)
             .then(function (response) {
+                $scope.interests = $rootScope.interests;
                 $rootScope.friend = response.data;
+                $rootScope.userInterests = $scope.interests.filter(function (interest) {
+                    for (var index = 0; index < $rootScope.friend.interests.length; index++) {
+                        if (interest._id == $rootScope.friend.interests[index]) {
+                            return interest;
+                        }
+                    }
+                });
                 $rootScope.$broadcast("friendUpdated");
 
                 // $rootScope.user = response.data;

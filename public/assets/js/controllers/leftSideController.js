@@ -17,6 +17,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         url: "/getInterests",
     }).then(function (response) {
         $scope.interests = response.data;
+        $rootScope.interests = $scope.interests;
         $scope.$apply();
     });
 

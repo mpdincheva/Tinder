@@ -11,15 +11,11 @@ app.controller("loginController", function ($scope, $location, $window, $http) {
                 .then(function (response, status, headers, config) {
 
                     if (response.data !== "") {
-                        // console.log(response.data);                 
-                        // $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
-                        // $rootScope.user = response.data;
-                        // console.log($window.localStorage.getItem("currentUser"));
                         $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
+
                         // Create global variable for socket
                         socket = io.connect('http://localhost:3000');
                         socket.emit('updateSocket', { user: response.data });
-                        console.log(socket);
                         $location.path('/home');
                     }
 

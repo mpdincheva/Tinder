@@ -6,11 +6,18 @@
         </div>
 
         <div id="myprofile">
-            <img src="{{ currentUser.profilePicture }}" class="col-sm-4" />
-            <p>{{ currentUser.firstname }} {{ currentUser.lastname }}</p>
-            <a id="accountSettings" ng-click="showSettings()">Редактиране на профила</a>
-            <div>
-                <button class="btn btn-sm" onclick="angular.element(this).scope().logout()">Logout</button>
+            <div class="row">
+                <div class="col-sm-7">
+                    <img src="{{ currentUser.profilePicture }}"  class="col-sm-12"/>
+                </div>
+                <div class="col-sm-5">
+
+                    <p>{{ currentUser.firstname }} {{ currentUser.lastname }}</p>
+                    <a id="accountSettings" ng-click="showSettings()">Редактиране на профила</a>
+                    <div>
+                        <button class="btn btn-sm btn-danger" onclick="angular.element(this).scope().logout()">Logout</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -36,91 +43,85 @@
                             </div>
                         </form>
                         <hr/>-->
-                        <form id="peopleForm" ng-submit="searchPeople()" novalidate>
-                            <div class="table-row">
-                                <label class="table-cell">Радиус: </label>
-                                <div id="slider" ng-model="radius">
-
-                                </div>
-                                <span>{{radius}}</span>
-                            </div>
-                            <div class="table-row">
-                                <label class="table-cell">Пол: </label>
-                                <div id="gender" class="table-cell">
-                                    <label>Мъже</label>
-                                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="male"
-                                        ng-true-value="'on'" ng-false-value="'off'">
-                                    <label>Жени</label>
-                                    <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="female"
-                                        ng-true-value="'on'" ng-false-value="'off'">
-                                </div>
-                            </div>
-                            <div class="table-row">
-                                <label class="table-cell">Години: </label>
-                                <div id="slider-range" ng-model="age">
-
-                                </div>
-                                <span>от {{ minAge }} до {{ maxAge }}</span>
-                            </div>
-                            <div class="table-row">
-                                <label class="table-cell">Интереси: </label>
-                                <div class="table-cell">
-                                    <select ng-model="selectedInterest" ng-init="selectedInterest='all'">
+                        <form id="peopleForm" ng-submit="searchPeople()" novalidate class="col-sm-12">
+                            <table>
+                                <tr>
+                                    <td> <label>Радиус: </label> </td>
+                                    <td>
+                                        <div id="slider" ng-model="radius">
+                                    </td>
+                                    <td> <span class="formNumbers">{{radius}} km</span></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Пол: </label></td>
+                                    <td>
+                                        <label>Мъже</label>
+                                        <input type="checkbox" checked data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="male"
+                                            ng-true-value="'on'" ng-false-value="'off'">
+                                    </td>
+                                    <td>
+                                        <label>Жени</label>
+                                        <input type="checkbox" data-toggle="toggle" data-onstyle="danger" data-offstyle="default" data-size="mini" ng-model="female"
+                                            ng-true-value="'on'" ng-false-value="'off'">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label>Години: </label></td>
+                                    <td>
+                                        <div id="slider-range" ng-model="age"></div>
+                                    </td>
+                                    <td><span class="formNumbers"> от {{ minAge }} до {{ maxAge }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Интереси: </label></td>
+                                    <td><select ng-model="selectedInterest" ng-init="selectedInterest='all'">
                                         <option ng-repeat="interest in interests" value="{{interest._id}}">{{ interest.name }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="table-row">
-                                <button class="btn btn-danger btn-block" type="submit"> Търси </button>
-                            </div>
+                                    </select></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="table-row">
+                                            <button class="btn btn-danger btn-block" type="submit"> Търси </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2" ng-click="showMapHideChat()">
+                        <h4 class="panel-title">
+                            Събития
+                        </h4>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form ng-submit="searchEvents()" novalidate ng-init="radiusEv=0">
+                                <table>
+                                    <tr>
+                                        <td><label>Радиус: </label></td>
+                                        <td>
+                                            <div id="sliderEv" ng-model="radiusEv"></div>
+                                        </td>
+                                        <td><span class="formNumbers">{{radiusEv}} km</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button type="submit" class="btn btn-danger">Търси</button></td>
+                                        <td><button ng-click="showEventForm($event)" class="btn btn-success" id="createButton">Създай</button></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapse2" ng-click="showMapHideChat()">
-                    <h4 class="panel-title">
-                        Събития
-                    </h4>
-                </div>
-                <div id="collapse2" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <form ng-submit="searchEvents()" novalidate>
-                            <label class="table-cell">Радиус: </label>
-                            <div id="sliderEv" ng-model="radiusEv">
 
-                            </div>
-                            <span>{{radiusEv}}</span>
-                            <button type="submit" class="btn btn-danger">Търси</button>
-                            <button ng-click="showEventForm($event)" class="btn btn-success">Създай</button>
-                        </form>
-                    </div>
-                </div>
+            <div id="lastinvites">
+                <p ng-show="missingChatRequests" id="noRequests">Все още нямате предложения за чат</span>
             </div>
-        </div>
-
-        <div id="lastinvites">
-
-            <p ng-show="missingChatRequests" id="noRequests">Все още нямате предложения за чат</span>
-
-            <!--<div class="invites">
-                <img src="{{user.profilePicture}}" class="col-sm-3">
-                <p> {{user.firstname}} {{user.lastname}} пожела да започне чат с Вас</p>
-            </div>-->
-
-            <!--<div class="invites">
-                <img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
-                <p> George пожела да започне чат с Вас</p>
-            </div>
-            <div class="invites">
-                <img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
-                <p> George пожела да започне чат с Вас</p>
-            </div>
-            <div class="invites">
-                <img src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" class="col-sm-3">
-                <p> George пожела да започне чат с Вас</p>
-            </div>-->
-        </div>
 
     </aside>
-</div>
+    </div>

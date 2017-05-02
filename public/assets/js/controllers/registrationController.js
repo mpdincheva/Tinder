@@ -17,22 +17,17 @@ app.controller("registrationController", function ($scope, $window, $location, $
 					'email': $scope.email,
 					'password': $scope.password
 				}
-				console.log(Indata);
 				$http.post("/register", Indata)
 					.then(function (response, status, headers, config) {
-						console.log(response.data);
 						if (response.data !== "") {
 							$window.localStorage.setItem("currentUser", JSON.stringify(response.data));
 							$location.path("/account");
 						}
-						console.log("The status code is:");
-						console.log(status);
 					}, function (err) {
 						if (err) {
 							$scope.error = true;
 							$scope.errorMessage = "Вече има регистриран потребител с този и-мейл";
 						}
-						console.log(err);
 					})
 			}
 

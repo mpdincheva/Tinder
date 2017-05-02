@@ -1,7 +1,6 @@
 app.controller("moreInfoController", function ($rootScope, $scope, $http) {
     $rootScope.$on("updateMarkerUser", function () {
         $scope.userInterests = $rootScope.userInterests;
-        console.log($scope.userInterests);
         $scope.user = $rootScope.user;
         $scope.showme = true;
 
@@ -29,7 +28,6 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
         // Check if already send chat request
         for (var index = 0; index < $scope.currentUser.sendedChatRequests.length; index++) {
             if ($scope.user._id == $scope.currentUser.sendedChatRequests[index]) {
-                console.log("You already send chat request to this user");
                 $scope.alreadySent = true;
                 $scope.isFriend = false;
                 $scope.chatRequestButton = false;
@@ -59,10 +57,6 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
 
 
     $('#sendChatRequest').on('click', function (event) {
-        console.log("Chat request is SENT FROM-------------");
-        console.log($scope.currentUser);
-        console.log("Chat request MUST BE TO-------------");
-        console.log($scope.user);
         socket.emit('sendChatRequest', { fromUser: $scope.currentUser, toUser: $scope.user });
         $scope.$apply(function () {
             $scope.alreadySent = true;
@@ -76,9 +70,7 @@ app.controller("moreInfoController", function ($rootScope, $scope, $http) {
 
     $("#closeInformation").on("click", function (event) {
         $scope.$apply(function () {
-            console.log("You clicked close information button");
             $scope.showme = false;
-            console.log($scope.showme);
             $("#map").removeClass("col-sm-6");
             $("#map").addClass("col-sm-9");
             

@@ -1,15 +1,9 @@
 app.controller("eventsController", function ($scope, $window, $http, $rootScope, $location) {
 
-    console.log("jdksmds");
-
-    console.log($scope.currentUser);
-    console.log(document.getElementById("mapEvents"));
-
     $rootScope.$on('updatedMapEvents', function () {
         $scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
         $scope.marker = $rootScope.marker;
         $scope.mapEvents = $rootScope.mapEvents;
-        console.log($scope.mapEvents);
         google.maps.event.addListener($scope.mapEvents, 'click', function (event) {
             if ($scope.marker != null) {
                 $scope.marker.setMap(null);
@@ -30,7 +24,6 @@ app.controller("eventsController", function ($scope, $window, $http, $rootScope,
         };
 
         $scope.saveEvent = function () {
-            console.log($scope.dateEvent);
             $http({
                 url: "/saveEvent",
                 method: "POST",
@@ -43,7 +36,9 @@ app.controller("eventsController", function ($scope, $window, $http, $rootScope,
                     createdby: $scope.currentUser._id
                 }
             }).then(function (response) {
-                console.log("Done");
+                $rootScope.showEventForm = false;
+                $rootScope.$broadcast('showEventForm');
+                $(".modal-backdrop").remove();
             });
         }
     });

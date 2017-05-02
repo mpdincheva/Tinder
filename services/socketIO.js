@@ -9,14 +9,10 @@ module.exports = function (app, passport) {
 
 
     app.io.on('connection', function (socket) {
-        console.log("Made new connection");
 
 
         socket.on('updateSocket', function (data) {
             // data is the full current person object
-
-            console.log("Made new socket id");
-            console.log(socket.id);
 
 
             userService.updateSocket(data.user._id, socket.id);
@@ -25,19 +21,14 @@ module.exports = function (app, passport) {
             userService.getAllOnlineUsers(data.user.friends, function (err, myFriends) {
 
                 myFriends.forEach(function (friend) {
-                    console.log("My online friends are:  ");
-                    console.log(friend);
                     app.io.to(friend.socketId).emit('onlineFriend', data.user);
-                    // socket.emit('updateChatList', user);
                 })
             });
 
-            // })
         })
 
         socket.on('new-msg', function (data) {
             chatService.insertMessage(data.fromUser._id, data.toUser._id, data.msg);
-
 
             userService.getUsersSockets(data.fromUser._id, data.toUser._id, function (fromUser, toUser) {
                 app.io.to(fromUser.socketId).to(toUser.socketId)
@@ -54,8 +45,6 @@ module.exports = function (app, passport) {
         })
 
         socket.on('sendTypingNotification', function (data) {
-            console.log("Get typing notification");
-            console.log(data.toUser);
             userService.findUserById(data.fromUser, function (err, user) {
                 app.io.to(user.socketId).emit('sendTypingNotification', data.toUser);
             })
@@ -66,15 +55,10 @@ module.exports = function (app, passport) {
         socket.on('sendChatRequest', function (data) {
             // data contains: fromUser: $scope.currentUser, toUser: $scope.user
 
-            console.log("Just receive send chat request");
             userService.updateChatRequests(data.fromUser._id, data.toUser._id);
 
 
             userService.getUsersSockets(data.fromUser._id, data.toUser._id, function (fromUser, toUser) {
-                console.log("Chat request is SENT FROM-------------");
-                console.log(fromUser);
-                console.log("Chat request MUST BE TO-------------");
-                console.log(toUser);
                 app.io.to(toUser.socketId).emit('receiveChatRequest', fromUser)
             })
         })
@@ -85,11 +69,8 @@ module.exports = function (app, passport) {
 
         socket.on('IAcceptRequest', function (data) {
             // data contains: friend and currentUser
-            console.log(data.friend);
-            console.log(data.currentUser);
 
             // userService.addNewFriend(data.currentUser._id, data.friend._id);
-
             userService.getUsersSockets(data.currentUser._id, data.friend._id, function (fromUser, toUser) {
                 app.io.to(toUser.socketId).emit('friendAcceptMyRequest', data.currentUser);
             })
@@ -99,14 +80,11 @@ module.exports = function (app, passport) {
 
         socket.on('seenAllMessages', function (data) {
             // data contains fromUser and toUser
-            console.log("In see all messages.");
             chatService.setAllMessagesSeen(data.fromUser._id, data.toUser._id);
             app.io.to(data.toUser.socketId).emit('allMessagesAreSeen', data.fromUser);
         })
 
         socket.on('getAllUnseenMessages', function (currentUser) {
-            console.log("From get all unseen messages in socket. The user is:");
-            console.log(currentUser);
             chatService.getAllUnseenMessages(currentUser._id, function (messages) {
                 socket.emit('receiveAllUnseenMessages', messages);
             })
@@ -115,16 +93,11 @@ module.exports = function (app, passport) {
 
         // Must delete socket id from database
         socket.on('disconnect', function () {
-            console.log("On disconnect. This id was disconected..");
-            console.log(socket.id);
-
 
             userService.findUserBySocketId(socket.id, function (user) {
                 userService.getAllOnlineUsers(user.friends, function (err, myFriends) {
 
                     myFriends.forEach(function (friend) {
-                        console.log("My online friends are:  ");
-                        console.log(friend);
                         app.io.to(friend.socketId).emit('offlineFriend', user);
                         // socket.emit('updateChatList', user);
                     })

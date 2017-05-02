@@ -1,21 +1,21 @@
 <div ng-controller="accountController" class="modal show" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg ">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: lightgrey">
+            <div class="modal-header">
                 <h4 class="modal-title">Моля попълнете</h4>
             </div>
             <div class="modal-body">
                 <form ng-submit="saveAccountSettings()">
                     <div class="row">
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-7">
                             <input type='file' id="file" custom-on-change="uploadFile">
-                            <div style="width:300px; height: 400px">
+                            <div style="width:300px; height: auto">
                                 <img id="photo" ng-src="{{ user.profilePicture }}" class="col-sm-12" />
                             </div>
                         </div>
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <div>
                                 <label for="age">Години: </label>
                                 <input id="age" type="number" min="0" ng-model="user.age" required/>
@@ -23,13 +23,13 @@
 
                             <div>
                                 <label for="gender"> Пол: </label>
-                                <input type="radio" ng-model="user.gender" value="male"> Male
-                                <input type="radio" ng-model="user.gender" value="female"> Female
+                                <input type="radio" ng-model="user.gender" name="gender" value="male" required> Male
+                                <input type="radio" ng-model="user.gender" name="gender" value="female"> Female
                             </div>
 
                             <div>
                                 <label for="description">Описание:</label>
-                                <textarea id="description" ng-model="user.description"></textarea>
+                                <textarea id="description" rows="4" cols="50" ng-model="user.description"></textarea>
                             </div>
 
                             <div>
@@ -41,8 +41,8 @@
                             </div>
 
                             <div>
-                                <button type="submit">Запази</button>
-                                <button ng-show="showCancelButton" ng-click="cancel($event)">Отмени</button>
+                                <button type="submit" class="btn btn-success">Запази</button>
+                                <button ng-show="showCancelButton" class="btn btn-danger" ng-click="cancel($event)">Отмени</button>
                             </div>
                         </div>
                     </div>

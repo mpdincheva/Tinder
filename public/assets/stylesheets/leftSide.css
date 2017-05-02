@@ -53,7 +53,7 @@ body {
 	left: 0;
 	/*margin: 0px 1em;*/
 	border-top: 8px solid rgb(183, 28, 28);
-	background-color: #e5e5e5;
+	background-color: #ffffff;
 	display: block;
 	height: 150px;
 	width: 100%;
@@ -65,7 +65,7 @@ body {
 	text-align: center;
 	font-weight: bold;
 	font-size: 2em;
-	color: rgb(183, 28, 28);
+	/*color: rgb(183, 28, 28);*/
 }
 
 .invites {
@@ -121,7 +121,7 @@ form  {
 	height: 100%;
 }
 
-#markPerson {
+.markPerson {
 	padding:0.5em;
 	overflow: scroll;
 	overflow-x: hidden;
@@ -155,4 +155,27 @@ form  {
 
 .modal-backdrop {
 	opacity: 0.7;
+}
+
+a:hover {
+	text-decoration: none !important;
+	cursor:pointer !important;
+}
+
+.formNumbers {
+	margin-left: 0.5em;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+#peopleForm {
+	padding: 0px;
+}
+
+#peopleForm > div.col-sm-12 {
+	padding: 0px;
+}
+
+#createButton {
+	margin-left: 2em;
 }

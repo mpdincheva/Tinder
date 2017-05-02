@@ -14,7 +14,6 @@ app.controller("mapController", function ($scope, $location, $window, $rootScope
                 lng: parseFloat(position.coords.longitude)
             }
         }).then(function () {
-            console.log("Zapazeni");
             $scope.currentUser.lat = parseFloat(position.coords.latitude);
             $scope.currentUser.lng = parseFloat(position.coords.longitude);
             $rootScope.map = new google.maps.Map(document.getElementById('map'), {
@@ -31,19 +30,18 @@ app.controller("mapController", function ($scope, $location, $window, $rootScope
     }
 
     (function () {
-        console.log("Vliza v map controller");
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(getPosition);
         }
     })();
 
     $('#sendChatNotification').on('click', function() {
-        console.log("You clicked start chat button");
         socket.emit('sendChatNotification', {'fromUser': $scope.currentUser, 'toUser': $scope.user})
     })
 
-    socket.on('chatNotification', function(user) {
-        console.log("Somebody wants to start chat with you.");
-        console.log(user);
-    })
+
+    // socket.on('chatNotification', function(user) {
+    //     console.log("Somebody wants to start chat with you.");
+    //     console.log(user);
+    // })
 });

@@ -1,33 +1,33 @@
 <div ng-controller="eventsController" class="modal show" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: lightgrey">
+            <div class="modal-header">
                 <h4 class="modal-title">Моля попълнете</h4>
             </div>
             <div class="modal-body">
                 <form name="formEvents" ng-submit="saveEvent()" novalidate>
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <div id="mapEvents" style="width: 400px; height:400px;"></div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-5">
                             <div>
-                                <label for="nameEvent">Име на събитие: </label>
+                                <label for="nameEvent">Име на събитие: </label><br>
                                 <input id="nameEvent" type="text" ng-model="nameEvent" required/>
                             </div>
                             <div>
-                                <label for="dateEvent">Кога?</label>
+                                <label for="dateEvent">Кога?</label><br>
                                 <input id="dateEvent" type="date" data-date-inline-picker="true" ng-model="dateEvent" required/>
                             </div>
                             <div>
                                 <label>Описание:</label>
-                                <textarea ng-model="desc"></textarea>
+                                <textarea ng-model="desc" cols="50" rows="4"></textarea>
                             </div>
 
                             <div>
-                                <button type="submit">Запази</button>
-                                <button ng-click="closeForm($event)">Отмени</button>
+                                <button type="submit" class="btn btn-success">Запази</button>
+                                <button ng-click="closeForm($event)" class="btn btn-danger">Отмени</button>
                             </div>
                         </div>
                     </div>

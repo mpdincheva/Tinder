@@ -5,7 +5,6 @@ var db = monk(configDB.url);
 var users = db.get('users');
 
 var ObjectId = require('mongodb').ObjectID;
-
 var passwordHash = require('password-hash');
 
 
@@ -17,7 +16,8 @@ module.exports = (function () {
         this.firstname = firstname;
         this.lastname = lastname;
 
-        this.description;
+        this.description = "";
+        this.interests = [];
         this.lat = "";
         this.lng = "";
         this.friends = [];
@@ -66,8 +66,6 @@ module.exports = (function () {
             var createdUser = new LocalUser(email, hashedPassword, firstname, lastname)
             users.insert(createdUser, function (err, insertedUser) {
                 if (cb) {
-                    console.log("In database. Inserted user is: ");
-                    console.log(insertedUser);
                     cb(null, insertedUser);
                 }
             });
@@ -83,8 +81,6 @@ module.exports = (function () {
 
             users.insert(createdUser, function (err, insertedUser) {
                 if (cb) {
-                    console.log("In database. Inserted user is: ");
-                    console.log(insertedUser);
                     cb(null, insertedUser);
                 }
             });
@@ -103,8 +99,6 @@ module.exports = (function () {
                 })
         },
         findUserById: function (profileId, cb) {
-            console.log("user service found user by id");
-            console.log(profileId);
             users.find({ '_id': profileId })
                 .then(function (data) {
                     if (data.length > 0) {
@@ -229,7 +223,6 @@ module.exports = (function () {
         },
 
         updateUserAccount: function (userId, accountSettings) {
-            console.log(accountSettings);
             users.findOneAndUpdate(
                 { _id: userId },
                 {
@@ -326,31 +319,20 @@ module.exports = (function () {
                                 allUsers.push(data[index]);
                             }
                         }
-                        // console.log("Userite");
-                        console.log(allUsers);
                         cb(null, allUsers);
                     }
                 });
         },
 
         getAllOnlineUsers: function (arrayWithIds, cb) {
-            console.log("In get online users function..");
             users.find({ _id: { $in: arrayWithIds } })
                 .then(function (data) {
-                    console.log("From the database.. all friends are:");
-                    // console.log(data);
                     var onlineUsers = [];
                     for (var index = 0; index < data.length; index++) {
-                        // console.log("In the loop--->");
-                        // console.log(data[index].socketId);
                         if (data[index].socketId) {
-                            console.log(data[index]);
                             onlineUsers.push(data[index]);
                         }
                     }
-                    console.log("Founded users from database are: ")
-                    console.log(onlineUsers);
-                    // console.log(onlineUsers);
                     cb(null, onlineUsers);
                 })
                 .catch(function (err) {

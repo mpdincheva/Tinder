@@ -26,19 +26,14 @@ module.exports = function (app, passport) {
 	var upload = multer({ dest: "public/assets/images/profilePhotos" });
 
 	app.post('/updateAccountInfo', upload.any(), function (req, res, next) {
-		console.log("Interesite ----------------------");
-		console.log(req.body.interests);
 		var interestsUser = [];
 		var interests = JSON.parse(req.body.interests);
 		var allInterests = JSON.parse(req.body.allInterests);
-		console.log(interests);
 		for (var index = 0; index < allInterests.length; index++) {
 			if (interests[index] === "true") {
-				console.log(req.body.interests[index]);
 				interestsUser.push(allInterests[index]._id);
 			}
 		}
-		console.log(interestsUser);
 		var obj = {
 			age: req.body.age,
 			gender: req.body.gender,
@@ -50,7 +45,6 @@ module.exports = function (app, passport) {
 		} else {
 			obj["profilePicture"] = "assets/images/profilePhotos/default.svg";
 		}
-		console.log(obj);
 		userService.updateUserAccount(req.cookies.userid, obj);
 
 		userService.findUserById(req.cookies.userid, function (err, user) {
@@ -58,8 +52,6 @@ module.exports = function (app, passport) {
 				res.json(user);
 			}
 		})
-
-		// res.status(200).send();
 	});
 
 	app.get('/getFriends', function (req, res) {
@@ -73,17 +65,12 @@ module.exports = function (app, passport) {
 	})
 
 	app.get('/updateSocket', function (req, res) {
-		console.log(req.cookies.userid);
 		res.json('');
 	})
 
 	app.get('/getAllInfoForMe', function (req, res) {
-		console.log("In get all info for me in Server");
-		console.log(req.cookies.userid);
 		userService.findUserById(req.cookies.userid, function (err, user) {
 			if (user) {
-				// console.log("Sending user to the client:");
-				// console.log(user);
 				res.json(user);
 			} else {
 				res.status(404).send();
@@ -102,8 +89,6 @@ module.exports = function (app, passport) {
 
 	app.get('/allMessagesBetween:friendId', function (req, res, next) {
 		var friendId = req.params.friendId;
-		console.log("In the server. My friends id is: ");
-		console.log(friendId);
 		chatService.getMessages(req.cookies.userid, friendId, function (err, messages) {
 			if (messages) {
 				res.json(messages);
@@ -129,9 +114,8 @@ module.exports = function (app, passport) {
 	});
 
 	app.post("/saveEvent", function (req, res, next) {
-		eventsService.createEvent(req.body.lat, req.body.lng, req.body.name, req.body.date, req.body.description, req.body.createdby, function (err, data) {
-			res.json(data);
-		});
+		eventsService.createEvent(req.body.lat, req.body.lng, req.body.name, req.body.date, req.body.description, req.body.createdby);
+		res.status(200).send();
 	});
 
 	app.post("/findEvents", function (req, res, next) {
@@ -158,31 +142,28 @@ module.exports = function (app, passport) {
 			res.json(data);
 		});
 	});
-  
-  app.get("/getUserInfo:userId", function(req, res, next) {
-    userService.findUserById(req.params.userId, function(err, user) {
-      if(user) {
-        res.json(user);
-      }
-    })
-  })
 
-  app.post('/receiveChatRequest', function(req, res, next) {
-    userService.findAndUpdateChatRequests(req.cookies.userid, req.body.user);
-  })
+	app.get("/getUserInfo:userId", function (req, res, next) {
+		userService.findUserById(req.params.userId, function (err, user) {
+			if (user) {
+				res.json(user);
+			}
+		})
+	})
 
-  app.post('/updateUserFriends', function(req, res, next) {
-    console.log("I will update users friends")
-    console.log(req.body.currentUserId);
-    console.log(req.body.friendId);
-    userService.updateUserFriends(req.body.currentUserId, req.body.friendId);
-    res.status(200).send();
-  })
+	app.post('/receiveChatRequest', function (req, res, next) {
+		userService.findAndUpdateChatRequests(req.cookies.userid, req.body.user);
+	})
 
-  // app.post('/sendedChatRequests', function(req, res, next) {
-  //     userService.updateChatRequests(req.cookies.userid, req.body);
-  //     res.status(200).send();
-  // })
+	app.post('/updateUserFriends', function (req, res, next) {
+		userService.updateUserFriends(req.body.currentUserId, req.body.friendId);
+		res.status(200).send();
+	})
+
+	// app.post('/sendedChatRequests', function(req, res, next) {
+	//     userService.updateChatRequests(req.cookies.userid, req.body);
+	//     res.status(200).send();
+	// })
 
 }
 

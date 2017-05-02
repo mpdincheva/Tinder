@@ -8,7 +8,6 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
             }
         }).then(function (response) {
             $scope.people = response.data;
-            console.log($scope.event["going"]);
         });
     }
     
@@ -55,7 +54,6 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
     });
 
     $scope.addMe = function () {
-        console.log("ddsds");
         $http({
             method: "POST",
             url: "/addUserToEvent",
@@ -80,7 +78,6 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
             }
         }).then(function (response) {
             $scope.going = false;
-            console.log(response.data["going"]);
             $scope.event["going"] = response.data["going"];
             updateGoing();            
         });

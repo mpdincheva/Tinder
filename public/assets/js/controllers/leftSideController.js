@@ -7,11 +7,11 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
 
     // $scope.showme = false;
     $rootScope.markers = [];
-    console.log("From left side controller");
-    console.log($scope.currentUser);
 
     $rootScope.$on("userUpdated", function () {
-        $scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
+        $scope.$apply(function () {
+            $scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
+        })
     });
 
     $http({
@@ -30,10 +30,8 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
 
     $scope.showEventForm = function ($event) {
         $event.preventDefault();
-        console.log("Clicked create event");
         $('<div class="modal-backdrop"></div>').appendTo(document.body);
         $rootScope.showEventForm = true;
-        console.log(document.getElementById("mapEvents"));
         $rootScope.mapEvents = new google.maps.Map(document.getElementById('mapEvents'), {
             zoom: 12,
             center: new google.maps.LatLng(parseFloat($scope.currentUser.lat), parseFloat($scope.currentUser.lng)),
@@ -42,8 +40,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
             styles: [{ "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#b71c1c" }] }, { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f2f2f2" }] }, { "featureType": "landscape.natural", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": "-23" }, { "lightness": "27" }, { "visibility": "on" }, { "gamma": "1" }, { "hue": "#ff1800" }, { "weight": "0.75" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "visibility": "on" }, { "color": "#e74c3c" }, { "saturation": "-59" }, { "lightness": "30" }] }, { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "on" }, { "hue": "#ff1800" }, { "saturation": "2" }, { "lightness": "2" }, { "weight": "0.75" }] }, { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "on" }, { "saturation": "-51" }, { "color": "#cbcbcb" }] }, { "featureType": "transit.station", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#2c3e50" }, { "visibility": "on" }] }]
         });
         $rootScope.marker = null;
-        console.log($rootScope.mapEvents);
-        console.log($rootScope.marker);
         $rootScope.$broadcast('showEventForm');
         $rootScope.$broadcast('updatedMapEvents');
     };
@@ -54,7 +50,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $scope.maxAge = 60;
         $rootScope.showMap = true;
         $rootScope.showChatRoom = false;
-        console.log($("#slider"));
         $("#slider").slider({
             value: 0,
             min: 0,
@@ -107,7 +102,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $window.localStorage.removeItem('currentUser');
 
         $scope.$apply(function () {
-            console.log("Changing path!");
             $location.path("/");
         });
     };
@@ -161,13 +155,11 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                 interest: $scope.selectedInterest
             }
         }).then(function (response) {
-            console.log(response.data);
             $rootScope.markers.forEach(function (mark) {
                 mark.setMap(null);
             });
             $rootScope.markers = [];
             response.data.forEach(function (user) {
-                console.log(user);
                 if (user._id != $scope.currentUser._id) {
                     var mark = new google.maps.Marker({
                         position: { lat: parseFloat(user.lat), lng: parseFloat(user.lng) },
@@ -182,7 +174,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                         });
                         mark.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
 
-                        console.log(this);
                         var self = this;
                         $scope.$apply(function () {
                             $rootScope.user = self.user;
@@ -197,10 +188,10 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                             $rootScope.$broadcast("updateMarkerUser");
                             $("#map").addClass("col-sm-6");
                             $("#map").removeClass("col-sm-9");
-                            $("#markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
+                            $(".markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
 
                             window.onresize = function (event) {
-                                $("#markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
+                                $(".markPerson").css("height", ($window.innerHeight * 70 / 100) + "px");
                             }
                             // google.maps.event.trigger(map, 'resize');
                         });
@@ -224,7 +215,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                 radius: $scope.radiusEv,
             }
         }).then(function (response) {
-            // console.log(response.data);
             $rootScope.markers.forEach(function (mark) {
                 mark.setMap(null);
             });
@@ -243,7 +233,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                     });
                     mark.setIcon("http://maps.google.com/mapfiles/ms/icons/purple-dot.png");
 
-                    console.log(this);
                     var self = this;
                     $scope.$apply(function () {
                         $http({
@@ -254,8 +243,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                             }
                         }).then(function (response) {
                             $rootScope.people = response.data;
-                            console.log("Are going");
-                            console.log(self.event["going"]);
                         });
                         $rootScope.event = self.event;
                         $rootScope.$broadcast("updateEventMarker");
@@ -285,8 +272,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $scope.missingChatRequests = false;
 
         var requests = $scope.currentUser.chatRequests;
-        console.log("From chat request:");
-        console.log($scope.currentUser.chatRequests);
         for (var index = 0; index < requests.length; index++) {
             $http.get('/getUserInfo' + requests[index])
                 .then(function (response) {
@@ -296,8 +281,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                             .append($('<img>').attr("src", user.profilePicture))
                             .append($('<span>').text(user.firstname + " " + user.lastname + " пожела да започне чат с вас."))
                             .append($('<button>').text('Приеми').click(function () {
-                                console.log("You click me.");
-                                console.log(user);
                                 $http({
                                     'method': 'POST',
                                     'url': '/updateUserFriends',
@@ -329,7 +312,6 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
         $scope.$apply(function () {
             $scope.missingChatRequests = false;
         })
-        console.log("JUST RECEIVE CHAT REQUEST HERE --------");
         $('#lastinvites')
             .append($('<div>').addClass("invites")
                 .append($('<img>').attr("src", user.profilePicture))

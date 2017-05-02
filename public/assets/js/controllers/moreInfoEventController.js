@@ -7,12 +7,13 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
                 users: $scope.event["going"]
             }
         }).then(function (response) {
-            $scope.event["going"] = response.data;
+            $scope.people = response.data;
             console.log($scope.event["going"]);
         });
     }
     
     $rootScope.$on("updateEventMarker", function () {
+        $scope.people = $rootScope.people;
         $scope.event = $rootScope.event;
         $scope.event["date"] = new Date($scope.event["date"]).toDateString();
 
@@ -35,7 +36,7 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
         }).then(function (response) {
             $scope.event["createdByUser"] = response.data;
         });
-
+        console.log($scope.event["going"]);
         updateGoing();
         $scope.showmeEvent = true;
     });
@@ -50,7 +51,6 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
         $rootScope.markers.forEach(function (mark) {
             mark.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
         });
-        // google.maps.event.trigger(map, 'resize');
     });
 
     $scope.addMe = function () {

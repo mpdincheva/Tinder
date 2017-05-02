@@ -15,7 +15,7 @@
             <span style="font-weight:bold"> {{ event.createdByUser.firstname }} {{ event.createdByUser.lastname }}</span>
         </div>
         <h2> Ще отидат: </h2>
-        <div ng-repeat="user in event.going">
+        <div ng-repeat="user in people">
             <img src="{{user.profilePicture}}" style="width:25px; height: 50px;">
             <span style="font-style:italic"> {{ user.firstname }} {{ user.lastname }}</span>
         </div>

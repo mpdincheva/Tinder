@@ -227,7 +227,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
             // console.log(response.data);
             $rootScope.markers.forEach(function (mark) {
                 mark.setMap(null);
-            });
+            })
             $rootScope.markers = [];
             response.data.forEach(function (event) {
                 var mark = new google.maps.Marker({
@@ -253,7 +253,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
                                 users: self.event["going"]
                             }
                         }).then(function (response) {
-                            self.event["going"] = response.data;
+                            $rootScope.people = response.data;
                             console.log("Are going");
                             console.log(self.event["going"]);
                         });

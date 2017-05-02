@@ -113,7 +113,7 @@ module.exports = (function () {
         },
 
         findUsersById: function (usersIds, cb) {
-            users.find({ '_id': { $in : usersIds} })
+            users.find({ '_id': { $in: usersIds } })
                 .then(function (data) {
                     if (data.length > 0) {
                         cb(null, data);
@@ -156,10 +156,10 @@ module.exports = (function () {
         // },
 
 
-        findUserBySocketId: function(socketId, cb) {
+        findUserBySocketId: function (socketId, cb) {
             users.find({ socketId: socketId })
-                .then(function(user) {
-                    if(user) {
+                .then(function (user) {
+                    if (user) {
                         cb(user);
                     }
                 })
@@ -222,7 +222,7 @@ module.exports = (function () {
                 })
         },
 
-        updateUserAccount: function (userId, accountSettings) {
+        updateUserAccount: function (userId, accountSettings, cb) {
             users.findOneAndUpdate(
                 { _id: userId },
                 {
@@ -233,6 +233,10 @@ module.exports = (function () {
                         interests: accountSettings.interests,
                         profilePicture: accountSettings.profilePicture
                     }
+                }).then(function () {
+                    users.find({ _id: userId }).then(function(data){
+                        cb(null, data[0]);
+                    });
                 });
         },
 

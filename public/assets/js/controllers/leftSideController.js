@@ -9,9 +9,7 @@ app.controller("leftSideController", function ($scope, $location, $rootScope, $h
     $rootScope.markers = [];
 
     $rootScope.$on("userUpdated", function () {
-        $scope.$apply(function () {
-            $scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
-        })
+        $scope.currentUser = JSON.parse($window.localStorage.getItem("currentUser"));
     });
 
     $http({

@@ -10,6 +10,7 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
     if ($location.$$path == "/home") {
         $scope.user = JSON.parse($window.localStorage.getItem("currentUser"));
         $scope.user["age"] = parseInt($scope.user["age"]);
+        var profilePicture = $scope.user["profilePicture"];
         $scope.showCancelButton = true;
         $scope.cancel = function ($event) {
             $event.preventDefault();
@@ -51,6 +52,11 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
                 formData.append(prop, $scope.user[prop]);
             }
         }
+
+        if($scope.user["profilePicture"] == null){
+            formData.append("profilePicture", profilePicture);
+        }
+        
         formData.append("allInterests", JSON.stringify($scope.interests));
         formData.append("image", file);
         $http.post("/updateAccountInfo", formData, {
@@ -60,7 +66,6 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
             }
         }).then(function (response) {
             $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
-
             $rootScope.$broadcast('userUpdated');
 
             socket = io.connect('http://localhost:3000');

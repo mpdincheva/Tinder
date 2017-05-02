@@ -38,20 +38,18 @@ module.exports = function (app, passport) {
 			age: req.body.age,
 			gender: req.body.gender,
 			description: req.body.description,
-			interests: interestsUser
+			interests: interestsUser,
+			profilePicture: req.body.profilePicture
 		}
+
 		if (req.files.length > 0) {
 			obj["profilePicture"] = req.files[0].path.substr(7);
-		} else {
-			obj["profilePicture"] = "assets/images/profilePhotos/default.svg";
 		}
-		userService.updateUserAccount(req.cookies.userid, obj);
 
-		userService.findUserById(req.cookies.userid, function (err, user) {
-			if (user) {
-				res.json(user);
-			}
-		})
+		userService.updateUserAccount(req.cookies.userid, obj, function (err, user) {
+			res.json(user);
+		});
+
 	});
 
 	app.get('/getFriends', function (req, res) {

@@ -8,21 +8,17 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
     });
 
     if ($location.$$path == "/home") {
-        console.log("In home");
         $scope.user = JSON.parse($window.localStorage.getItem("currentUser"));
         $scope.user["age"] = parseInt($scope.user["age"]);
         $scope.showCancelButton = true;
         $scope.cancel = function ($event) {
             $event.preventDefault();
-            console.log("Cancel");
             $(".modal-backdrop").remove();
             $rootScope.showSettings = false;
             $rootScope.$broadcast('showSettings');
         };
-        console.log($scope.user);
 
     } else {
-        console.log("In /account");
         $scope.user = {
             profilePicture: 'assets/images/profilePhotos/default.svg'
         }
@@ -47,9 +43,9 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
         var file = document.getElementById("file").files[0];
 
         for (prop in $scope.user) {
-            console.log(prop);
-            console.log($scope.user[prop]);
             if (Array.isArray($scope.user[prop])) {
+                formData.append(prop, JSON.stringify($scope.user[prop]));
+            } else if (typeof $scope.user[prop] == "object") {
                 formData.append(prop, JSON.stringify($scope.user[prop]));
             } else {
                 formData.append(prop, $scope.user[prop]);
@@ -57,16 +53,15 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
         }
         formData.append("allInterests", JSON.stringify($scope.interests));
         formData.append("image", file);
-
         $http.post("/updateAccountInfo", formData, {
             transformRequest: angular.identify,
             headers: {
                 'Content-Type': undefined
             }
         }).then(function (response) {
-            console.log("In account controller. Response is:");
-            console.log(response);
             $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
+
+            $rootScope.$broadcast('userUpdated');
 
             socket = io.connect('http://localhost:3000');
             socket.emit('updateSocket', { user: response.data });
@@ -76,7 +71,6 @@ app.controller("accountController", function ($scope, $http, $location, $rootSco
             } else {
                 $rootScope.showSettings = false;
                 $rootScope.$broadcast('showSettings');
-                $rootScope.$broadcast('userUpdated');
             }
         });
     };

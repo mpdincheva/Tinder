@@ -13,95 +13,27 @@
 
 var multer = require("multer");
 
-var userService = require("../config/userService");
-var interestsService = require("../config/interestsService");
-var chatService = require("../config/chatService");
-var eventsService = require("../config/eventsService");
+var userService = require("../services/userService");
+var interestsService = require("../services/interestsService");
+var chatService = require("../services/chatService");
+var eventsService = require("../services/eventsService");
 
 
 // var passwordHash = require('password-hash');
 
 module.exports = function (app, passport) {
 
-	app.post('/register', function (req, res, next) {
-		console.log("You made post request to register page");
-		userService.checkIfUsernameExist('local', req.body.email, function (isAvalilableUsername) {
-			console.log(isAvalilableUsername);
-			if (isAvalilableUsername) {
-				userService.createLocalUser(req.body.email, req.body.password, req.body.firstName, req.body.lastName, function (err, insertedUser) {
-					console.log("From server: Inserted user is:")
-					console.log(insertedUser);
-					res.cookie("userid", insertedUser._id);
-					res.json(insertedUser);
-				});
-			}
-			else {
-				res.status(404).send();
-			}
-
-		})
-	})
-
-	app.post('/login',
-		passport.authenticate('local'),
-		function (req, res, next) {
-			// console.log(req.user);
-			console.log("In /login route"),
-				console.log(req.user._id)
-			res.cookie('userid', req.user._id);
-			res.json(req.user);
-		}
-	);
-
-	// We send the client on facebook to authenticate ->
-	app.get('/auth/facebook',
-		passport.authenticate('facebook', { scope: 'email' }));
-
-	// Waiting for response from facebook->
-	app.get('/auth/facebook/callback',
-		passport.authenticate('facebook', { failureRedirect: '/index.html#/' }),
-		function (req, res, next) {
-			console.log("Poluchix usera.... toi izglejda ei taka:");
-			res.cookie('userid', req.user._id);
-			res.redirect('/index.html#/home');
-		});
-
-
-	app.get('/auth/google',
-		passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-	app.get('/auth/google/callback',
-		passport.authenticate('google', { failureRedirect: '/index.html#/' }),
-		function (req, res) {
-			console.log("Google passport");
-			res.cookie('userid', req.user._id);
-			res.redirect('/index.html#/home');
-		});
-
-
-	app.get('/logout', function (req, res) {
-		req.session.destroy();
-		// req.logout();
-		res.status(200).send();
-		// res.redirect('/');
-	});
-
 	var upload = multer({ dest: "public/assets/images/profilePhotos" });
 
 	app.post('/updateAccountInfo', upload.any(), function (req, res, next) {
-		console.log("Interesite ----------------------");
-		console.log(req.body.interests);
 		var interestsUser = [];
 		var interests = JSON.parse(req.body.interests);
 		var allInterests = JSON.parse(req.body.allInterests);
-		console.log(interests);
 		for (var index = 0; index < allInterests.length; index++) {
 			if (interests[index] === "true") {
-				console.log(req.body.interests[index]);
 				interestsUser.push(allInterests[index]._id);
 			}
 		}
-		console.log(interestsUser);
 		var obj = {
 			age: req.body.age,
 			gender: req.body.gender,
@@ -113,7 +45,6 @@ module.exports = function (app, passport) {
 		} else {
 			obj["profilePicture"] = "assets/images/profilePhotos/default.svg";
 		}
-		console.log(obj);
 		userService.updateUserAccount(req.cookies.userid, obj);
 
 		userService.findUserById(req.cookies.userid, function (err, user) {
@@ -121,8 +52,6 @@ module.exports = function (app, passport) {
 				res.json(user);
 			}
 		})
-
-		// res.status(200).send();
 	});
 
 	app.get('/getFriends', function (req, res) {
@@ -136,17 +65,12 @@ module.exports = function (app, passport) {
 	})
 
 	app.get('/updateSocket', function (req, res) {
-		console.log(req.cookies.userid);
 		res.json('');
 	})
 
 	app.get('/getAllInfoForMe', function (req, res) {
-		console.log("In get all info for me in Server");
-		console.log(req.cookies.userid);
 		userService.findUserById(req.cookies.userid, function (err, user) {
 			if (user) {
-				// console.log("Sending user to the client:");
-				// console.log(user);
 				res.json(user);
 			} else {
 				res.status(404).send();
@@ -155,38 +79,16 @@ module.exports = function (app, passport) {
 	})
 
 	app.post("/updatePosition", function (req, res, next) {
-		// console.log(req.body.lat);
-		// console.log(req.body.lng);
-		// console.log("Eto ti go user-a");
-		// console.log(req.cookies.userid);
 		var user_id = (req.body.id) ? req.body.id : req.cookies.userid;
 		userService.updatePosition(user_id, req.body.lat, req.body.lng);
 		res.status(200).send();
 	})
-	//   router.post('/', function (req, res, next) {
-	//     var userid = req.session.userId;
-	//     console.log(req.session.userId);
-	//     var db = req.db;
-	//     var users = db.get('users');
-	//     users.find({_id: userid})
-	//         .then(function (data) {
-	//             if (data.length > 0) {
-	//                 var user = data[0];
-	//                 console.log(user);
-	//                 res.json(user);
-	//             } else {
-	//                 res.json('');
-	//             }
-	//         }).catch(function (err) {
-	//         res.json(500, err);
-	//     });
-	// });
+
+
 
 
 	app.get('/allMessagesBetween:friendId', function (req, res, next) {
 		var friendId = req.params.friendId;
-		console.log("In the server. My friends id is: ");
-		console.log(friendId);
 		chatService.getMessages(req.cookies.userid, friendId, function (err, messages) {
 			if (messages) {
 				res.json(messages);
@@ -212,9 +114,8 @@ module.exports = function (app, passport) {
 	});
 
 	app.post("/saveEvent", function (req, res, next) {
-		eventsService.createEvent(req.body.lat, req.body.lng, req.body.name, req.body.date, req.body.description, req.body.createdby, function (err, data) {
-			res.json(data);
-		});
+		eventsService.createEvent(req.body.lat, req.body.lng, req.body.name, req.body.date, req.body.description, req.body.createdby);
+		res.status(200).send();
 	});
 
 	app.post("/findEvents", function (req, res, next) {
@@ -243,8 +144,6 @@ module.exports = function (app, passport) {
 	});
 
 	app.get("/getUserInfo:userId", function (req, res, next) {
-		console.log("FROM SERVER----------------");
-		console.log(req.params.userId);
 		userService.findUserById(req.params.userId, function (err, user) {
 			if (user) {
 				res.json(user);
@@ -253,16 +152,10 @@ module.exports = function (app, passport) {
 	})
 
 	app.post('/receiveChatRequest', function (req, res, next) {
-		// userService
-		console.log("Receiving chat request from server");
-		console.log(req.body.user);
 		userService.findAndUpdateChatRequests(req.cookies.userid, req.body.user);
 	})
 
 	app.post('/updateUserFriends', function (req, res, next) {
-		console.log("I will update users friends")
-		console.log(req.body.currentUserId);
-		console.log(req.body.friendId);
 		userService.updateUserFriends(req.body.currentUserId, req.body.friendId);
 		res.status(200).send();
 	})

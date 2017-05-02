@@ -8,17 +8,15 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
             }
         }).then(function (response) {
             $scope.people = response.data;
-            console.log($scope.event["going"]);
         });
     }
-    
+
     $rootScope.$on("updateEventMarker", function () {
         $scope.people = $rootScope.people;
         $scope.event = $rootScope.event;
         $scope.event["date"] = new Date($scope.event["date"]).toDateString();
 
         if ($scope.event["going"]) {
-
             var isGoing = $scope.event["going"].find(function (userid) {
                 return userid == $scope.currentUser._id;
             });
@@ -28,6 +26,8 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
 
         if (isGoing) {
             $scope.going = true;
+        } else {
+            $scope.going = false;
         }
 
         $http({
@@ -54,7 +54,6 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
     });
 
     $scope.addMe = function () {
-        console.log("ddsds");
         $http({
             method: "POST",
             url: "/addUserToEvent",
@@ -79,9 +78,8 @@ app.controller("moreInfoEventController", function ($scope, $rootScope, $http) {
             }
         }).then(function (response) {
             $scope.going = false;
-            console.log(response.data["going"]);
             $scope.event["going"] = response.data["going"];
-            updateGoing();            
+            updateGoing();
         });
     }
 });

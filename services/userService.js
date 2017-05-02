@@ -1,12 +1,10 @@
-
-var configDB = require('./database.js');
+var configDB = require('../config/database.js');
 var mongodb = require('mongodb');
 var monk = require('monk');
 var db = monk(configDB.url);
 var users = db.get('users');
 
 var ObjectId = require('mongodb').ObjectID;
-
 var passwordHash = require('password-hash');
 
 
@@ -18,7 +16,8 @@ module.exports = (function () {
         this.firstname = firstname;
         this.lastname = lastname;
 
-        this.description;
+        this.description = "";
+        this.interests = [];
         this.lat = "";
         this.lng = "";
         this.friends = [];
@@ -67,8 +66,6 @@ module.exports = (function () {
             var createdUser = new LocalUser(email, hashedPassword, firstname, lastname)
             users.insert(createdUser, function (err, insertedUser) {
                 if (cb) {
-                    console.log("In database. Inserted user is: ");
-                    console.log(insertedUser);
                     cb(null, insertedUser);
                 }
             });
@@ -84,28 +81,11 @@ module.exports = (function () {
 
             users.insert(createdUser, function (err, insertedUser) {
                 if (cb) {
-                    console.log("In database. Inserted user is: ");
-                    console.log(insertedUser);
                     cb(null, insertedUser);
                 }
             });
         },
 
-        // createLocalUser : function(email, password, firstname, lastname){
-        //     users.insert(new LocalUser(email, password, firstname, lastname));
-        // },
-        // createFacebookUser : function(facebookId, email, password, firstname, lastname){
-        //     console.log('I will create facebook user');
-        //     console.log(facebookId);
-        //     console.log(email);
-        //     console.log(password);
-        //     console.log(firstname);
-        //     console.log(lastname);
-        //     users.insert(new FacebookUser(facebookId, email, password, firstname, lastname))
-        // },
-        // createGoogleUser : function(){
-        //     users.insert(new GoogleUser(googleId, email, password, firstname, lastname));
-        // },
         findUserByName: function (provider, username, cb) {
             users.find({ provider: provider, email: username }).then(function (data) {
                 if (data.length > 0) {
@@ -119,14 +99,8 @@ module.exports = (function () {
                 })
         },
         findUserById: function (profileId, cb) {
-            console.log("user service found user by id");
-            console.log(profileId);
-            // console.log(ObjectId(profileId));
             users.find({ '_id': profileId })
                 .then(function (data) {
-                    console.log("FOUNDED USER IS--------------");
-                    console.log(data);
-                    // console.log(data);
                     if (data.length > 0) {
                         cb(null, data[0]);
                     } else {
@@ -139,12 +113,8 @@ module.exports = (function () {
         },
 
         findUsersById: function (usersIds, cb) {
-            // console.log("user service found user by id");
-            // console.log(profileId);
-            // console.log(ObjectId(profileId));
-            users.find({ '_id': { $in: usersIds } })
+            users.find({ '_id': { $in : usersIds} })
                 .then(function (data) {
-                    // console.log(data);
                     if (data.length > 0) {
                         cb(null, data);
                     } else {
@@ -161,9 +131,6 @@ module.exports = (function () {
                 .then(function (fromUser) {
                     users.find({ _id: toUser })
                         .then(function (toUser) {
-                            console.log("From database. The users i found are:");
-                            console.log(fromUser);
-                            console.log(toUser);
                             cb(fromUser[0], toUser[0]);
                         })
                 })
@@ -188,17 +155,25 @@ module.exports = (function () {
         //         })
         // },
 
+
+        findUserBySocketId: function(socketId, cb) {
+            users.find({ socketId: socketId })
+                .then(function(user) {
+                    if(user) {
+                        cb(user);
+                    }
+                })
+        },
+
         findAndUpdateChatRequests: function (userId, requestFrom, cb) {
             users.findOneAndUpdate({ _id: userId },
                 { $push: { chatRequests: requestFrom } }
             )
-            console.log("In thwe database. User is updated");
         },
 
         checkUserPassword: function (provider, username, password, cb) {
             users.find({ provider: provider, 'email': username })
                 .then(function (data) {
-                    // console.log(data);
                     if (data.length > 0) {
                         if (passwordHash.verify(password, data[0].password)) {
                             cb(null, data[0]);
@@ -223,8 +198,6 @@ module.exports = (function () {
         getUsersFriends: function (arrayWithIds, cb) {
             users.find({ _id: { $in: arrayWithIds } })
                 .then(function (data) {
-                    // console.log("Founded users from database are: ")
-                    // console.log(data);
                     cb(null, data);
                 })
                 .catch(function (err) {
@@ -232,7 +205,6 @@ module.exports = (function () {
                 })
         },
 
-        // Must use findOneAndUpdate---->
         updateSocket: function (userId, socketId, cb) {
             users.findOneAndUpdate(
                 { _id: userId },
@@ -251,7 +223,6 @@ module.exports = (function () {
         },
 
         updateUserAccount: function (userId, accountSettings) {
-            console.log(accountSettings);
             users.findOneAndUpdate(
                 { _id: userId },
                 {
@@ -265,11 +236,7 @@ module.exports = (function () {
                 });
         },
 
-
-
         updateUserFriends: function (userId, friendId) {
-            console.log("From database when update user friends");
-            console.log(userId + "--------" + friendId);
             users.findOneAndUpdate(
                 { _id: userId },
                 {
@@ -288,9 +255,7 @@ module.exports = (function () {
 
 
 
-        // Set chat requests to both of the users
         updateChatRequests: function (fromUserId, toUserId) {
-            console.log("Will update user sended chat requests");
             users.findOneAndUpdate(
                 { _id: fromUserId },
                 { $push: { sendedChatRequests: toUserId } });
@@ -309,22 +274,22 @@ module.exports = (function () {
                 { $push: { friends: friend } })
         },
 
-        findUsersByFullName: function (firstname, lastname, cb) {
-            var lastName = new RegExp("^" + lastname);
-            users.find({ firstname: firstname, lastname: lastName })
-                .then(function (data) {
-                    console.log(data);
-                    cb(null, data);
-                });
-        },
+        // findUsersByFullName: function (firstname, lastname, cb) {
+        //     var lastName = new RegExp("^" + lastname);
+        //     users.find({ firstname: firstname, lastname: lastName })
+        //         .then(function (data) {
+        //             console.log(data);
+        //             cb(null, data);
+        //         });
+        // },
 
-        findUsersByFirstName: function (first, cb) {
-            var firstName = new RegExp("^" + first);
-            users.find({ firstname: firstName })
-                .then(function (data) {
-                    cb(null, data);
-                });
-        },
+        // findUsersByFirstName: function (first, cb) {
+        //     var firstName = new RegExp("^" + first);
+        //     users.find({ firstname: firstName })
+        //         .then(function (data) {
+        //             cb(null, data);
+        //         });
+        // },
 
         findUsers: function (lat, lng, radius, genderInput, ageInput, interest, cb) {
             var obj = {};
@@ -354,37 +319,26 @@ module.exports = (function () {
                                 allUsers.push(data[index]);
                             }
                         }
-                        // console.log("Userite");
-                        console.log(allUsers);
                         cb(null, allUsers);
                     }
                 });
         },
 
-        // getAllOnlineUsers: function (arrayWithIds, cb) {
-        //     console.log("In get online users function..");
-        //     users.find({ _id: { $in: arrayWithIds } })
-        //         .then(function (data) {
-        //             console.log("From the database.. all friends are:");
-        //             // console.log(data);
-        //             var onlineUsers = [];
-        //             for (var index = 0; index < data.length; index++) {
-        //                 // console.log("In the loop--->");
-        //                 // console.log(data[index].socketId);
-        //                 if (data[index].socketId) {
-        //                     console.log(data[index]);
-        //                     onlineUsers.push(data[index]);
-        //                 }
-        //             }
-        //             console.log("Founded users from database are: ")
-        //             console.log(onlineUsers);
-        //             // console.log(onlineUsers);
-        //             cb(null, onlineUsers);
-        //         })
-        //         .catch(function (err) {
-        //             cb(err, false);
-        //         })
-        // },
+        getAllOnlineUsers: function (arrayWithIds, cb) {
+            users.find({ _id: { $in: arrayWithIds } })
+                .then(function (data) {
+                    var onlineUsers = [];
+                    for (var index = 0; index < data.length; index++) {
+                        if (data[index].socketId) {
+                            onlineUsers.push(data[index]);
+                        }
+                    }
+                    cb(null, onlineUsers);
+                })
+                .catch(function (err) {
+                    cb(err, false);
+                })
+        },
 
     }
 })();

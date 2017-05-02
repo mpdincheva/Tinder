@@ -3,7 +3,7 @@
     bottom: 0;
     right: 0;
     height: 30%;
-    background-color: #a08888;
+    background-color: #e5e5e5;
 }
 
 /*Temporary styling*/
@@ -55,14 +55,15 @@
   }*/
 
 #message-container {
-  /*position: relative;
+  position: relative;
   top:0;
-  left:0;*/
+  left:0;
     /*position: absolute;
     left: 25%;
     height: 65%;*/
     background-color: #acadaf;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 
@@ -72,6 +73,8 @@
 
 #message-container img {
   width:75px;
+  border-radius: 25%;
+  margin:0.2em 0;
 }
 /*Messages from me*/
 #message-container li.message-from-me {
@@ -79,33 +82,96 @@
 }
 
 #message-container li.message-from-me span {
-    padding: 2em;
+    padding: 1em;
     background-color: #e5e5e5;
-    border-radius: 40% 40% 0% 40%;
+        border-radius: 30% 60% 60% 30%;
+
+    margin-right: 1em;
 }
 
 #message-container li.message-from-friend span {
-    padding: 2em;
+    padding: 1em;
     background-color: #e5e5e5;
-    border-radius: 40% 40% 40% 0%;
+    border-radius: 70% 25% 25% 70%;
+    margin-left: 1em;
 }
 
 
 
 #send-message-form {
   position: absolute;
-  bottom: 30%;
+  bottom: 28%;
   left: 25%;
+  /*color:rgb(183, 28, 28);*/
   padding: 0;
-  color:rgb(183, 28, 28);
 }
 
 #send-message-form input {
-  width: 80%;
   height: 45px;
 }
 #send-message-form button {
-  width: 20%;
-  height: 45px;
-  color: rgb(183, 28, 28);
+    height: 45px;
+
+}
+
+.seenMessage {
+  float: right;
+}
+
+#search-friends {
+  position: absolute;
+  bottom: 0;
+  right:0;
+  background-color: #d9534f;
+  color: white;
+  font-weight: bold;
+  height: 15%;
+  text-align: center;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    white;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    white;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    white;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    white;
+}
+
+
+#friends-container { 
+  max-height: 203px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#friends-container > div {
+  padding: 1em;
+}
+
+.friendInList div{
+  text-align: center;
+}
+
+.imgFriend {
+  border-radius: 25%;
+  height: 70px;
+}
+
+.cantStartChat {
+  font-weight: bold;
+  color: #b71c1c;
+  margin-top: 1em;
+  border-top: 3px solid #b71c1c;
+  text-align: center;
+}
+
+.friendName {
+  font-size: 22px;
 }

@@ -49,4 +49,21 @@ header .btn-lg{
 }*/
 
 
+#login-error {
+  color:red;
+  font-weight: bold;
+}
 
+#registration-error {
+  color:red;
+  font-weight: bold;
+}
+
+.modal-header {
+  background-color: #d9534f;
+  color: white;
+}
+
+.usersGoingToEvents {
+  margin-bottom: 0.5em;
+}

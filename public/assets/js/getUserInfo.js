@@ -7,11 +7,8 @@ if (document.cookie) {
     window.localStorage.setItem('currentUser', xhr.response);
 
     // Socket events--->
-    console.log("Create new socket");
     var socket = io.connect('http://localhost:3000');
     socket.emit('updateSocket', { user: currentUser });
-    console.log(socket);
-    console.log("end");
     // $rootScope.socket = socket;
 }
 

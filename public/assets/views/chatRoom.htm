@@ -3,15 +3,23 @@
 	<div id="message-container" class="col-sm-6">
 		<!--Here will print all messages-->
 	</div>
-		<p ng-show="friendIsTyping" id="friendIsTyping">Потребителя пише съобщение</p>
+	<p ng-show="friendIsTyping" id="friendIsTyping">Потребителя пише съобщение</p>
 
 
+
+	<!--<form id="send-message-form" class="col-sm-6">
+		<input id="new-message" type="text" name="message" />
+		<button id="sendMessage" class="btn btn-danger">Send</button>
+	</form>-->
 
 	<form id="send-message-form" class="col-sm-6">
-		<input id="new-message" type="text" name="message" />
-		<button id="sendMessage">Send</button>
+		<div class="input-group">
+			<input id="new-message" type="text" class="form-control"  name="message" />
+			<div class="input-group-btn">
+				<button id="sendMessage" class="btn btn-danger">Send</button>
+			</div>
+		</div>
 	</form>
-
 
 	<!--<div class="col-sm-9">
 				<h2>Welcome in my chatroom</h2>

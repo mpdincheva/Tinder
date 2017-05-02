@@ -1,4 +1,4 @@
-var configDB = require('./database.js');
+var configDB = require('../config/database.js');
 var mongodb = require('mongodb');
 var monk = require('monk');
 var db = monk(configDB.url);
@@ -28,7 +28,7 @@ module.exports = (function () {
 
 
     return {
-        createEvent: function (lat, lng, name, date, description, createdby, cb) {
+        createEvent: function (lat, lng, name, date, description, createdby) {
             events.insert({ name: name, lat: lat, lng: lng, date: new Date(date), description: description, createdby: createdby });
         },
 
@@ -41,17 +41,11 @@ module.exports = (function () {
                 var y = q.getFullYear();
                 var dateNow = new Date(y, m, d);
                 data.forEach(function (event) {
-                    console.log(event.date);
                     var dateEvent = new Date(event.date);
-                    console.log(distanceInKmBetweenTwoUsers(lat, lng, event.lat, event.lng) <= radius);
-                    console.log(dateEvent > dateNow);
-                    console.log(dateEvent);
-                    console.log(dateNow);
                     if (distanceInKmBetweenTwoUsers(lat, lng, event.lat, event.lng) <= radius && dateEvent > dateNow) {
                         allEvents.push(event);
                     }
                 });
-                console.log(allEvents);
                 cb(null, allEvents);
             });
 
